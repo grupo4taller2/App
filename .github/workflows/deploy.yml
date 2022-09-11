@@ -1,6 +1,8 @@
-name: update
-push:
+on:
+  push:
     branches: [ master ]
+
+name: update
 
 jobs:
   update:
