@@ -1,20 +1,15 @@
+import React, { useState } from "react";
+import { Stack, TextInput, IconButton } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import FiUberLogo from './resources/images/logo.png';
+import LoginViewWithLogo from "./LoginViewWithLogo";
+import LoginView from "./LoginView";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    //<LoginViewWithLogo></LoginViewWithLogo>
+    <LoginView></LoginView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
