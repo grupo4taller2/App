@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Button, TextInput, IconButton } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import FiUberLogo from './resources/images/logo.png';
+import { StyleSheet, TouchableHighlight, View} from 'react-native';
+import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
+import FiUberLogo from '../resources/images/logo.png';
 
 export default function LoginView() {
     const [username, setUsername] = useState('');
@@ -23,24 +22,24 @@ export default function LoginView() {
         <View style={styles.inputView}>
           <TextInput
             label="Username"
-            variant="outlined"
+            mode="outlined"
+            style={styles.inputBox}
           />
           <TextInput
             label="Password"
-            variant="outlined"
-            trailing={props => (
-              <IconButton icon={props => <Icon name="eye" {...props} />} {...props} />
-            )}
+            mode="outlined"
+            style={styles.inputBox}
+            right={<TextInput.Icon icon="eye"/>}
           />
         </View>
 
-        <Button style={styles.singInButton} color="#37a0bd" tintColor="white" uppercase={false}
-            title={props => (
-                <Text style={styles.buttonText}> Sign In </Text>)}
-        />
+        <Button style={styles.singInButton} buttonColor="#37a0bd" labelStyle={styles.buttonText} uppercase={false}>
+          Sign In
+        </Button>
         
         <View style={styles.registerNow}>
-            <Text> Don't have an account? Register Now </Text>
+            <Text> Don't have an account?</Text>
+            <TouchableHighlight><Text style={styles.higlightText}> Register Now</Text></TouchableHighlight>  
         </View>
 
       </View>
@@ -60,10 +59,15 @@ export default function LoginView() {
     },
     inputView: {
       flex: 2,
-      paddingTop: 0,
-      width: 300,
-      justifyContent: "space-evenly"
+      marginBottom: 100,
+      minWidth: 350,
+      maxHeight: 150,
+      justifyContent: "flex-start"
     },
+    inputBox: {
+      maxHeight: 60,
+      margin: 10,
+    },  
     mainGreet: {
         textAlign: "center",
         color: "black",
@@ -78,17 +82,26 @@ export default function LoginView() {
     },
     singInButton: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        width: 350,
+        maxHeight: 70,
     },
     registerNow: {
         flex: 1,
-        flexDirection: "column-reverse",
-        paddingBottom: 25
+        flexDirection: "row",
+        paddingBottom: 25,
+        alignItems: 'flex-end'
+        
     },
     buttonText: {
         color: "white",
-        fontSize: 30,
-        fontWeight: "500"
+        fontSize: 20,
+        fontWeight: "500",
+        alignSelf: 'center'
+    },
+    higlightText: {
+      fontSize: 15,
+      fontWeight: 'bold'
     }
   });
   

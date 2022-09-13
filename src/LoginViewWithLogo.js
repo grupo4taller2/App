@@ -3,7 +3,7 @@ import { Stack, TextInput, IconButton } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import FiUberLogo from './resources/images/logo.png';
+import FiUberLogo from '../resources/images/logo.png';
 
 export default function LoginViewWithLogo() {
     const [username, setUsername] = useState('');
