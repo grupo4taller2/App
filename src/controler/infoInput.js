@@ -10,6 +10,15 @@ export default class InfoInput{
         this.hide = createText(isHideable);
     }
 
+    getText(){
+        return this.text.getText();
+    }
+
+    fail(){
+        this.text.fail();
+        this.viewCallback(this);
+    }
+
     setNotifyCallback = (callback) => {
         this.viewCallback = callback;
     }

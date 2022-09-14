@@ -13,21 +13,10 @@ export default class LoginInfo extends Component{
 
 
     render(){
-        let userText = new InfoInput(null, {
-            label: "Username",
-            mode: "outlined",
-            style: styles.inputBox
-          });
-
-          let passwordText = new InfoInput(true, {
-            label: "Password",
-            mode: "outlined",
-            style: styles.inputBox
-          });
 
         return (<View style={styles.inputView}>
-                    <TextField text={userText} />
-                    <TextField text={passwordText}/>
+                    <TextField text={this.props.userText} />
+                    <TextField text={this.props.passwordText}/>
                 </View>);
     }
 }
