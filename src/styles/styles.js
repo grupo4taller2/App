@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
       marginBottom: 100,
       minWidth: 350,
       maxHeight: 150,
-      justifyContent: "flex-start"
+      justifyContent: 'flex-start',
     },
     inputBox: {
       maxHeight: 60,
@@ -24,40 +24,42 @@ export const styles = StyleSheet.create({
       paddingLeft: 8,
     },  
     mainGreet: {
-        textAlign: "center",
-        color: "black",
-        fontWeight: "bold",
-        fontSize: 34
+        textAlign: 'center',
+        color: 'black',
+        fontWeight: 'bold',
+        fontSize: 34,
     },
     secondaryGreet: {
-        textAlign: "center",
-        color: "black",
-        fontWeight: "300",
-        fontSize: 24
+        textAlign: 'center',
+        color: 'black',
+        fontWeight: '300',
+        fontSize: 24,
     },
     singInButton: {
-        flex: 1,
-        justifyContent: "center",
-        width: 350,
-        maxHeight: 70,
-        backgroundColor: "#37a0bd",
+        backgroundColor: '#37a0bd',
         borderRadius: 100,
+    },
+    signInButtonContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: 320,
+        height: 70,
     },
     registerNow: {
         flex: 1,
         flexDirection: "row",
         paddingBottom: 25,
-        alignItems: 'flex-end'
-        
+        alignItems: 'flex-end',
     },
     buttonText: {
-        color: "white",
+        color: 'white',
         fontSize: 20,
-        fontWeight: "500",
-        alignSelf: 'center'
+        fontWeight: '500',
+        alignSelf: 'center',
     },
     higlightText: {
       fontSize: 15,
       fontWeight: 'bold'
-    }
+    },
   });

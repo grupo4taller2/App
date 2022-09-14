@@ -62,7 +62,7 @@ export default class Login extends Component{
         <React.Fragment>
         <LoginInfo userText={this.state.username} passwordText={this.state.password}/>
 
-        <Button style={[styles.singInButton, backgroundColorChange]} labelStyle={styles.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
+        <Button style={[styles.singInButton, backgroundColorChange]} contentStyle={styles.signInButtonContent} labelStyle={styles.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
           {this.state.signInText}
         </Button>
         </React.Fragment>);
