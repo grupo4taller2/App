@@ -28,6 +28,8 @@ export default class Login extends Component{
             style: styles.inputBox
           });
 
+          this.state.signInText = "Sign In";
+
         this.handleLoginAttemp = this.handleLoginAttemp.bind(this);
     }
 
@@ -36,20 +38,32 @@ export default class Login extends Component{
         this.state.password.fail();
     }
 
+    handleAcceptedLogin(){
+        let signInText = "Succesful";
+
+        this.setState({signInText})
+    }
+
     async handleLoginAttemp(){
-        console.log("Username: ", this.state.username.getText());
-        console.log("Password: ", this.state.password.getText());
-        this.handleFailedLogin();   
+        let response = await this.state.connection.tryLogin(this.state.username, this.state.password)
+
+        if (response.result){
+          this.handleAcceptedLogin();
+        }else{
+          this.handleFailedLogin();   
+        }
     }
 
     render(){
+
+        let backgroundColorChange = this.state.signInText === 'Succesful' ? {backgroundColor: "#90ee90"} : null
 
         return (
         <React.Fragment>
         <LoginInfo userText={this.state.username} passwordText={this.state.password}/>
 
-        <Button style={styles.singInButton} labelStyle={styles.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
-          Sign In
+        <Button style={[styles.singInButton, backgroundColorChange]} labelStyle={styles.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
+          {this.state.signInText}
         </Button>
         </React.Fragment>);
     }

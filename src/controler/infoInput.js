@@ -52,4 +52,12 @@ export default class InfoInput{
 
     }
 
+    addUserTo(credentials){
+        credentials.username = this.getText();
+    }
+
+    addPasswordTo(credentials){
+        credentials.password = this.getText();
+    }
+
 }

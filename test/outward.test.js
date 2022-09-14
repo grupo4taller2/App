@@ -1,4 +1,5 @@
 import NetworkMock from "../mocks/network";
+import InfoInput from "../src/controler/infoInput";
 import Outward, { ROUTE } from "../src/controler/outward"
 
 
@@ -38,4 +39,34 @@ test("Al pedir get a la ruta base, me devuelve lo mismo que el fetch a esa ruta"
     
     expect(outward.get()).toEqual(devolucion)
 
+})
+
+test("Al enviar un paquete con get para un usuario, este se envia bien", () => {
+    let credentials = {
+        username: 'usuario',
+        password: 'contrasenia'
+    }
+
+    let mockedNotify = () => null;
+
+    let usuario = new InfoInput();
+    usuario.setNotifyCallback(mockedNotify)
+    usuario.handleTextChange("usuario");
+    let contrasenia = new InfoInput();
+    contrasenia.setNotifyCallback(mockedNotify);
+    contrasenia.handleTextChange("contrasenia");
+
+    let mockedLogIn = (mainRoute, somePath, credenciales) => {
+        return credenciales;
+    }
+
+    let mockedConnection = new NetworkMock({
+        callLogIn: mockedLogIn,
+    })
+
+    let outward = new Outward();
+
+    outward.setNetwork(mockedConnection);
+
+    expect(outward.tryLogin(usuario, contrasenia)).toEqual(credentials);
 })

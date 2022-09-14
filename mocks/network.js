@@ -3,6 +3,8 @@ export default class NetworkMock{
         this.callGet = object.callGet;
 
         this.callPost = object.callPost;
+
+        this.callLogIn = object.callLogIn;
     }
 
 
@@ -17,5 +19,8 @@ export default class NetworkMock{
 
     }
 
+    tryLogin(someRoute, somePath, credentials){
+        return this.callLogIn(someRoute, somePath, credentials)
+    }
 }
 

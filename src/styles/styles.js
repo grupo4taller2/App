@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
         width: 350,
         maxHeight: 70,
         backgroundColor: "#37a0bd",
-        borderRadius: "100",
+        borderRadius: 100,
     },
     registerNow: {
         flex: 1,

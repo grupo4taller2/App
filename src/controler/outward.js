@@ -2,6 +2,8 @@ import fetch from 'node-fetch';
 import Network from '../model/network';
 
 export const ROUTE = 'https://grupo4-backend-users.herokuapp.com';
+const LOGINROUTE = '/users'
+
 
 export default class Outward{
 
@@ -19,6 +21,15 @@ export default class Outward{
     get(route = "/"){
         
         return this.network.get(ROUTE, route);
+    }
+
+    tryLogin(usuario, contrasenia){
+        let credentials = {};
+
+        usuario.addUserTo(credentials);
+        contrasenia.addPasswordTo(credentials);
+
+        return this.network.tryLogin(ROUTE, LOGINROUTE + "/", credentials);
     }
 
 }

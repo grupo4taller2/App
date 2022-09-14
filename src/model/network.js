@@ -1,4 +1,6 @@
 const GET = "GET"
+const CONTENT = 'application/json'
+
 
 export default class Network{
 
@@ -11,7 +13,9 @@ export default class Network{
             {
                 method: GET
             }
-            ).then((response) => response.json()).finally((response) => response);
+            ).then(async (response) => ({result: response.ok, answer: await response.json()}))
+            .finally((response) => response)
+            .catch((why) => ({result: false, reason: why}));
         
     
         return response
@@ -24,6 +28,19 @@ export default class Network{
                 method: POST
             }
             ).then((response) => response.json()).finally((response) => response);
+
+        return response
+
+    }
+
+    async tryLogin(mainRoute, path, credentials){
+        let response = await fetch(mainRoute + path + credentials.username,
+            {
+                method: GET
+            }
+            ).then(async (response) => ({result: response.ok, answer: await response.json()}))
+            .finally((response) => response)
+            .catch((why) => ({result: false, reason: why}))
 
         return response
 
