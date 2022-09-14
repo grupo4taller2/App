@@ -1,44 +1,44 @@
-import React, { Component } from 'react';
-import createText from './textType';
-import { TextInput } from "react-native-paper";
+import createText from '../model/textType';
 
-export default class InfoInput extends Component{
-    constructor(props){
-        super(props);
+export default class InfoInput{
+    constructor(isHideable = null, info = {}){
+        this.text = '';
+        this.info = info;
 
-        this.state = {
-            value: ''
-        };
+        this.hide = createText(isHideable);
+    }
 
-        this.state.textType = createText(this.props.hideable);
-        this.hideHandler = this.hideHandler.bind(this);
-        this.update = this.update.bind(this);
+    setNotifyCallback = (callback) => {
+        this.viewCallback = callback;
+    }
 
-        this.state.textCallback = this.state.textType.getHideWidget(this.hideHandler);
+    handleTextChange = (newText) => {
+        this.text = newText;
+        this.viewCallback(this);
+    }
+
+    makeWidget(widgetCreator){
+        return widgetCreator(this.hide.getIcon(), this.hideHandler);
+    }
+
+    hideHandler = () => {
+        this.hide.hide();
+        
+        this.viewCallback(this);
+    }
+
+    hasWidget(){
+
+        return this.hide.isHideable();
+    }
+
+    getInfo(){
+
+        this.info.value = this.text;
+        this.info.secureTextEntry = this.hide.ishidden();
+
+        return this.info;
 
     }
 
-    hideHandler(){
-        let textType = this.state.textType.hide();
-
-        this.setState({textType})
-    }
-
-    update(text)
-    {
-        let value = text;
-        this.setState({value})
-    }
-
-
-
-    render(){
-        return (<TextInput
-            label={this.props.label}
-            mode={this.props.mode}
-            style={this.props.style}
-            right={this.state.textCallback}
-            value={this.state.textType.processText(this.state.value)}
-            onChangeText={this.update} />);
-    }
 }

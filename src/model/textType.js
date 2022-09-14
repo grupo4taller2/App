@@ -1,5 +1,3 @@
-import { TextInput } from "react-native-paper";
-
 export default function createText(hideable){
     if (hideable){
         return new HideableText();
@@ -15,24 +13,24 @@ export class HideableText{
 
     hide(){
         this.hidden = !this.hidden;
+    }
 
-        return this;
+    getIcon(){
+
+        return this.hidden ? 'eye-off' : 'eye';
     }
 
     getHideWidget(callback){
-        return <TextInput.Icon icon="eye" onPress={callback}/>
+        return hideWidget(this.icon, callback);
     }
 
-    processText(text){
-        if (this.hidden){
-            return ([...text].map(element => {
-                return '*'
-            }).join(''))
-        }
-
-        return text
+    isHideable(){
+        return true;
     }
 
+    ishidden(){
+        return this.hidden;
+    }
 }
 
 export class UnhideableText{
@@ -42,14 +40,23 @@ export class UnhideableText{
     }
 
     hide(){
-        return this;
+        
     }
 
-    processText(text){
-        return text
+    getIcon(){
+
+        return null;
     }
 
     getHideWidget(callback){
         return null;
+    }
+
+    isHideable(){
+        return false;
+    }
+
+    ishidden(){
+        return false;
     }
 }

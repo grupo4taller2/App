@@ -3,12 +3,25 @@ import { StatusBar } from 'expo-status-bar';
 import {TouchableHighlight, View} from 'react-native';
 import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
 import { styles } from "./styles/styles";
-import FiUberLogo from '../resources/images/logo.png';
+import TextField from "./view/textField";
 import InfoInput from "./controler/text";
+
 
 export default function LoginView() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    let userText = new InfoInput(null, {
+      label: "Username",
+      mode: "outlined",
+      style: styles.inputBox
+    });
+
+    let passwordText = new InfoInput(true, {
+      label: "Password",
+      mode: "outlined",
+      style: styles.inputBox
+    });
 
     return (
       <View style={styles.loginMainView}>
@@ -23,8 +36,8 @@ export default function LoginView() {
         </View>
 
         <View style={styles.inputView}>
-          <InfoInput label='Username' mode='outlined' style={styles.inputBox} />
-          <InfoInput label='Password' mode='outlined' style={styles.inputBox} hideable/>
+          <TextField text={userText} />
+          <TextField text={passwordText}/>
         </View>
 
         <Button style={styles.singInButton} labelStyle={styles.buttonText} uppercase={false}>
