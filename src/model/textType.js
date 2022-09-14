@@ -8,7 +8,7 @@ export default function createText(hideable){
 export class HideableText{
 
     constructor(){
-        this.hidden = false;
+        this.hidden = true;
     }
 
     hide(){

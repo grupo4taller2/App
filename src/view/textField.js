@@ -39,7 +39,7 @@ export default class TextField extends Component{
 
         return (<TextInput
             {...info}
-            
+        
             right={this.getHideWidget()}
             onChangeText={this.state.text.handleTextChange} />)
     }

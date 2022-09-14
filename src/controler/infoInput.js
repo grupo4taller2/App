@@ -1,8 +1,10 @@
 import createText from '../model/textType';
+import Input from '../model/textInput';
+
 
 export default class InfoInput{
     constructor(isHideable = null, info = {}){
-        this.text = '';
+        this.text = new Input();
         this.info = info;
 
         this.hide = createText(isHideable);
@@ -13,7 +15,7 @@ export default class InfoInput{
     }
 
     handleTextChange = (newText) => {
-        this.text = newText;
+        this.text.setText(newText);
         this.viewCallback(this);
     }
 
@@ -34,7 +36,7 @@ export default class InfoInput{
 
     getInfo(){
 
-        this.info.value = this.text;
+        this.text.addInfo(this.info);
         this.info.secureTextEntry = this.hide.ishidden();
 
         return this.info;
