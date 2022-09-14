@@ -39,7 +39,9 @@ export default class TextField extends Component{
 
         return (<TextInput
             {...info}
-        
+            selectionColor="#000000"
+            activeOutlineColor="#37a0bd"
+            theme={{ roundness: 30 }} 
             right={this.getHideWidget()}
             onChangeText={this.state.text.handleTextChange} />)
     }
