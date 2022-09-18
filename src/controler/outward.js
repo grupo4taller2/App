@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
 import Network from '../model/network';
 
-export const ROUTE = 'https://grupo4-backend-users.herokuapp.com';
+import {ROUTE} from '@env';
+
 const LOGINROUTE = '/users'
 
 
