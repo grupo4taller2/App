@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import InfoInput from '../controler/infoInput';
 import Outward from '../controler/outward';
-import { styles } from '../styles/styles';
 import LoginInfo from './loginInputView';
 
 
@@ -20,12 +20,12 @@ export default class Login extends Component{
         this.state.username = new InfoInput(null, {
             label: "Username",
             mode: "outlined",
-            style: styles.inputBox
+            style: style.inputBox
           });
         this.state.password = new InfoInput(true, {
             label: "Password",
             mode: "outlined",
-            style: styles.inputBox
+            style: style.inputBox
           });
 
           this.state.signInText = "Sign In";
@@ -62,9 +62,34 @@ export default class Login extends Component{
         <React.Fragment>
         <LoginInfo userText={this.state.username} passwordText={this.state.password}/>
 
-        <Button style={[styles.singInButton, backgroundColorChange]} contentStyle={styles.signInButtonContent} labelStyle={styles.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
+        <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
           {this.state.signInText}
         </Button>
         </React.Fragment>);
     }
 }
+
+const style = StyleSheet.create({
+  singInButton: {
+    backgroundColor: '#37a0bd',
+    borderRadius: 100,
+},
+signInButtonContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: 320,
+    height: 70,
+},
+buttonText: {
+  color: 'white',
+  fontSize: 20,
+  fontWeight: '500',
+  alignSelf: 'center',
+},
+inputBox: {
+  maxHeight: 60,
+  margin: 10,
+  paddingLeft: 8,
+},  
+})

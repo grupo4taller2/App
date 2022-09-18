@@ -1,7 +1,7 @@
 import NetworkMock from "../mocks/network";
 import InfoInput from "../src/controler/infoInput";
-import Outward, { ROUTE } from "../src/controler/outward"
-
+import Outward from "../src/controler/outward"
+import {ROUTE} from '@env'
 
 test("al crear un objeto outward, el mismo tiene configurada una ruta", () => {
 

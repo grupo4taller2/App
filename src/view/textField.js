@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { StyleSheet } from 'react-native';
 import { TextInput } from "react-native-paper";
 
 export function hideWidget(icon, callback) {
@@ -38,12 +39,18 @@ export default class TextField extends Component{
         let info = this.state.text.getInfo();
 
         return (<TextInput
-            {...info}
-            selectionColor="#000000"
-            activeOutlineColor="#37a0bd"
-            theme={{ roundness: 30 }} 
+            {...info} 
+            {...style.textField}
             right={this.getHideWidget()}
             onChangeText={this.state.text.handleTextChange} />)
     }
 
+}
+
+const style = {
+    textField: {
+        selectionColor: '#000000',
+        activeOutlineColor: '#37a0bd',
+        theme: {roundness: 30}
+    }
 }

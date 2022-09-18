@@ -1,34 +1,65 @@
 import React, { useState } from "react";
-import { StatusBar } from 'expo-status-bar';
-import {TouchableHighlight, View} from 'react-native';
+import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
-import { styles } from "../styles/styles";
-import LoginInfo from "./loginInputView";
-import Outward from "../controler/outward";
 import Login from "./loginMainView";
 
 
 export default function LoginView() {
     return (
-      <View style={styles.loginMainView}>
+      <View style={style.loginMainView}>
   
-        <View style={styles.greetView}>
-            <Text style={styles.mainGreet}>
+        <View style={style.greetView}>
+            <Text style={style.mainGreet}>
                 Hello Again!
             </Text>
-            <Text style={styles.secondaryGreet}>
+            <Text style={style.secondaryGreet}>
                 Need a Lift?
             </Text>
         </View>
 
         <Login />
         
-        <View style={styles.registerNow}>
+        <View style={style.registerNow}>
             <Text> Don't have an account?</Text>
-            <TouchableHighlight><Text style={styles.higlightText}> Register Now</Text></TouchableHighlight>  
+            <TouchableHighlight><Text style={style.higlightText}> Register Now</Text></TouchableHighlight>  
         </View>
 
       </View>
     );
   }
+
+const style = StyleSheet.create({
+  mainGreet: {
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 34,
+},
+  loginMainView: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  greetView: {
+    flex: 1,
+    paddingTop: 100
+  },
+  secondaryGreet: {
+    textAlign: 'center',
+    color: 'black',
+    fontWeight: '300',
+    fontSize: 24,
+},
+registerNow: {
+  flex: 1,
+  flexDirection: "row",
+  paddingBottom: 25,
+  alignItems: 'flex-end',
+},
+higlightText: {
+  fontSize: 15,
+  fontWeight: 'bold'
+},
+})
   
