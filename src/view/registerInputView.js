@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import TextField from './textField';
 
 
-export default class LoginInfo extends Component{
+export default class RegisterInput extends Component {
 
     constructor(props){
         super(props);
@@ -13,15 +13,16 @@ export default class LoginInfo extends Component{
         return (<View style={inputViewStyle}>
                     <TextField text={this.props.userText} />
                     <TextField text={this.props.passwordText}/>
+                    <TextField text={this.props.repeatPasswordText}/>
+                    <TextField text={this.props.emailText}/>
+                    <TextField text={this.props.walletText}/>
                 </View>);
     }
 }
 
 
 const inputViewStyle = StyleSheet.create({
-        flex: 2,
         marginBottom: 100,
         minWidth: 350,
         maxHeight: 150,
-        justifyContent: 'flex-start',
 })
