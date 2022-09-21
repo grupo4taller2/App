@@ -44,12 +44,11 @@ export default class RegisterInfo extends Component {
     render(){
         return (
         <React.Fragment>
-        <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet}/>
-        
-        <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText} >
-           Sign up
-        </Button>
-        
+            <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet}/>
+            
+            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => this.props.navigation.navigate('Register')}  >
+            Sign up
+            </Button>
         </React.Fragment>);
     }
 }
@@ -58,6 +57,7 @@ const style = StyleSheet.create({
     singUpButton: {
         backgroundColor: '#37a0bd',
         borderRadius: 100,
+        marginBottom: 40,
     },
     signUpButtonContent: {
         justifyContent: 'center',
@@ -76,5 +76,5 @@ const style = StyleSheet.create({
       maxHeight: 60,
       margin: 10,
       paddingLeft: 8,
-    },  
+    },
     })

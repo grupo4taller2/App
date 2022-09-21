@@ -4,7 +4,7 @@ import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
 import Login from "./loginMainView";
 
 
-export default function LoginView() {
+export default function LoginScreen({ navigation }) {
     return (
       <View style={style.loginMainView}>
   

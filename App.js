@@ -1,13 +1,16 @@
 import { View } from "react-native";
 import { Provider, Text } from "react-native-paper";
-import LoginView from "./src/view/LoginView";
-import RegisterView from "./src/view/RegisterView";
+import LoginScreen from "./src/view/LoginScreen";
+import RegisterScreen from "./src/view/RegisterScreen";
+import { NavigationContainer } from '@react-navigation/native';
 
 
 export default function App() {
   return (
     <Provider>
-      <RegisterView />
+      <NavigationContainer>
+        <RegisterScreen />
+      </NavigationContainer>
     </Provider>    
   );
 }

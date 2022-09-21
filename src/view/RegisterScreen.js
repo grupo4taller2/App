@@ -4,7 +4,7 @@ import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
 import RegisterInfo from "./registerInfoView";
 
 
-export default function RegisterView() {
+export default function RegisterScreen({ navigation }) {
     return (
       <View style={style.registerMainView}>
   

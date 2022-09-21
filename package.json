@@ -13,6 +13,7 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "@react-navigation/native": "^6.0.13",
     "expo": "~46.0.9",
     "expo-status-bar": "~1.4.0",
     "expo-updates": "~0.14.5",

@@ -22,7 +22,9 @@ export default class RegisterInput extends Component {
 
 
 const inputViewStyle = StyleSheet.create({
+        flex: 4,
         marginBottom: 100,
         minWidth: 350,
-        maxHeight: 150,
+        maxHeight: 550,
+        justifyContent: 'flex-start',
 })
