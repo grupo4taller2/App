@@ -39,14 +39,21 @@ export default class RegisterInfo extends Component {
             mode: "outlined",
             style: style.inputBox
         });
+        this.state.phone = new InfoInput(null, {
+            label: "Phone Number",
+            mode: "outlined",
+            style: style.inputBox
+        });
     }
 
     render(){
         return (
         <React.Fragment>
-            <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet}/>
+            <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
             
-            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => this.props.navigation.navigate('Register')}  >
+            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => {
+                this.state.connection.tryRegister(this.state.email.getText(), this.state.password.getText())
+            }} >
             Sign up
             </Button>
         </React.Fragment>);
@@ -57,7 +64,7 @@ const style = StyleSheet.create({
     singUpButton: {
         backgroundColor: '#37a0bd',
         borderRadius: 100,
-        marginBottom: 40,
+        marginBottom: 30,
     },
     signUpButtonContent: {
         justifyContent: 'center',
@@ -74,7 +81,7 @@ const style = StyleSheet.create({
     },
     inputBox: {
       maxHeight: 60,
-      margin: 10,
+      margin: 7,
       paddingLeft: 8,
     },
     })

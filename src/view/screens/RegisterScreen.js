@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
-import RegisterInfo from "./registerInfoView";
+import RegisterInfo from "../registerInfoView";
+import { Appbar } from 'react-native-paper';
 
 
 export default function RegisterScreen({ navigation }) {
     return (
       <View style={style.registerMainView}>
-  
-        <View style={style.instructionView}>
+        
+        <View style={style.headerView}>
+            <Appbar.Header>
+              <Appbar.BackAction onPress={() => {navigation.navigate('Login')}} />
+            </Appbar.Header>
             <Text style={style.instructionText}>
               {'Let\'s start off \nby getting you set up'}
             </Text>
@@ -27,15 +31,15 @@ const style = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  instructionView: {
-    flex: 1,
-    paddingTop: 50,
-    paddingLeft: 50,
+  headerView: {
+    flex: 1.5,
+    flexDirection: 'row',
   },
   instructionText: {
     color: 'black',
     fontWeight: '500',
     fontSize: 26,
+    paddingTop: 75,
   },
   registerView: {
     flex: 5,

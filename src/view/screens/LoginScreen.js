@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import {StyleSheet, TouchableHighlight, View} from 'react-native';
+import {StyleSheet, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
-import Login from "./loginMainView";
+import Login from "../loginMainView";
 
 
 export default function LoginScreen({ navigation }) {
@@ -21,7 +21,9 @@ export default function LoginScreen({ navigation }) {
         
         <View style={style.registerNow}>
             <Text> Don't have an account?</Text>
-            <TouchableHighlight><Text style={style.higlightText}> Register Now</Text></TouchableHighlight>  
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <Text style={style.higlightText}> Register Now </Text>
+            </TouchableOpacity>  
         </View>
 
       </View>

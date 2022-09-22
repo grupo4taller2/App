@@ -53,7 +53,7 @@ export default class InfoInput{
     }
 
     addUserTo(credentials){
-        credentials.username = this.getText();
+        credentials.email = this.getText();
     }
 
     addPasswordTo(credentials){

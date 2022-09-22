@@ -43,7 +43,7 @@ test("Al pedir get a la ruta base, me devuelve lo mismo que el fetch a esa ruta"
 
 test("Al enviar un paquete con get para un usuario, este se envia bien", () => {
     let credentials = {
-        username: 'usuario',
+        email: 'usuario',
         password: 'contrasenia'
     }
 
@@ -56,7 +56,7 @@ test("Al enviar un paquete con get para un usuario, este se envia bien", () => {
     contrasenia.setNotifyCallback(mockedNotify);
     contrasenia.handleTextChange("contrasenia");
 
-    let mockedLogIn = (mainRoute, somePath, credenciales) => {
+    let mockedLogIn = (credenciales) => {
         return credenciales;
     }
 

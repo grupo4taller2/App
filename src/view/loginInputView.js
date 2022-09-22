@@ -11,7 +11,7 @@ export default class LoginInfo extends Component{
 
     render(){
         return (<View style={inputViewStyle}>
-                    <TextField text={this.props.userText} />
+                    <TextField text={this.props.emailText} />
                     <TextField text={this.props.passwordText}/>
                 </View>);
     }

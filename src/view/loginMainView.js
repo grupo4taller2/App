@@ -1,12 +1,40 @@
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import InfoInput from '../controler/infoInput';
 import Outward from '../controler/outward';
+import { useAuthentication } from '../utils/hooks/useAuthentication';
 import LoginInfo from './loginInputView';
 
 
+function GoogleLogin({succesfulLogIn, failedLogIn}){
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
+  function handleSignIn(){
+    signInWithPopup(auth, provider). 
+    then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+      const user = result.user;
+
+      console.log("Signed in with google");
+
+      succesfulLogIn();
+
+    }).catch ((error) => {
+      console.log(Error);
+      failedLogIn();
+    })
+  }
+
+  return (<Button style={[style.singInButton]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={handleSignIn}>
+    Google
+  </Button>)
+
+}
 
 export default class Login extends Component{
 
@@ -17,24 +45,27 @@ export default class Login extends Component{
 
         this.state.connection = new Outward();
 
-        this.state.username = new InfoInput(null, {
-            label: "Username",
+        this.state.email = new InfoInput(null, {
+            label: "E-mail",
             mode: "outlined",
             style: style.inputBox
           });
+
         this.state.password = new InfoInput(true, {
             label: "Password",
             mode: "outlined",
             style: style.inputBox
           });
 
-          this.state.signInText = "Sign In";
+        this.state.signInText = "Sign In";
 
         this.handleLoginAttemp = this.handleLoginAttemp.bind(this);
+        this.handleFailedLogin = this.handleFailedLogin.bind(this);
+        this.handleAcceptedLogin = this.handleAcceptedLogin.bind(this);
     }
 
     handleFailedLogin(){
-        this.state.username.fail();
+        this.state.email.fail();
         this.state.password.fail();
     }
 
@@ -45,9 +76,10 @@ export default class Login extends Component{
     }
 
     async handleLoginAttemp(){
-        let response = await this.state.connection.tryLogin(this.state.username, this.state.password)
+        let response = await this.state.connection.tryLogin(this.state.email, this.state.password)
 
-        if (response.result){
+        if (response.result) {
+          console.log(response);
           this.handleAcceptedLogin();
         }else{
           this.handleFailedLogin();   
@@ -60,11 +92,11 @@ export default class Login extends Component{
 
         return (
         <React.Fragment>
-        <LoginInfo userText={this.state.username} passwordText={this.state.password}/>
+          <LoginInfo emailText={this.state.email} passwordText={this.state.password}/>
 
-        <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
-          {this.state.signInText}
-        </Button>
+          <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
+            {this.state.signInText}
+          </Button>
         </React.Fragment>);
     }
 }

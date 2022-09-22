@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
+import Outward from '../controler/outward';
 import TextField from './textField';
 
 
@@ -16,6 +17,7 @@ export default class RegisterInput extends Component {
                     <TextField text={this.props.repeatPasswordText}/>
                     <TextField text={this.props.emailText}/>
                     <TextField text={this.props.walletText}/>
+                    <TextField text={this.props.phoneText}/>
                 </View>);
     }
 }
