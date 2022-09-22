@@ -44,8 +44,8 @@ export default class Network{
         }
 
         try{
-            let result = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
-            return result;
+            let credencial = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+            return {credencial, result: true};
         }catch (error) {
             console.log(error);
         }

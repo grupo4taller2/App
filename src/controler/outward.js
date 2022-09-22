@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import Network from '../model/network';
 
 import {ROUTE} from '@env';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const LOGINROUTE = '/users'
 
@@ -25,7 +25,7 @@ export default class Outward{
         return this.network.get(ROUTE, route);
     }
 
-    async tryLogin(usuario, contrasenia){
+    tryLogin(usuario, contrasenia){
 
         
         let credentials = {};
@@ -36,4 +36,17 @@ export default class Outward{
         return this.network.tryLogin(credentials);
     }
 
-}
+    async tryRegister(usuario, contrasenia){
+        const auth = getAuth();
+        console.log(usuario);
+        console.log(contrasenia);
+        try {
+            
+            let result = await createUserWithEmailAndPassword(auth, usuario, contrasenia);
+            console.log("Creaste un usuario!!!");
+          } catch (error) {
+            console.log(error)
+        }
+        }
+
+    }

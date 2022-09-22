@@ -30,7 +30,7 @@ function GoogleLogin({succesfulLogIn, failedLogIn}){
   }
 
   return (<Button style={[style.singInButton]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={handleSignIn}>
-    Il Google
+    Google
   </Button>)
 
 }
@@ -78,6 +78,7 @@ export default class Login extends Component{
         let response = await this.state.connection.tryLogin(this.state.username, this.state.password)
 
         if (response.result){
+          console.log(response);
           this.handleAcceptedLogin();
         }else{
           this.handleFailedLogin();   
@@ -95,7 +96,6 @@ export default class Login extends Component{
         <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
           {this.state.signInText}
         </Button>
-        <GoogleLogin succesfulLogIn={this.handleAcceptedLogin} failedLogIn={this.handleFailedLogin} />
         </React.Fragment>);
     }
 }

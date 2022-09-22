@@ -13,7 +13,7 @@ export default function App() {
   return (
     <Provider>
       <NavigationContainer>
-        <RegisterScreen />
+        <LoginScreen />
       </NavigationContainer>
     </Provider>    
   );

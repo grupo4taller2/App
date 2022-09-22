@@ -19,8 +19,8 @@ export default class NetworkMock{
 
     }
 
-    tryLogin(someRoute, somePath, credentials){
-        return this.callLogIn(someRoute, somePath, credentials)
+    tryLogin(credentials){
+        return this.callLogIn(credentials)
     }
 }
 

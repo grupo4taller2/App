@@ -46,7 +46,9 @@ export default class RegisterInfo extends Component {
         <React.Fragment>
             <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet}/>
             
-            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => this.props.navigation.navigate('Register')}  >
+            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => {
+                this.state.connection.tryRegister(this.state.email.getText(), this.state.password.getText())
+            }}  >
             Sign up
             </Button>
         </React.Fragment>);
