@@ -1,11 +1,39 @@
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import InfoInput from '../controler/infoInput';
 import Outward from '../controler/outward';
+import { useAuthentication } from '../hooks/useAuthentication';
 import LoginInfo from './loginInputView';
 
+function GoogleLogin({succesfulLogIn, failedLogIn}){
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
+  function handleSignIn(){
+    signInWithPopup(auth, provider). 
+    then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+
+      const user = result.user;
+
+      console.log("Signed in with google");
+
+      succesfulLogIn();
+      
+    }).catch ((error) => {
+      console.log(Error);
+      failedLogIn();
+    })
+  }
+
+  return (<Button style={[style.singInButton]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={handleSignIn}>
+    Il Google
+  </Button>)
+
+}
 
 
 export default class Login extends Component{
@@ -28,9 +56,11 @@ export default class Login extends Component{
             style: style.inputBox
           });
 
-          this.state.signInText = "Sign In";
-
+        this.state.signInText = "Sign In";
+        
         this.handleLoginAttemp = this.handleLoginAttemp.bind(this);
+        this.handleFailedLogin = this.handleFailedLogin.bind(this);
+        this.handleAcceptedLogin = this.handleAcceptedLogin.bind(this);
     }
 
     handleFailedLogin(){
@@ -65,6 +95,7 @@ export default class Login extends Component{
         <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
           {this.state.signInText}
         </Button>
+        <GoogleLogin succesfulLogIn={this.handleAcceptedLogin} failedLogIn={this.handleFailedLogin} />
         </React.Fragment>);
     }
 }
