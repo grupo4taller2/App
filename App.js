@@ -1,8 +1,10 @@
 import { View } from "react-native";
 import { Provider, Text } from "react-native-paper";
-import LoginView from "./src/view/LoginView";
 import './src/config/firebase'
 import { useAuthentication } from "./src/hooks/useAuthentication";
+import LoginScreen from "./src/view/LoginScreen";
+import RegisterScreen from "./src/view/RegisterScreen";
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App() {
   
@@ -10,7 +12,9 @@ export default function App() {
 
   return (
     <Provider>
-      <LoginView />
+      <NavigationContainer>
+        <RegisterScreen />
+      </NavigationContainer>
     </Provider>    
   );
 }
