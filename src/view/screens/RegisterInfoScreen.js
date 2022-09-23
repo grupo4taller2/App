@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
-import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
-import RegisterInfo from "../registerInfoView";
+import {Text, TextInput, Button, Checkbox } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
+import TextField from "../textField";
+import InfoInput from "../../controler/infoInput";
+import UserTypeCheck from "../registerUserView";
 
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterInfoScreen({ navigation }) {
     return (
-      <View style={style.registerMainView}>
+      <View style={style.registerInfoMainView}>
         
         <View style={style.headerView}>
             <Appbar.Header>
               <Appbar.BackAction onPress={() => {navigation.navigate('Login')}} />
             </Appbar.Header>
             <Text style={style.instructionText}>
-              {'Let\'s start off \nby getting you set up'}
+              {"Great! \nyou're almost done"}
             </Text>
         </View>
         
-        <View style={style.registerView}>
-          <RegisterInfo nav={navigation} />
-        </View>
+        <UserTypeCheck location={style.locationInput}/>
 
       </View>
-    );
-  }
+    )
+}
 
 const style = StyleSheet.create({
-  registerMainView: {
+  registerInfoMainView: {
     flex: 1,
     backgroundColor: '#fff',
   },
@@ -41,9 +41,12 @@ const style = StyleSheet.create({
     fontSize: 26,
     paddingTop: 75,
   },
-  registerView: {
-    flex: 5,
-    alignItems: 'center',
+  locationInput: {
+    flex: 4,
+    marginBottom: 100,
+    minWidth: 350,
+    maxHeight: 550,
+    justifyContent: 'flex-start',
   },
 })
   

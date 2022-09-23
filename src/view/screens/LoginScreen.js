@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {StyleSheet, TouchableHighlight, TouchableOpacity, View} from 'react-native';
-import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import Login from "../loginMainView";
 
 
@@ -20,10 +20,17 @@ export default function LoginScreen({ navigation }) {
         <Login />
         
         <View style={style.registerNow}>
-            <Text> Don't have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={style.higlightText}> Register Now </Text>
-            </TouchableOpacity>  
+            <Text style={style.bottomTextAcc}> Don't have an account?</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('Register')} >
+              <Text style={style.higlightTextReg}> {"Register Now"} </Text>
+            </TouchableOpacity>
+        </View>
+
+        <View style={style.bottomTextView}>
+            <Text style={style.bottomTextOr}> or</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => {/* firabase function for google log in */}}>
+              <Text style={style.higlightTextGoogle}> Sign in with Google </Text>
+            </TouchableOpacity>
         </View>
 
       </View>
@@ -52,16 +59,32 @@ const style = StyleSheet.create({
     color: 'black',
     fontWeight: '300',
     fontSize: 24,
-},
-registerNow: {
-  flex: 1,
-  flexDirection: "row",
-  paddingBottom: 25,
-  alignItems: 'flex-end',
-},
-higlightText: {
-  fontSize: 15,
-  fontWeight: 'bold'
-},
+  },
+  registerNow: {
+    flex: 0.7,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  bottomTextView: {
+    flex: 0.3,
+    flexDirection: "row",
+    alignItems: 'flex-end',
+  },
+  bottomTextAcc: {
+    paddingBottom: 5,
+  },
+  bottomTextOr: {
+    paddingBottom: 25,
+  },
+  higlightTextReg: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+  higlightTextGoogle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingBottom: 25,
+  },
 })
   

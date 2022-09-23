@@ -52,7 +52,8 @@ export default class RegisterInfo extends Component {
             <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
             
             <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => {
-                this.state.connection.tryRegister(this.state.email.getText(), this.state.password.getText())
+                this.state.connection.tryRegister(this.state.email.getText(), this.state.password.getText());
+                this.props.nav.navigate('RegisterInfo');
             }} >
             Sign up
             </Button>
