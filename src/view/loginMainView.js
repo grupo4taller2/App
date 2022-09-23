@@ -9,7 +9,6 @@ import GoogleLogin from './components/googleSignin';
 import LoginInfo from './loginInputView';
 
 
-
 export default class Login extends Component{
 
     constructor(props){

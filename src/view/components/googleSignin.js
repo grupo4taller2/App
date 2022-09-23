@@ -17,6 +17,7 @@ export default function GoogleLogin(props){
         console.log(response);
       }
     }, [response]);
+
     return (<Button style={[props.singInButton]} contentStyle={props.signInButtonContent} labelStyle={props.buttonText} uppercase={false} onPress={() => promptAsync()}>
       Google
     </Button>)
