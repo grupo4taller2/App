@@ -26,7 +26,9 @@
     "react-native": "0.69.5",
     "react-native-dotenv": "^3.3.1",
     "react-native-elements": "^3.4.2",
-    "react-native-paper": "^5.0.0-rc.5"
+    "react-native-paper": "^5.0.0-rc.5",
+    "expo-auth-session": "~3.7.1",
+    "expo-random": "~12.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",

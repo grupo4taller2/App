@@ -5,36 +5,10 @@ import { Button } from 'react-native-paper';
 import InfoInput from '../controler/infoInput';
 import Outward from '../controler/outward';
 import { useAuthentication } from '../utils/hooks/useAuthentication';
+import GoogleLogin from './components/googleSignin';
 import LoginInfo from './loginInputView';
 
 
-function GoogleLogin({succesfulLogIn, failedLogIn}){
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  function handleSignIn(){
-    signInWithPopup(auth, provider). 
-    then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-
-      const user = result.user;
-
-      console.log("Signed in with google");
-
-      succesfulLogIn();
-
-    }).catch ((error) => {
-      console.log(Error);
-      failedLogIn();
-    })
-  }
-
-  return (<Button style={[style.singInButton]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={handleSignIn}>
-    Google
-  </Button>)
-
-}
 
 export default class Login extends Component{
 
@@ -97,6 +71,7 @@ export default class Login extends Component{
           <Button style={[style.singInButton, backgroundColorChange]} contentStyle={style.signInButtonContent} labelStyle={style.buttonText} uppercase={false} onPress={this.handleLoginAttemp}>
             {this.state.signInText}
           </Button>
+          <GoogleLogin style={style}/>
         </React.Fragment>);
     }
 }
