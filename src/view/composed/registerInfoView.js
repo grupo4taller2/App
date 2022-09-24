@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
+import LoginButton from '../components/loginButton';
 import RegisterInput from './registerInputView';
 
 export default class RegisterInfo extends Component {
@@ -11,8 +12,6 @@ export default class RegisterInfo extends Component {
         super(props)
 
         this.state = {};
-
-        this.state.connection = new Outward();
 
         this.state.username = new InfoInput(null, {
             label: "Username",
@@ -44,30 +43,36 @@ export default class RegisterInfo extends Component {
             mode: "outlined",
             style: style.inputBox
         });
+
+        this.failedRegister = this.failedRegister.bind(this);
+    }
+
+    failedRegister(){
+        this.state.username.fail();
+        this.state.password.fail();
+        this.state.repeatPassword.fail();
+        this.state.email.fail();
+        this.state.wallet.fail();
+        this.state.phone.fail();
+        this.setState(this.state);
     }
 
     render(){
         return (
         <React.Fragment>
             <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
-            
-            <Button style={[style.singUpButton]} contentStyle={style.signUpButtonContent} labelStyle={style.buttonText}  onPress={() => {
-                this.state.connection.tryRegister(this.state.email.getText(), this.state.password.getText());
-                this.props.nav.navigate('RegisterInfo');
-            }} >
-            Sign up
-            </Button>
+            <LoginButton text={"Sign up"} style={style} register={true} failedCallback={this.failedRegister} password={this.state.password} email={this.state.email}/>
         </React.Fragment>);
     }
 }
 
 const style = StyleSheet.create({
-    singUpButton: {
+    button: {
         backgroundColor: '#37a0bd',
         borderRadius: 100,
         marginBottom: 30,
     },
-    signUpButtonContent: {
+    buttonContent: {
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',

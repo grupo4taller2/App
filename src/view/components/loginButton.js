@@ -16,7 +16,18 @@ export default function LoginButton(props){
 
     }
 
-    return(<Button style={[props.style.singInButton]} contentStyle={props.style.signInButtonContent} labelStyle={props.style.buttonText} uppercase={false} onPress={attempLogIn}>
-        "Sign in"
+    const attempRegister = async () => {
+        const credentials = await connection.tryRegister(props.email, props.password);
+        
+        if(credentials.result){
+            signIn(credentials.credential);
+        }else{
+            props.failedCallback();
+        }
+    }
+
+    return(<Button style={[props.style.button]} contentStyle={props.style.buttonContent} 
+                    labelStyle={props.style.buttonText} uppercase={false} onPress={props.register ? attempRegister : attempLogIn}>
+        {props.text}
       </Button>)
 }

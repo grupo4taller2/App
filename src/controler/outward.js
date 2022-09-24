@@ -35,14 +35,16 @@ export default class Outward{
     }
 
     async tryRegister(usuario, contrasenia){
+        let user = usuario.getText();
+        let password = contrasenia.getText();
         const auth = getAuth();
-        console.log(usuario);
-        console.log(contrasenia);
         try {
-            let result = await createUserWithEmailAndPassword(auth, usuario, contrasenia);
+            let result = await createUserWithEmailAndPassword(auth, user, password);
             console.log("Creaste un usuario!!!");
+            return {credential: result, result: true};
           } catch (error) {
             console.log(error)
+            return {}
         }
     }
     

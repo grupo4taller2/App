@@ -46,17 +46,17 @@ export default class Login extends Component{
         return (
         <React.Fragment>
           <LoginInfo emailText={this.state.email} passwordText={this.state.password}/>
-          <LoginButton style={style} failedCallback={this.handleFailedLogin} password={this.state.password} email={this.state.email}/>
+          <LoginButton text={"Sign in"} style={style} failedCallback={this.handleFailedLogin} password={this.state.password} email={this.state.email}/>
         </React.Fragment>);
     }
 }
 
 const style = StyleSheet.create({
-  singInButton: {
+  button: {
     backgroundColor: '#37a0bd',
     borderRadius: 100,
 },
-signInButtonContent: {
+buttonContent: {
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',

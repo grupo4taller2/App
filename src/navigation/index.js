@@ -1,13 +1,14 @@
 import React from 'react';
 import UserStack from './userStack';
 import AuthStack from './authStack';
-import { UserContext } from '../view/components/context';
-import MainScreen from '../view/screens/MainScreen';
+import { UserContext, useUserContext } from '../view/components/context';
 
 export default function RootNavigation() {
+  const context = useUserContext();
+
   return (
     <React.Fragment>
-      <AuthStack />
+      {context.userState.user ? <UserStack /> : <AuthStack />}
     </React.Fragment>) 
 
 }
