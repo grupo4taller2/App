@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 
 import { initializeApp } from "firebase/app";
-
+import {APIKEY, AUTHDOMAIN, PROJECTID, BUCKET, MESSSENDER, APPID} from '@env';
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -11,17 +11,17 @@ import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyC0T3fmBUgFQlRqyXjqZI9_53cRXvxyZSw",
+  apiKey: APIKEY,
 
-  authDomain: "fifi-uber-4.firebaseapp.com",
+  authDomain: AUTHDOMAIN,
 
-  projectId: "fifi-uber-4",
+  projectId: PROJECTID,
 
-  storageBucket: "fifi-uber-4.appspot.com",
+  storageBucket: BUCKET,
 
-  messagingSenderId: "91621333154",
+  messagingSenderId: MESSSENDER,
 
-  appId: "1:91621333154:web:d22e23172d9df59cf71ffb"
+  appId: APPID
 
 };
 

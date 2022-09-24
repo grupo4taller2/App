@@ -3,19 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import TextField from './textField';
 
 
-export default class LoginInfo extends Component{
+export default function LoginInfo(props){
 
-    constructor(props){
-        super(props);
-    }
-
-    render(){
         return (<View style={inputViewStyle}>
-                    <TextField text={this.props.emailText} />
-                    <TextField text={this.props.passwordText}/>
+                    <TextField text={props.emailText} />
+                    <TextField text={props.passwordText}/>
                 </View>);
-    }
-}
+                }
 
 
 const inputViewStyle = StyleSheet.create({

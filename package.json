@@ -1,12 +1,11 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "test": "jest",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "jest": {
@@ -28,7 +27,10 @@
     "react-native-elements": "^3.4.2",
     "react-native-paper": "^5.0.0-rc.5",
     "expo-auth-session": "~3.7.1",
-    "expo-random": "~12.3.0"
+    "expo-random": "~12.3.0",
+    "expo-splash-screen": "~0.16.2",
+    "react-dom": "18.0.0",
+    "react-native-web": "~0.18.7"
   },
   "devDependencies": {
     "@babel/core": "^7.19.0",

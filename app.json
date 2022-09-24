@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "https",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,7 +21,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "FIFI.UBA"
     },
     "android": {
       "adaptiveIcon": {
@@ -39,8 +41,6 @@
         "projectId": "744ef38b-559e-4872-9826-d08cd2d3e8db"
       }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    }
+    "runtimeVersion": "exposdk:46.0.0"
   }
 }

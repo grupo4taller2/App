@@ -1,11 +1,13 @@
 import React from 'react';
-import { useAuthentication } from '../utils/hooks/useAuthentication';
 import UserStack from './userStack';
 import AuthStack from './authStack';
+import { UserContext } from '../view/components/context';
+import MainScreen from '../view/screens/MainScreen';
 
 export default function RootNavigation() {
-  /* const { user } = useAuthentication();
+  return (
+    <React.Fragment>
+      <AuthStack />
+    </React.Fragment>) 
 
-  return user ? <UserStack /> : <AuthStack />;*/
-  return <AuthStack />
 }

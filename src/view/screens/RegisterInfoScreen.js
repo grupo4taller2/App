@@ -2,9 +2,9 @@ import React, { useState, Component } from "react";
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {Text, TextInput, Button, Checkbox } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
-import TextField from "../textField";
+import TextField from "../composed/textField";
 import InfoInput from "../../controler/infoInput";
-import UserTypeCheck from "../registerUserView";
+import UserTypeCheck from "../composed/registerUserView";
 
 
 export default function RegisterInfoScreen({ navigation }) {
@@ -13,7 +13,7 @@ export default function RegisterInfoScreen({ navigation }) {
         
         <View style={style.headerView}>
             <Appbar.Header>
-              <Appbar.BackAction onPress={() => {navigation.navigate('Login')}} />
+              <Appbar.BackAction onPress={() => {navigation.pop()}} />
             </Appbar.Header>
             <Text style={style.instructionText}>
               {"Great! \nyou're almost done"}

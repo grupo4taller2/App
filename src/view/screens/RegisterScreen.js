@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
-import RegisterInfo from "../registerInfoView";
+import RegisterInfo from "../composed/registerInfoView";
 import { Appbar } from 'react-native-paper';
 
 
@@ -11,7 +11,7 @@ export default function RegisterScreen({ navigation }) {
         
         <View style={style.headerView}>
             <Appbar.Header>
-              <Appbar.BackAction onPress={() => {navigation.navigate('Login')}} />
+              <Appbar.BackAction onPress={() => {navigation.pop()}} />
             </Appbar.Header>
             <Text style={style.instructionText}>
               {'Let\'s start off \nby getting you set up'}

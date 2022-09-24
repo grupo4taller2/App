@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import InfoInput from '../controler/infoInput';
-import Outward from '../controler/outward';
+import InfoInput from '../../controler/infoInput';
+import Outward from '../../controler/outward';
 import RegisterInput from './registerInputView';
 
 export default class RegisterInfo extends Component {

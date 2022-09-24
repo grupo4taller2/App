@@ -1,26 +1,47 @@
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import * as Google from 'expo-auth-session/providers/google'
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import {WEBKEY, ANDROIDKEY} from '@env'
+import { UserContext, useUserContext } from './context';
+
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function GoogleLogin(props){
-  
-  
+
+    const {signIn} = useUserContext();
+
     const [request, response, promptAsync] = Google.useAuthRequest({
-      expoClientId: '91621333154-2cccsnv6n0bo4iv18rokuur856oo6sdi.apps.googleusercontent.com'
+      androidClientId: ANDROIDKEY,
+      expoClientId: WEBKEY,
+      webClientId: WEBKEY
+    },
+    {
+      useProxy: true
     })
     React.useEffect(() => {
       
       if (response?.type === "success") {
-        console.log(response);
+        signIn(response);
+        
       }
     }, [response]);
 
-    return (<Button style={[props.singInButton]} contentStyle={props.signInButtonContent} labelStyle={props.buttonText} uppercase={false} onPress={() => promptAsync()}>
-      Google
-    </Button>)
-  
+    return (
+    <TouchableOpacity activeOpacity={0.6} onPress={() => {promptAsync()}}>
+        <Text style={style.higlightTextGoogle}> Sign in with Google</Text>
+    </TouchableOpacity>
+    )
+    
   }
   
+
+const style = StyleSheet.create({
+  higlightTextGoogle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingBottom: 25,
+  }
+})

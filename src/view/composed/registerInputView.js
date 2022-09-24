@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
-import Outward from '../controler/outward';
+import Outward from '../../controler/outward';
 import TextField from './textField';
 
 

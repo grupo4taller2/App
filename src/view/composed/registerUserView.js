@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
-import Outward from '../controler/outward';
+import Outward from '../../controler/outward';
 import TextField from './textField';
-import InfoInput from '../controler/infoInput';
-import UserDriverBox from '../model/userDriverBox';
+import InfoInput from '../../controler/infoInput';
+import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
 
 

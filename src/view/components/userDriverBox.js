@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
-import Outward from '../controler/outward';
-import InfoInput from '../controler/infoInput';
+import Outward from '../../controler/outward';
+import InfoInput from '../../controler/infoInput';
 
 
 export default function UserDriverBox() {

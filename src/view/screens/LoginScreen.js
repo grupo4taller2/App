@@ -1,36 +1,31 @@
 import React, { useState } from "react";
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native-paper';
-import Login from "../loginMainView";
+import {Appbar, Text} from 'react-native-paper';
+import GoogleLogin from "../components/googleSignin";
+import Greet from "../components/greet";
+import Login from "../composed/loginMainView";
+import {UserContext} from '../components/context'
+import { ROUTES } from "../../navigation/authStack";
 
 
 export default function LoginScreen({ navigation }) {
     return (
       <View style={style.loginMainView}>
-  
-        <View style={style.greetView}>
-            <Text style={style.mainGreet}>
-                Hello Again!
-            </Text>
-            <Text style={style.secondaryGreet}>
-                Need a Lift?
-            </Text>
-        </View>
-
+        
+        
+        <Greet mainText={"Hello Again!"} secondaryText={"Need a Lift?"} />
         <Login />
         
         <View style={style.registerNow}>
             <Text style={style.bottomTextAcc}> Don't have an account?</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('Register')} >
+            <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.push(ROUTES.RegisterFirstView)} >
               <Text style={style.higlightTextReg}> {"Register Now"} </Text>
             </TouchableOpacity>
         </View>
 
         <View style={style.bottomTextView}>
             <Text style={style.bottomTextOr}> or</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => {/* firabase function for google log in */}}>
-              <Text style={style.higlightTextGoogle}> Sign in with Google </Text>
-            </TouchableOpacity>
+            <GoogleLogin />
         </View>
 
       </View>
@@ -38,27 +33,11 @@ export default function LoginScreen({ navigation }) {
   }
 
 const style = StyleSheet.create({
-  mainGreet: {
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 34,
-},
   loginMainView: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  greetView: {
-    flex: 1,
-    paddingTop: 100
-  },
-  secondaryGreet: {
-    textAlign: 'center',
-    color: 'black',
-    fontWeight: '300',
-    fontSize: 24,
   },
   registerNow: {
     flex: 0.7,
@@ -80,11 +59,6 @@ const style = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     paddingBottom: 5,
-  },
-  higlightTextGoogle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    paddingBottom: 25,
   },
 })
   
