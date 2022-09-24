@@ -5,12 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "https",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "originalFullName": "@taller4fiuba/App",
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/744ef38b-559e-4872-9826-d08cd2d3e8db"
@@ -19,13 +21,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "FIFI.UBA"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "package": "FIFI.UBA"
     },
     "web": {
@@ -37,8 +41,6 @@
         "projectId": "744ef38b-559e-4872-9826-d08cd2d3e8db"
       }
     },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
-    }
+    "runtimeVersion": "exposdk:46.0.0"
   }
 }

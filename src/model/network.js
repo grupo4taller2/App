@@ -1,3 +1,5 @@
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 const GET = "GET"
 const CONTENT = 'application/json'
 
@@ -33,16 +35,21 @@ export default class Network{
 
     }
 
-    async tryLogin(mainRoute, path, credentials){
-        let response = await fetch(mainRoute + path + credentials.username,
-            {
-                method: GET
-            }
-            ).then(async (response) => ({result: response.ok, answer: await response.json()}))
-            .finally((response) => response)
-            .catch((why) => ({result: false, reason: why}))
+    async tryLogin(credentials){
 
-        return response
+        const auth = getAuth();
+
+        if (credentials.email === '' || credentials.password === '') {
+            return 'Invalid log in credentials'
+        }
+
+        try {
+            let credencial = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
+            return {credential: credencial, result: true};
+        } catch (error) {
+            console.log(error);
+            return {}
+        }
 
     }
 

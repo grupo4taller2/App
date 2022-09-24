@@ -1,12 +1,37 @@
-import { View } from "react-native";
-import { Provider, Text } from "react-native-paper";
-import LoginView from "./src/view/LoginView";
+import React, { useReducer } from 'react';
+import './src/config/firebase';
+import RootNavigation from './src/navigation';
+import { UserContext } from './src/view/components/context';
+
+
+const initialState = () => {
+  return {
+    user: null
+  }
+};
+
+const reducer = (state=initialState(), action = {}) => {
+  return action
+}
 
 
 export default function App() {
+
+  const [userState, dispatch] = useReducer(reducer, reducer());
+
+
+  const authState = React.useMemo(() => {
+    return ({
+      userState,
+      signIn: (responseToken) => {
+          console.log("Pase por aca");
+          dispatch({...responseToken, user: true})
+      }
+    })
+  })
   return (
-    <Provider>
-      <LoginView />
-    </Provider>    
+    <UserContext.Provider value={authState} >
+      <RootNavigation />
+    </UserContext.Provider>
   );
 }
