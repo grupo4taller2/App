@@ -27,7 +27,6 @@ export default class Outward{
 
     tryLogin(usuario, contrasenia){
         let credentials = {};
-
         usuario.addUserTo(credentials);
         contrasenia.addPasswordTo(credentials);
 

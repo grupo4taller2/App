@@ -5,6 +5,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import {WEBKEY, ANDROIDKEY} from '@env'
 import { UserContext, useUserContext } from './context';
+import { getAuth } from 'firebase/auth';
 
 
 WebBrowser.maybeCompleteAuthSession();
