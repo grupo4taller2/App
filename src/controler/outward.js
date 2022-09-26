@@ -37,6 +37,11 @@ export default class Outward{
         let user = usuario.getText();
         let password = contrasenia.getText();
         const auth = getAuth();
+
+        if (user === '' || password === ''){
+            return {};
+        }
+
         try {
             let result = await createUserWithEmailAndPassword(auth, user, password);
             return {credential: result, result: true};
