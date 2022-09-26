@@ -63,7 +63,7 @@ export default class RegisterInfo extends Component {
     render(){
         const callBack = createStatusChanger(register,
                                             this.connection,
-                                            {email: this.state.username,
+                                            {email: this.state.email,
                                             password: this.state.password},
                                             this.failedRegister)
 

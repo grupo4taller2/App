@@ -39,7 +39,6 @@ export default class Outward{
         const auth = getAuth();
         try {
             let result = await createUserWithEmailAndPassword(auth, user, password);
-            console.log("Creaste un usuario!!!");
             return {credential: result, result: true};
           } catch (error) {
             console.log(error)
