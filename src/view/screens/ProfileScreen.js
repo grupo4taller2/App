@@ -26,6 +26,11 @@ export default function Profile(){
                     <Text>Hello</Text>
                 </Surface>
                 </View>
+                <View style={style.creditView}>
+                    <Surface style={style.CreditSurface} elevation={5}>
+                        <Text>Hello</Text>
+                    </Surface>
+                </View>
             </View>
             <View style={style.privateOptions}>
                 <Text>Cabify things</Text>
@@ -54,10 +59,14 @@ const style = StyleSheet.create(
             borderWidth: 1,
         },
         OptionsView: {
+            flex: 1/2,
             flexDirection: "row",
             alignItems: "flex-start",
             justifyContent: "flex-start",
             padding: 10
+        },
+        creditView: {
+            flex: 1/2
         },
         privateOptions: {
             flex: 0.5,
@@ -83,13 +92,21 @@ const style = StyleSheet.create(
         },
         OptionSurface: {
             padding: 8,
+            flex: 1/3,
             minHeight: 100,
-            minWidth: 100,
             margin: 12,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: "#eaeaba"
           },
+        CreditSurface: {
+            flex: 1,
+            flexDirection: "row",
+            padding: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: "#eaeaba"
+        }
 
     }
 )
