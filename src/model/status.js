@@ -23,7 +23,6 @@ export async function register(connection, info, failCall, context){
 }
 
 export async function signOut(connection, info, failCall, context){
-    const auth = getAuth();
     try{
         context.signOut();
     }catch{
@@ -39,5 +38,15 @@ export function createStatusChanger(call, connection, info, failCall){
     };
 
     return wrapper
+}
 
+export function createStatusChangerWithChecks(call, connection, info, failCall, checkCall){
+
+    const wrapper = (context) => {
+        if (checkCall()){
+            call(connection, info, failCall, context);
+        }
+    };
+
+    return wrapper
 }

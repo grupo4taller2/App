@@ -57,6 +57,10 @@ export default class InfoInput{
 
     }
 
+    createCheck(check, failCall){
+        return this.text.createCheck(check, failCall);
+    }
+
     addUserTo(credentials){
         credentials.email = this.getText();
     }

@@ -47,6 +47,26 @@ export default class ConfirmableTextInput{
         this.callBack(this);
     }
 
+    getCheck(){
+        return (
+            () => {
+                const areEqual = this.check();
+
+                if(!areEqual){
+                    return false;
+                }
+
+                const okLength = this.isOk();
+
+                if(!okLength){
+                    this.mainText.fail();
+                    this.secondaryText.fail();
+                }
+
+                return areEqual && okLength;
+            }
+        )
+    }
 
     makeWidget(widgetCreator){
         return this.mainText.makeWidget(widgetCreator);
@@ -85,15 +105,24 @@ export default class ConfirmableTextInput{
     }
 
     compareTexts(){
-        let mainText = this.mainText.getText();
-        let secondaryText = this.secondaryText.getText();
-        if(mainText !== secondaryText){
+        
+        if(!this.check()){
             this.fail()
         }else{
             this.mainText.unfail();
             this.secondaryText.unfail();
-        }
+        }        
+    }
 
+    check(){
+        let mainText = this.mainText.getText();
+        let secondaryText = this.secondaryText.getText();
+        return mainText === secondaryText;
+    }
+
+    isOk(){
+        const length = this.mainText.length;
         
+        return length > 8 && length < 16;
     }
 }
