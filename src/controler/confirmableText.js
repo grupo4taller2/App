@@ -121,7 +121,7 @@ export default class ConfirmableTextInput{
     }
 
     isOk(){
-        const length = this.mainText.length;
+        const length = this.mainText.getText().length;
         
         return length > 8 && length < 16;
     }
