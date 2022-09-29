@@ -38,6 +38,15 @@ export default class TextField extends Component{
 
         let info = this.state.text.getInfo();
 
+        if (this.props.disabled) {
+            return (<TextInput
+                {...info} 
+                {...style.textField}
+                disabled={true}
+                right={this.getHideWidget()}
+                onChangeText={this.state.text.handleTextChange} />)
+        }
+
         return (<TextInput
             {...info} 
             {...style.textField}
@@ -51,6 +60,6 @@ const style = {
     textField: {
         selectionColor: '#000000',
         activeOutlineColor: '#37a0bd',
-        theme: {roundness: 30}
+        theme: {roundness: 30},
     }
 }

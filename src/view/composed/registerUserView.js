@@ -7,49 +7,44 @@ import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
 
 
-export default class UserTypeCheck extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {};
-
-        this.state.location = new InfoInput(null, {
-            label: "Default Location",
-            mode: "outlined",
-            style: styles.inputBox
-        });
-    }
-    
-    render() {
+export default function UserTypeCheck() {
+    const location = new InfoInput(null, {
+        label: "Default Location",
+        mode: "outlined",
+        style: styles.inputBox
+    });
+    return(
         <React.Fragment>
             <View style={styles.infoView}>
+
                 <View style={styles.locationInputView} >
-                    <TextField text={this.props.location} />
+                    <TextField text={location} />
                 </View>
 
-            
                 <UserDriverBox/>
+                
             </View>
         </React.Fragment>
-    }
+    )
 }
 
 
 const styles = StyleSheet.create({
   inputBox: {
-      flex: 1,
-      marginBottom: 100,
-      minWidth: 350,
-      maxHeight: 550,
-      justifyContent: 'flex-start',
-  },
+    maxHeight: 60,
+    margin: 10,
+    paddingLeft: 8,
+  },  
   locationInputView: {
       flex: 1,
+      marginBottom: 15,
+      justifyContent: 'center',
+      minWidth: 350,
+      maxHeight: 150,
+      paddingLeft: 30,
+      paddingRight: 30,
   },
   infoView: {
-      flex: 1,
-      backgroundColor: '#AA44DD',
-      justifyContent: 'center',
-      alignContent: 'center'
+      flex: 4,      
   },
 })
