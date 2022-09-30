@@ -8,6 +8,7 @@ jobs:
   build:
     name: Install and build
     runs-on: ubuntu-latest
+    environment: mainEnv
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -20,8 +21,6 @@ jobs:
           expo-version: 5.x
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: Create .env file
-        run: echo "${{ environments.ENV_VARIABLES }}" > .env
       - name: Install dependencies
         run: npm ci
       - name: Build on EAS
