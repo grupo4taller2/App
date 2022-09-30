@@ -19,7 +19,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 16.x
-
+    - name: Create .env file
+      run: echo "${{ environments.ENV_VARIABLES }}" > .env
     - name: npm install
       run: |
         npm install
