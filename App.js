@@ -3,6 +3,7 @@ import React, { useReducer } from 'react';
 import './src/config/firebase';
 import RootNavigation from './src/navigation';
 import { UserContext } from './src/view/components/context';
+import HomeScreen from './src/view/screens/HomeScreen';
 
 
 const initialState = () => {
