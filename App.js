@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react';
 import './src/config/firebase';
 import RootNavigation from './src/navigation';
+import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
 import Profile from './src/view/screens/ProfileScreen';
 
@@ -32,7 +33,7 @@ export default function App() {
   })
   return (
     <UserContext.Provider value={authState} >
-      <Profile />
+      <UserStack />
     </UserContext.Provider>
   );
 }
