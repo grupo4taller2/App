@@ -1,9 +1,9 @@
+import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
 import RootNavigation from './src/navigation';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
-import Profile from './src/view/screens/ProfileScreen';
 
 
 const initialState = () => {
@@ -26,8 +26,12 @@ export default function App() {
     return ({
       userState,
       signIn: (responseToken) => {
-          console.log("Pase por aca");
           dispatch({...responseToken, user: true})
+      },
+      signOut: async () => {
+        const auth = getAuth();
+        const signed_auth = await signOut(auth);
+        dispatch({user: false})
       }
     })
   })

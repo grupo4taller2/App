@@ -4,8 +4,7 @@ import {Appbar, Text} from 'react-native-paper';
 import GoogleLogin from "../components/googleSignin";
 import Greet from "../components/greet";
 import Login from "../composed/loginMainView";
-import {UserContext} from '../components/context'
-import { ROUTES } from "../../navigation/authStack";
+import { ROUTES } from "../../navigation/routes";
 
 
 export default function LoginScreen({ navigation }) {

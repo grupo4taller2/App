@@ -20,7 +20,7 @@ export default function RegisterInfoScreen({ navigation }) {
             </Text>
         </View>
         
-        <UserTypeCheck location={style.locationInput}/>
+        <UserTypeCheck />
 
       </View>
     )
@@ -30,23 +30,17 @@ const style = StyleSheet.create({
   registerInfoMainView: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   headerView: {
-    flex: 1.5,
+    flex: .95,
     flexDirection: 'row',
   },
   instructionText: {
     color: 'black',
     fontWeight: '500',
     fontSize: 26,
-    paddingTop: 75,
-  },
-  locationInput: {
-    flex: 4,
-    marginBottom: 100,
-    minWidth: 350,
-    maxHeight: 550,
-    justifyContent: 'flex-start',
+    paddingTop: 60,
   },
 })
   

@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
+import ConfirmableTextInput from '../../controler/confirmableText';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
-import LoginButton from '../components/loginButton';
+import { createStatusChanger, createStatusChangerWithChecks, register } from '../../model/status';
+import { EMAILCHECK, NUMBERCHECK, USERCHECK } from '../../model/textInput';
+import StatusButton from '../components/loginButton';
 import RegisterInput from './registerInputView';
 
 export default class RegisterInfo extends Component {
@@ -13,21 +16,20 @@ export default class RegisterInfo extends Component {
 
         this.state = {};
 
+        this.connection = new Outward();
+
         this.state.username = new InfoInput(null, {
             label: "Username",
             mode: "outlined",
             style: style.inputBox
         });
-        this.state.password = new InfoInput(true, {
+
+        this.state.password = new ConfirmableTextInput(true, {
             label: "Password",
             mode: "outlined",
-            style: style.inputBox
-        });
-        this.state.repeatPassword = new InfoInput(true, {
-            label: "Repeat Password",
-            mode: "outlined",
-            style: style.inputBox
-        });
+            style: style.inputBox    
+        })
+
         this.state.email = new InfoInput(null, {
             label: "E-mail",
             mode: "outlined",
@@ -45,23 +47,68 @@ export default class RegisterInfo extends Component {
         });
 
         this.failedRegister = this.failedRegister.bind(this);
+        this.handlePassWordChange = this.handlePassWordChange.bind(this);
+
+        this.state.password.setNotifyCallback(this.handlePassWordChange);
     }
 
     failedRegister(){
         this.state.username.fail();
-        this.state.password.fail();
-        this.state.repeatPassword.fail();
+        this.state.password.fail()
         this.state.email.fail();
         this.state.wallet.fail();
         this.state.phone.fail();
         this.setState(this.state);
     }
 
+    failedUsername = () => {
+        this.setState(this.state);
+    }
+
+    failedEmail = () => {
+        this.setState(this.state);
+    }
+
+    failedPhone = () => {
+        this.setState(this.state);
+    }
+
+    handlePassWordChange(newPassword){
+        const password = newPassword;
+
+        this.setState({password})
+    }
+
+    bundleChecks(){
+        const userCheck = this.state.username.createCheck(USERCHECK, this.failedUsername);
+        const emailCheck = this.state.email.createCheck(EMAILCHECK, this.failedEmail);
+        const phoneCheck = this.state.phone.createCheck(NUMBERCHECK, this.failedPhone);
+
+        const passwordCheck = this.state.password.getCheck();
+
+        return (
+            () => {
+                const user = userCheck();
+                const email = emailCheck();
+                const phone = phoneCheck();
+                const password = passwordCheck();
+                return (user && email && phone && password)
+            }
+        )
+    }
+
     render(){
+        const callBack = createStatusChangerWithChecks(register,
+                                            this.connection,
+                                            {email: this.state.email,
+                                            password: this.state.password},
+                                            this.failedRegister,
+                                            this.bundleChecks())
+        
         return (
         <React.Fragment>
-            <RegisterInput userText={this.state.username} passwordText={this.state.password} repeatPasswordText={this.state.repeatPassword} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
-            <LoginButton text={"Sign up"} style={style} register={true} failedCallback={this.failedRegister} password={this.state.password} email={this.state.email}/>
+            <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
+            <StatusButton text={"Sign up"} style={style} call={callBack}/>
         </React.Fragment>);
     }
 }

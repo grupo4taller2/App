@@ -4,9 +4,10 @@ import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
+import { createStatusChanger, signIn } from '../../model/status';
 import { UserContext } from '../components/context';
 import GoogleLogin from '../components/googleSignin';
-import LoginButton from '../components/loginButton';
+import StatusButton from '../components/loginButton';
 import LoginInfo from './loginInputView';
 
 
@@ -16,7 +17,7 @@ export default class Login extends Component{
         super(props)
 
         this.state = {};
-
+        this.connection = new Outward();
         this.state.email = new InfoInput(null, {
             label: "E-mail",
             mode: "outlined",
@@ -41,12 +42,18 @@ export default class Login extends Component{
 
     render(){
 
-        let backgroundColorChange = this.state.signInText === 'Succesful' ? {backgroundColor: "#90ee90"} : null
+        const call = createStatusChanger(signIn,
+                                        this.connection,
+                                        {
+                                          email: this.state.email,
+                                          password: this.state.password
+                                        },
+                                        this.handleFailedLogin)
 
         return (
         <React.Fragment>
           <LoginInfo emailText={this.state.email} passwordText={this.state.password}/>
-          <LoginButton text={"Sign in"} style={style} failedCallback={this.handleFailedLogin} password={this.state.password} email={this.state.email}/>
+          <StatusButton text={"Sign in"} style={style} call={call}/>
         </React.Fragment>);
     }
 }

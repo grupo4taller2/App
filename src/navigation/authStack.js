@@ -4,17 +4,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RegisterScreen from '../view/screens/RegisterScreen';
 import RegisterInfoScreen from '../view/screens/RegisterInfoScreen';
 import LoginScreen from '../view/screens/LoginScreen';
+import { ROUTES } from './routes';
 
 
 
 export const Stack = createNativeStackNavigator();
 
-export const ROUTES = {
-    LoginMainView: "Login",
-    RegisterFirstView: "Register",
-    RegisterInfoView: "RegisterInfo",
-    MainPage: "Main"
-};
 
 export default function AuthStack() {
   return (

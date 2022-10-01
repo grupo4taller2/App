@@ -1,4 +1,4 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const GET = "GET"
 const CONTENT = 'application/json'
@@ -51,6 +51,10 @@ export default class Network{
             return {}
         }
 
+    }
+
+    async signOut(context){
+        context.signOut();
     }
 
 }

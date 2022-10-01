@@ -8,12 +8,15 @@ jobs:
   build:
     name: Install and build
     runs-on: ubuntu-latest
+    environment: mainEnv
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
           cache: npm
+      - name: create .env file
+        run: echo "${{ secrets.ENV_VARIABLES }}" > .env
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v7
         with:

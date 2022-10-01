@@ -19,6 +19,11 @@ export default class InfoInput{
         this.viewCallback(this);
     }
 
+    unfail(){
+        this.text.unfail();
+        this.viewCallback(this);
+    }
+
     setNotifyCallback = (callback) => {
         this.viewCallback = callback;
     }
@@ -50,6 +55,10 @@ export default class InfoInput{
 
         return this.info;
 
+    }
+
+    createCheck(check, failCall){
+        return this.text.createCheck(check, failCall);
     }
 
     addUserTo(credentials){
