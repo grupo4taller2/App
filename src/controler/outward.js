@@ -27,7 +27,6 @@ export default class Outward{
 
     tryLogin(usuario, contrasenia){
         let credentials = {};
-
         usuario.addUserTo(credentials);
         contrasenia.addPasswordTo(credentials);
 
@@ -38,9 +37,13 @@ export default class Outward{
         let user = usuario.getText();
         let password = contrasenia.getText();
         const auth = getAuth();
+
+        if (user === '' || password === ''){
+            return {};
+        }
+
         try {
             let result = await createUserWithEmailAndPassword(auth, user, password);
-            console.log("Creaste un usuario!!!");
             return {credential: result, result: true};
           } catch (error) {
             console.log(error)
