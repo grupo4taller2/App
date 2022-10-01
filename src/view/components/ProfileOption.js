@@ -3,7 +3,7 @@ import { Avatar, Menu, Surface } from "react-native-paper"
 
 export function ProfileOption(props){
     return (
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={props.callback}>
                 <Surface style={style.optionStyle} elevation={4}>
                     <Menu.Item leadingIcon={props.icon} title={props.text} style={style.optionItem}></Menu.Item>
                     <Avatar.Icon style={style.optionArrow} icon="chevron-right"/>

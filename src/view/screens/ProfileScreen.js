@@ -10,7 +10,7 @@ export default function Profile({navigation}){
         <View style={style.Mainview}>
             <ProfileTopView />
             
-            <ProfileOptionsView />
+            <ProfileOptionsView navigation={navigation}/>
         </View>
     )
 }
@@ -19,7 +19,7 @@ const style = StyleSheet.create(
     {
         Mainview: {
             flex: 1,
-            backgroundColor: "#f0efc0"
+            backgroundColor: "#eaeaba"
             
         }
     }

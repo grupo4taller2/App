@@ -1,8 +1,15 @@
-import { StyleSheet, TouchableNativeFeedback, View } from "react-native"
+import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native"
 import { Avatar, Surface, Text } from "react-native-paper"
+import Constants from "expo-constants";
 
-export default function WalletView(){
+export default function WalletView({navigation}){
     return (
+        <>
+        <SafeAreaView style={[style.PrivateView, {flex: 0.1}]}>
+            <TouchableNativeFeedback onPress={() => navigation.pop()}>
+                <Avatar.Icon style={style.backArrow} size={50} icon="chevron-left" />
+            </TouchableNativeFeedback>
+        </SafeAreaView>
         <View style={style.PrivateView}>
                 <View style={style.OptionsView}>
                     <TouchableNativeFeedback>
@@ -30,6 +37,7 @@ export default function WalletView(){
                     </Surface>
                 </View>
             </View>
+            </>
     )
 }
 
@@ -38,10 +46,12 @@ export default function WalletView(){
 const style = StyleSheet.create(
     {
         PrivateView: {
-            flex: 0.3
+            flex: 0.9,
+            backgroundColor: "#eaeaba",
+            
         },
         OptionsView: {
-            flex: 1/2,
+            flex: 1/5,
             flexDirection: "row",
             alignItems: "flex-start",
             justifyContent: "flex-start"
@@ -65,14 +75,17 @@ const style = StyleSheet.create(
             backgroundColor: "#eaeaba"
         },
         creditView: {
-            flex: 1/3,
-            position: 'absolute',
-            bottom: 0,
+            flex: 1/2,
+            
             alignSelf: 'center'
         },
         nameText: {
             fontSize: 20,
             alignSelf: 'center'
         },
+        backArrow: {
+            backgroundColor: "#eaeaba",
+            marginTop: Constants.statusBarHeight
+        }
     }
 )

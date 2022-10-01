@@ -10,8 +10,8 @@ export default function RegisterScreen({ navigation }) {
       <View style={style.registerMainView}>
         
         <View style={style.headerView}>
-            <Appbar.Header>
-              <Appbar.BackAction onPress={() => {navigation.pop()}} />
+            <Appbar.Header style={{backgroundColor: "#eaeaba"}}>
+              <Appbar.BackAction style={{backgroundColor: "#eaeaba"}} onPress={() => {navigation.pop()}} />
             </Appbar.Header>
             <Text style={style.instructionText}>
               {'Let\'s start off \nby getting you set up'}
@@ -29,11 +29,12 @@ export default function RegisterScreen({ navigation }) {
 const style = StyleSheet.create({
   registerMainView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#eaeaba",
   },
   headerView: {
     flex: 1.5,
     flexDirection: 'row',
+    backgroundColor: "#eaeaba"
   },
   instructionText: {
     color: 'black',

@@ -2,6 +2,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
 import RootNavigation from './src/navigation';
+import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
 
@@ -37,7 +38,7 @@ export default function App() {
   })
   return (
     <UserContext.Provider value={authState} >
-      <UserStack />
+      {userState.user ? <UserStack /> : <AuthStack />}
     </UserContext.Provider>
   );
 }

@@ -6,20 +6,10 @@ import { Avatar, Button, Drawer, List, Menu, Surface, Text } from "react-native-
 import { useUserContext } from '../components/context';
 import { createStatusChanger, signOut } from '../../model/status';
 import Constants from 'expo-constants';
+import { UserNavConstants } from '../../config/userNavConstants';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const context = useUserContext();
-
-  const failedLogOut = () => {
-    console.log("Failed to log out")
-  };
-
-  const callBack = createStatusChanger(
-    signOut, 
-    null,
-    null,
-    failedLogOut
-  )
 
   return (
     <View style={style.mainView}>
@@ -42,7 +32,7 @@ export default function HomeScreen() {
                 <Text>Ride</Text>
             </Surface>
           </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.ProfileScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
                 <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="account" />
                 <Text>Profile</Text>
@@ -85,7 +75,7 @@ export default function HomeScreen() {
         </Surface>
         </TouchableNativeFeedback>
       </View>
-      <StatusButton text={"Sign out"} style={style} call={callBack}/>
+      
     </View>
     )
 }
@@ -156,11 +146,11 @@ export default function HomeScreen() {
     </View>
   </View>
    */
-  
+
 const style = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#eaeaba',
   },
   button: {
     backgroundColor: '#37a0bd',
@@ -194,6 +184,7 @@ const style = StyleSheet.create({
     width: 100,
     height: 80,
     resizeMode: 'contain',
+    backgroundColor: "#eaeaba"
   },
   balanceView: {
     flex: 1,

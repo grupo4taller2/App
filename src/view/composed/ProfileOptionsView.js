@@ -1,13 +1,31 @@
 import { StyleSheet, TouchableNativeFeedback, View } from "react-native"
 import { Avatar, Menu, Surface } from "react-native-paper"
+import { UserNavConstants } from "../../config/userNavConstants";
+import { createStatusChanger } from "../../model/status";
+import { useUserContext } from "../components/context";
 import { ProfileOption } from "../components/ProfileOption"
 
-export default function ProfileOptionsView(){
+export default function ProfileOptionsView({navigation}){
+
+    const {signOut} = useUserContext();
+
+    const failedLogOut = () => {
+        console.log("Failed to log out")
+      };
+    
+      const callBack = createStatusChanger(
+        signOut, 
+        null,
+        null,
+        failedLogOut
+      )
+
+
     return (
         <View style={style.privateOptions}>
                 <ProfileOption icon="forum" text="messages" />
-                <ProfileOption icon="wallet" text="wallet" />
-                <ProfileOption icon="logout" text="Log out" />
+                <ProfileOption icon="wallet" text="wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
+                <ProfileOption icon="logout" text="Log out" callback={callBack}/>
                 <ProfileOption icon="card-account-details" text="Become a driver" />
             </View>
     )
