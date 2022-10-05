@@ -35,7 +35,7 @@ export default function ProfileOptionsView({navigation}){
 const style = StyleSheet.create(
     {
         privateOptions: {
-            flex: 0.6,
+            flex: 0.4,
             alignItems: "center",
             justifyContent: "center"
         },

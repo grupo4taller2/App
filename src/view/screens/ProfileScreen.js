@@ -4,12 +4,13 @@ import Constants from 'expo-constants';
 import ProfileTopView from "../composed/profileTopView";
 import WalletView from "../composed/walletView";
 import ProfileOptionsView from "../composed/ProfileOptionsView";
+import ProfileInfoView from "../composed/profileInfoView";
 
 export default function Profile({navigation}){
     return (
         <View style={style.Mainview}>
             <ProfileTopView />
-            
+            <ProfileInfoView />
             <ProfileOptionsView navigation={navigation}/>
         </View>
     )

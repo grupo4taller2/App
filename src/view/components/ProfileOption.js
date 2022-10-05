@@ -14,7 +14,7 @@ export function ProfileOption(props){
 
 const style = StyleSheet.create({
     optionStyle: {
-        flex: 0.2,
+        flex: 0.25,
         minWidth: 350,
         margin: 5,
         backgroundColor: "#eaeaba"

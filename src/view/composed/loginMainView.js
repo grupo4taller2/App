@@ -21,7 +21,7 @@ export default class Login extends Component{
         this.state.email = new InfoInput(null, {
             label: "E-mail",
             mode: "outlined",
-            style: style.inputBox
+            style: [style.inputBox]
           });
 
         this.state.password = new InfoInput(true, {
