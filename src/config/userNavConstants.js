@@ -1,5 +1,6 @@
 export const UserNavConstants = {
     HomeScreen: "Home",
     ProfileScreen: "Profile",
-    WalletView: "Wallet"
+    WalletView: "Wallet",
+    TripScreen: "Trip"
 }

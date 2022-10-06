@@ -22,12 +22,20 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "FIFI.UBA"
+      "bundleIdentifier": "FIFI.UBA",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDCmZOjM-xds5wQ-bfSGeIrR37lCaXdyGI"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCDo_xTUAPTROSCNr70he8YLJxs1F1upkA"
+        }
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "FIFI.UBA"

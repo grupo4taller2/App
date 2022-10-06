@@ -26,7 +26,7 @@ export default function HomeScreen({navigation}) {
         <Text style={style.greeting}>Good morning, John</Text>
       </View>
       <View style={style.buttonsView}>
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.TripScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
                 <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="car" />
                 <Text>Ride</Text>
