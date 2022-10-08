@@ -83,7 +83,7 @@ export default function UserDriverBox() {
 
         <View style={styles.buttonView}>
             <Button style={styles.finishButton} contentStyle={styles.finishButtonContent} 
-                        labelStyle={styles.finishButtonText} onPress={()=>{console.log('submission')}}>
+                        labelStyle={styles.finishButtonText} disabled={!checkedLeft && !checkedRight} onPress={()=>{console.log('submission')}}>
                 Finish Sign up
             </Button>
         </View>

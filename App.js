@@ -5,6 +5,8 @@ import RootNavigation from './src/navigation';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
+import RegisterInfoScreen from './src/view/screens/RegisterInfoScreen';
+import TripScreen from './src/view/screens/TripScreen';
 
 
 const initialState = () => {
@@ -36,6 +38,7 @@ export default function App() {
       }
     })
   })
+
   return (
     <UserContext.Provider value={authState} >
       {userState.user ? <UserStack /> : <AuthStack />}
