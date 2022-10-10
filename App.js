@@ -29,7 +29,7 @@ export default function App() {
     return ({
       userState,
       signIn: (responseToken) => {
-          dispatch({...responseToken, user: true})
+          dispatch({token: responseToken._tokenResponse, user: responseToken.user})
       },
       signOut: async () => {
         const auth = getAuth();

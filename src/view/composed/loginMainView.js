@@ -1,7 +1,7 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
 import { createStatusChanger, signIn } from '../../model/status';
@@ -30,13 +30,16 @@ export default class Login extends Component{
             style: style.inputBox
           });
 
+          this.state.error = null;
+
         
         this.handleFailedLogin = this.handleFailedLogin.bind(this);
     }
 
-    handleFailedLogin(){
+    handleFailedLogin(error=null){
         this.state.email.fail();
         this.state.password.fail();
+        this.state.error = error;
         this.setState(this.state);
     }
 
@@ -52,6 +55,7 @@ export default class Login extends Component{
 
         return (
         <React.Fragment>
+          {this.state.error ? <Text style={style.errorText}>{this.state.error}</Text> : null}
           <LoginInfo emailText={this.state.email} passwordText={this.state.password}/>
           <StatusButton text={"Sign in"} style={style} call={call}/>
         </React.Fragment>);
@@ -80,5 +84,9 @@ inputBox: {
   maxHeight: 60,
   margin: 10,
   paddingLeft: 8,
-},  
+},
+errorText: {
+  fontWeight: "bold",
+  color: "#aa0000"
+}
 })

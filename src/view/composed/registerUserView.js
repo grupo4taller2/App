@@ -7,7 +7,7 @@ import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
 
 
-export default function UserTypeCheck() {
+export default function UserTypeCheck(props) {
     const location = new InfoInput(null, {
         label: "Default Location",
         mode: "outlined",
@@ -21,7 +21,7 @@ export default function UserTypeCheck() {
                     <TextField text={location} />
                 </View>
 
-                <UserDriverBox/>
+                <UserDriverBox all={props} defaultLoc={location}/>
                 
             </View>
         </React.Fragment>

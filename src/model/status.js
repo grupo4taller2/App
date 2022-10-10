@@ -1,5 +1,8 @@
 import { getAuth } from "firebase/auth";
 import { useUserContext } from "../view/components/context";
+import {ROUTE, DRIVERREG, PASSENGERREG} from '@env'
+import axios from "axios";
+import { USERCHECK } from "./textInput";
 
 export async function signIn(connection, info, failCall, context){
     
@@ -8,7 +11,8 @@ export async function signIn(connection, info, failCall, context){
         
         context.signIn(credentials.credential)
     }else{
-        failCall();
+        
+        failCall(credentials.error);
     }
 }
 
@@ -16,10 +20,15 @@ export async function register(connection, info, failCall, context){
     const credentials = await connection.tryRegister(info.email, info.password);
 
     if(credentials.result){
+        await postNewUser(info);
         context.signIn(credentials.credential);
     }else{
         failCall();
     }
+}
+
+export async function callCallback(callback, info=null, failCall=null, context=null){
+    callback()
 }
 
 export async function signOut(connection, info, failCall, context){
@@ -49,4 +58,12 @@ export function createStatusChangerWithChecks(call, connection, info, failCall, 
     };
 
     return wrapper
+}
+
+async function postNewUser(info){
+    console.log("posting");
+    const uri = ROUTE + (info.driver ? DRIVERREG : PASSENGERREG);
+    const result = await axios.post(uri, info.info);
+
+    console.log(result);
 }
