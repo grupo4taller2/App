@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native"
 import { Button, List, Surface, Text, TextInput } from "react-native-paper";
 import InfoInput from "../../controler/infoInput";
+import { useUserContext } from "../components/context";
 import EditButton from "../components/editButton";
 import UserPrivateInfo from "../components/userPrivateInfo";
 import UserPublicInfo from "../components/userPublicInfo";
@@ -27,15 +28,17 @@ Informacion pertinente:
 */
 export default function ProfileInfoView(){
 
+    const {userState} = useUserContext();
+
     const [edit, setEdit] = React.useState(false);
 
-    const [username, setUsername] = React.useState("FranPe498");
+    const [username, setUsername] = React.useState(userState.user.username);
 
-    const [phone, setPhone] = React.useState("1132391637");
+    const [phone, setPhone] = React.useState(userState.user.phone_number ? userState.user.phone_number : userState.user.phoneNumber);
 
-    const [email, setEmail] = React.useState("franciscopere987@gmail.com");
+    const [email, setEmail] = React.useState(userState.user.email);
 
-    const [address, setAddress] = React.useState("Formosa 286");
+    const [address, setAddress] = React.useState(userState.user.preferred_address);
 
     const onEdit = (setCallback) => {
         return edit ? setCallback : (dummy) => {}
@@ -52,11 +55,15 @@ export default function ProfileInfoView(){
         return callback;
     }
 
+    const returnType = (carModel) => {
+        return carModel ? "driver" : "passenger";
+    };
+
     return (<>
             <View style={style.infoContainer}>
                 <View style={style.infoWrapper}>
                     <UserPublicInfo edit={edit} username={username} userCallback={onEdit(setUsername)}
-                                    userType={"passenger"} userTypeEditable={false}/>
+                                    userType={returnType(userState.user.car_model)} userTypeEditable={false}/>
                     <UserPrivateInfo edit={edit} phone={phone} phoneCallback={onEdit(setPhone)}
                                                 email={email} emailCallback={onEdit(setEmail)}
                                                 address={address} addressCallback={onEdit(setAddress)}/>

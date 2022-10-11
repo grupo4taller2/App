@@ -8,7 +8,7 @@ export async function signIn(connection, info, failCall, context){
     
     const credentials = await connection.tryLogin(info.email, info.password);
     if (credentials.result){
-        
+        console.log(credentials.credential);
         context.signIn(credentials.credential)
     }else{
         
@@ -61,9 +61,9 @@ export function createStatusChangerWithChecks(call, connection, info, failCall, 
 }
 
 async function postNewUser(info){
-    console.log("posting");
+    
     const uri = ROUTE + (info.driver ? DRIVERREG : PASSENGERREG);
     const result = await axios.post(uri, info.info);
 
-    console.log(result);
+    
 }

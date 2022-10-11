@@ -23,7 +23,7 @@ export default function ProfileOptionsView({navigation}){
 
     return (
         <View style={style.privateOptions}>
-                <ProfileOption icon="account-search" text="search users" />
+                <ProfileOption icon="account-search" text="search users" callback={() => {console.log("Clicked"); navigation.push(UserNavConstants.UserSearchScreen)}}/>
                 <ProfileOption icon="wallet" text="wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
                 <ProfileOption icon="logout" text="Log out" callback={callBack}/>
                 <ProfileOption icon="card-account-details" text="Become a driver" />
