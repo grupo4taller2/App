@@ -5,7 +5,7 @@ import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, Sl
 import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, PROVIDER_GOOGLE, Button, IconButton, Snackbar } from "react-native-paper";
 import Geocoder from 'react-native-geocoding';
 import { Location } from 'expo';
-import WalletView from '../composed/walletView';
+import { getCurrentLocation } from '../../controler/getCurrentLocation';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
