@@ -4,7 +4,7 @@ import { Button, Text } from 'react-native-paper';
 import ConfirmableTextInput from '../../controler/confirmableText';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
-import { callCallback, createStatusChanger, createStatusChangerWithChecks, register } from '../../model/status';
+import { callCallback, checkUserFree, createStatusChanger, createStatusChangerWithAsyncChecks, createStatusChangerWithChecks, register } from '../../model/status';
 import { EMAILCHECK, NUMBERCHECK, USERCHECK } from '../../model/textInput';
 import StatusButton from '../components/loginButton';
 import RegisterInput from './registerInputView';
@@ -100,16 +100,30 @@ export default class RegisterInfo extends Component {
         const passwordCheck = this.state.password.getCheck();
 
         return (
-            () => {
+            async () => {
                 let error = null;
-                const user = userCheck();
+                let user = userCheck();
                 if (!user) error="Invalid username";
-                const email = emailCheck();
+                let email = emailCheck();
                 if(!email) error="Invalid E-mail";
                 const phone = phoneCheck();
                 if(!phone) error="Invalid phone";
                 const password = passwordCheck();
                 if(!password) error="Password should be between 8 and 16 characters";
+                const freeUser = await checkUserFree(this.state.username.getText());
+                if(!freeUser) {
+                    error="User already exists";
+                    user = false;
+                    this.state.username.fail();
+                }
+                const freeEmail = await checkUserFree(this.state.email.getText());
+                if(!freeEmail){
+                    error="Mail already registered";
+                    email = false;
+                    this.state.email.fail();
+                }
+
+
 
                 if(error) this.setState({error});
                 return (user && email && phone && password)
@@ -141,7 +155,7 @@ export default class RegisterInfo extends Component {
     }
 
     render(){
-        const callBack = createStatusChangerWithChecks(callCallback,
+        const callBack = createStatusChangerWithAsyncChecks(callCallback,
                                             this.stageChangeForward,
                                             {email: this.state.email,
                                             password: this.state.password},

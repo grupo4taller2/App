@@ -61,6 +61,17 @@ export function createStatusChangerWithChecks(call, connection, info, failCall, 
     return wrapper
 }
 
+export function createStatusChangerWithAsyncChecks(call, connection, info, failCall, checkCall){
+
+    const wrapper = async (context) => {
+        if (await checkCall()){
+            call(connection, info, failCall, context);
+        }
+    };
+
+    return wrapper
+}
+
 export async function updateInfo(newInfo, email, context){
     try{
         const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
@@ -73,8 +84,20 @@ export async function updateInfo(newInfo, email, context){
     }
 }
 
+export async function checkUserFree(user){
+    
+    try{
+        const userResult = await getUser(user);
+        
+        return false;
+    }catch{
+        return true;
+    }
+}
+
 export async function getUser(userOrEmail) {
     const uri = ROUTE + USERS + "/" + userOrEmail;
+    
     const result = await axios.get(uri);
     
     if(!result) console.log("failed: ", uri);

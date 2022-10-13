@@ -15,11 +15,11 @@ async function checkLocationValidity(location) {
     Geocoder.init(geocodingAPIKey);
     try {
         let response = await Geocoder.from(location);
-        /*var location_json = response.results[0].geometry.location;
-        console.log(location_json);*/
+        var location_json = response.results[0].geometry.location;
+        console.log(location_json);
         return true;
     } catch (error) {   // will enter here if location is invalid
-        //console.warn(error);
+        console.warn(error);
         return false;
     }
 }
