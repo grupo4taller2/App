@@ -1,6 +1,7 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
+import { getUser } from './src/model/status';
 import RootNavigation from './src/navigation';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
@@ -28,8 +29,9 @@ export default function App() {
   const authState = React.useMemo(() => {
     return ({
       userState,
-      signIn: (responseToken) => {
-          dispatch({token: responseToken._tokenResponse, user: responseToken.user})
+      signIn: async (responseToken) => {
+          const userInfo = await getUser(responseToken.user.email.toLowerCase());
+          dispatch({token: responseToken._tokenResponse, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {
         const auth = getAuth();
@@ -47,8 +49,9 @@ export default function App() {
             userInfo: userInfo
           })
       },
-      update: (newInfo) => {
-        console.log("Publishing new info to backend", newInfo);
+      update: async () => {
+        const newInfo = await getUser(userState.userInfo.email);
+        dispatch({token: userState.token , user: userState.user, userInfo: newInfo})
       },
       asDriver: (driverInfo) => {
         console.log("Generating a driver!");

@@ -31,15 +31,19 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
+    const riderInfo = userState.userInfo.rider_information;
+    
     const [edit, setEdit] = React.useState(false);
 
-    const [username, setUsername] = React.useState(userState.userInfo.username);
+    const [first_name, setFirstName] = React.useState(userState.userInfo.first_name);
 
-    const [phone, setPhone] = React.useState(userState.userInfo.phone_number ? userState.userInfo.phone_number : userState.user.phoneNumber);
+    const [last_name, setLastName] = React.useState(userState.userInfo.last_name);
+
+    const [phone, setPhone] = React.useState(riderInfo.phone_number ? riderInfo.phone_number : userState.user.phoneNumber);
 
     const [email, setEmail] = React.useState(userState.userInfo.email);
 
-    const [address, setAddress] = React.useState(userState.userInfo.preferred_location_name);
+    const [address, setAddress] = React.useState(riderInfo.preferred_location_name);
 
     const onEdit = (setCallback) => {
         return edit ? setCallback : (dummy) => {}
@@ -49,12 +53,12 @@ export default function ProfileInfoView(){
         const callback = () => {
             if (!new_value) {
                 const newInfo = {
-                    username: username,
+                    first_name: first_name,
+                    last_name: last_name,
                     phone_number: phone,
-                    email: email,
                     preferred_location_name: address
                 }
-                updateInfo(newInfo, context);
+                updateInfo(newInfo, email, context);
             }
             setEdit(new_value)
         }
@@ -69,7 +73,8 @@ export default function ProfileInfoView(){
     return (<>
             <View style={style.infoContainer}>
                 <View style={style.infoWrapper}>
-                    <UserPublicInfo edit={edit} username={username} userCallback={onEdit(setUsername)}
+                    <UserPublicInfo edit={edit} first_name={first_name} nameCallback={onEdit(setFirstName)}
+                                    last_name={last_name} lastNameCallback={onEdit(setLastName)}
                                     userType={returnType(userState.user.car_model)} userTypeEditable={false}/>
                     <UserPrivateInfo edit={edit} phone={phone} phoneCallback={onEdit(setPhone)}
                                                 email={email} emailCallback={onEdit(setEmail)}

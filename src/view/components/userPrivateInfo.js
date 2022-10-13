@@ -15,7 +15,7 @@ export default function UserPrivateInfo(props){
     return (
         <>
         <View style={style.infoField}>
-                        <TextInput style={style.infoText}  editable={props.edit} label="E-mail" 
+                        <TextInput style={style.infoText}  editable={false} label="E-mail" 
                                     value={email} onChangeText={emailCallback}/>
                         <TextInput style={style.infoText} editable={props.edit} label="Phone number"
                                     value={phone} onChangeText={phoneCallback}/>
