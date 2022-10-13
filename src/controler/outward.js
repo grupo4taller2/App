@@ -43,7 +43,9 @@ export default class Outward{
         }
 
         try {
+            console.log("Creating a user: ", usuario);
             let result = await createUserWithEmailAndPassword(auth, user, password);
+            
             return {credential: result, result: true};
           } catch (error) {
             console.log(error)

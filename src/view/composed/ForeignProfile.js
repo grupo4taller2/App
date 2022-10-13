@@ -4,17 +4,18 @@ import UserPublicInfo from "../components/userPublicInfo";
 import ProfileTopView from "./profileTopView";
 
 export default function ForeignProfile(props){
-    const [searchResult, setSearch] = React.useState({userState: {user: {}}});
+    const [searchResult, setSearch] = React.useState();
     
 
-    const getResult = (result) => {
+    const getResult = () => {
         
-        if (!result) return <UserSearch callback={setSearch}/>;
+        if (!searchResult) return <UserSearch callback={setSearch}/>;
 
         return (
             <>
             <ProfileTopView isSearch={true} result={searchResult}/>
-            <UserPublicInfo edit={false} userTypeEditable={false}/>
+            <UserPublicInfo first_name={searchResult.userInfo.first_name} last_name={searchResult.userInfo.last_name}
+            edit={false}/>
             </>
         );
     }

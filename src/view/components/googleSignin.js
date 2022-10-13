@@ -6,6 +6,7 @@ import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import {WEBKEY, ANDROIDKEY} from '@env'
 import { UserContext, useUserContext } from './context';
 import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import { googleGetUser } from '../../model/status';
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -30,6 +31,9 @@ export default function GoogleLogin(props){
       .catch((err) => alert(err));
 
       if (signInResult.user === undefined) return;
+      //If there is no user to this email. generate one
+      await googleGetUser(signInResult);
+
 
       signIn(signInResult);
 

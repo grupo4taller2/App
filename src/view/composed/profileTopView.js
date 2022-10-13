@@ -4,15 +4,15 @@ import Constants  from 'expo-constants'
 import { useUserContext } from '../components/context'
 
 export default function ProfileTopView(props){
-    const {userState} = props.isSearch ? props.result : useUserContext();
-
+    const context = useUserContext();
+    const userState = props.isSearch ? props.result : context.userState;
     const photo = userState.user.photoURL ? {uri: userState.user.photoURL} : require("../../../assets/no_pic.jpg");
-
+    
     return (
         <>
         <SafeAreaView style={style.ProfileView}>
                 <View style={style.NameReviewView}>
-                <Text style={style.nameText}>{userState.userInfo.first_name +" "+ userState.userInfo.last_name}</Text>
+                <Text style={style.nameText}>{userState.userInfo.username}</Text>
                 <Drawer.Item style={style.stars} label="4.8" icon="star" />
                 </View>
                 <View style={style.ProfilePict}>

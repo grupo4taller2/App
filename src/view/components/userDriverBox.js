@@ -46,7 +46,7 @@ export default function UserDriverBox(props) {
         const info = {};
         info.username = props.all.username.getText();
         info.password = props.all.password.getText();
-        info.email = props.all.email.getText();
+        info.email = props.all.email.getText().toLowerCase();
         //TODO: first name and last name
         info.first_name = props.firstName.getText();
         info.last_name = props.lastName.getText();
@@ -64,7 +64,7 @@ export default function UserDriverBox(props) {
             info.car_plate = carPlate.getText();
         }
         
-        console.log(info);
+        
         return {info: info, isDriver: driver};
     };
 
