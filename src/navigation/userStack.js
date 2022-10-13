@@ -8,6 +8,7 @@ import {UserNavConstants} from '../config/userNavConstants';
 import WalletView from '../view/composed/walletView';
 import TripScreen from '../view/screens/TripScreen';
 import UserSearchView from '../view/screens/UserSearchScreen';
+import RegisterAsDriver from '../view/composed/registerAsDriver';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function UserStack() {
         <Stack.Screen name={UserNavConstants.WalletView} component={WalletView} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.TripScreen} component={TripScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.UserSearchScreen} component={UserSearchView} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.DriverReg} component={RegisterAsDriver} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

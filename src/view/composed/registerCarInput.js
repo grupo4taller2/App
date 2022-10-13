@@ -9,6 +9,7 @@ const RegisterCarInput = (props) => {
     return(
         <View style={inputViewStyle}>
                     <TextField text={props.carMakeText} disabled={props.disabled} />
+                    <TextField text={props.carModelText} disabled={props.disabled} />
                     <TextField text={props.carYearText} disabled={props.disabled} />
                     <TextField text={props.carPlateText} disabled={props.disabled} />
                     <TextField text={props.carColorText} disabled={props.disabled} />

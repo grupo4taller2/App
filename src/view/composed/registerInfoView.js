@@ -47,6 +47,12 @@ export default class RegisterInfo extends Component {
             style: style.inputBox
         });
 
+        this.state.location = new InfoInput(null, {
+            label: "Default Location",
+            mode: "outlined",
+            style: style.inputBox
+        });
+
         this.state.error = null;
 
         this.state.stage = 0;
@@ -115,16 +121,17 @@ export default class RegisterInfo extends Component {
         
         return this.state.stage === 0 ? (
             <React.Fragment>
-                <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
+                <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} location={this.state.location}/>
                 <Text style={style.errorText}>{this.state.error}</Text>
                 <StatusButton text={"Sign up"} style={style} call={callBack}/>
             </React.Fragment>) :
             <UserTypeCheck username={this.state.username} email={this.state.email}
-                            phone={this.state.phone} wallet={this.state.wallet} password={this.state.password}/>
+                            phone={this.state.phone} wallet={this.state.wallet} password={this.state.password} location={this.state.location}/>
     }
 
     stageChangeForward = () => {
         this.state.stage += 1;
+        this.props.textChange("Great! \nyou're almost done");
         this.setState(this.state);
     }
 

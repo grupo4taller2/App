@@ -35,6 +35,23 @@ export default function App() {
         const auth = getAuth();
         const signed_auth = await signOut(auth);
         dispatch({user: false})
+      },
+      register: (credentials, back_response) => {
+          const token = credentials._tokenResponse;
+          const user = credentials.user;
+          const userInfo = back_response;
+          
+          dispatch({
+            token: token,
+            user: user,
+            userInfo: userInfo
+          })
+      },
+      update: (newInfo) => {
+        console.log("Publishing new info to backend", newInfo);
+      },
+      asDriver: (driverInfo) => {
+        console.log("Generating a driver!");
       }
     })
   })

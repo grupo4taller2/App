@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native"
 import { Button, List, Surface, Text, TextInput } from "react-native-paper";
 import InfoInput from "../../controler/infoInput";
+import { updateInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import EditButton from "../components/editButton";
 import UserPrivateInfo from "../components/userPrivateInfo";
@@ -28,26 +29,32 @@ Informacion pertinente:
 */
 export default function ProfileInfoView(){
 
-    const {userState} = useUserContext();
-
+    const context = useUserContext();
+    const userState = context.userState;
     const [edit, setEdit] = React.useState(false);
 
-    const [username, setUsername] = React.useState(userState.user.username);
+    const [username, setUsername] = React.useState(userState.userInfo.username);
 
-    const [phone, setPhone] = React.useState(userState.user.phone_number ? userState.user.phone_number : userState.user.phoneNumber);
+    const [phone, setPhone] = React.useState(userState.userInfo.phone_number ? userState.userInfo.phone_number : userState.user.phoneNumber);
 
-    const [email, setEmail] = React.useState(userState.user.email);
+    const [email, setEmail] = React.useState(userState.userInfo.email);
 
-    const [address, setAddress] = React.useState(userState.user.preferred_address);
+    const [address, setAddress] = React.useState(userState.userInfo.preferred_location_name);
 
     const onEdit = (setCallback) => {
         return edit ? setCallback : (dummy) => {}
     };
-
+    
     const checkOnSave = (new_value) => {
         const callback = () => {
             if (!new_value) {
-                console.log("Sending new info to server");
+                const newInfo = {
+                    username: username,
+                    phone_number: phone,
+                    email: email,
+                    preferred_location_name: address
+                }
+                updateInfo(newInfo, context);
             }
             setEdit(new_value)
         }

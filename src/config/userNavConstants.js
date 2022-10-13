@@ -3,5 +3,6 @@ export const UserNavConstants = {
     ProfileScreen: "Profile",
     WalletView: "Wallet",
     TripScreen: "Trip",
-    UserSearchScreen: "SearchUser"
+    UserSearchScreen: "SearchUser",
+    DriverReg: "Driver register"
 }

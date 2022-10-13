@@ -17,6 +17,9 @@ export default function UserSearch(props){
     const doSearch = (context) => {
         console.log(search.getText());
         //TODO: hace el search aca, si devuelve piola. Llama para arriba con el resultado
+        //const searchResult = search(search.getText());
+        //if (searchResult) props.callback(searchresult);
+        //if(!searchResult) search.fail();
     }
 
     return (

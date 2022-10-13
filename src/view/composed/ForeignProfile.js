@@ -9,7 +9,7 @@ export default function ForeignProfile(props){
 
     const getResult = (result) => {
         
-        if (!result) return <UserSearch />;
+        if (!result) return <UserSearch callback={setSearch}/>;
 
         return (
             <>

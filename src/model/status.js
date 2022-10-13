@@ -8,7 +8,7 @@ export async function signIn(connection, info, failCall, context){
     
     const credentials = await connection.tryLogin(info.email, info.password);
     if (credentials.result){
-        console.log(credentials.credential);
+        
         context.signIn(credentials.credential)
     }else{
         
@@ -17,11 +17,12 @@ export async function signIn(connection, info, failCall, context){
 }
 
 export async function register(connection, info, failCall, context){
-    const credentials = await connection.tryRegister(info.email, info.password);
-
-    if(credentials.result){
-        await postNewUser(info);
-        context.signIn(credentials.credential);
+    const result = await postNewUser(info);
+    let credentials = {};
+    if (result) credentials = await connection.tryRegister(info.email, info.password);
+    if(result && credentials.credential){
+        console.log(credentials);
+        context.register(credentials.credential, result.data);
     }else{
         failCall();
     }
@@ -60,10 +61,16 @@ export function createStatusChangerWithChecks(call, connection, info, failCall, 
     return wrapper
 }
 
+export function updateInfo(newInfo, context){
+    context.update(newInfo);
+}
+
 async function postNewUser(info){
     
-    const uri = ROUTE + (info.driver ? DRIVERREG : PASSENGERREG);
+    const uri = ROUTE + (info.isDriver ? DRIVERREG : PASSENGERREG);
+    console.log(DRIVERREG);
+    console.log(PASSENGERREG);
     const result = await axios.post(uri, info.info);
 
-    
+    return result;
 }

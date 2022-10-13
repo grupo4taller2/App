@@ -35,6 +35,12 @@ export default function UserDriverBox(props) {
         style: styles.inputBox
     });
 
+    const carModel = new InfoInput(null, {
+        label: "Model",
+        mode: "outlined",
+        style: styles.inputBox
+    });
+
     
     const bundleInfo = (props, driver) => {
         const info = {};
@@ -42,18 +48,17 @@ export default function UserDriverBox(props) {
         info.password = props.all.password.getText();
         info.email = props.all.email.getText();
         //TODO: first name and last name
-        info.first_name = "Nada";
-        info.last_name = "Nada";
+        info.first_name = props.firstName.getText();
+        info.last_name = props.lastName.getText();
         info.phone_number = props.all.phone.getText();
         info.wallet = props.all.wallet.getText();
         //TODO: convertir a latitud y longitud
-        info.preferred_latitude = -33;
-        info.preferred_longitude = -45;
+        info.preferred_location_name = props.all.location.getText();
 
         if (driver){
             info.car_manufacturer = carMake.getText();
             //TODO: agregar modelo de auto
-            info.car_model = "suran";
+            info.car_model = carModel.getText();
             info.car_year_of_production = carYear.getText();
             info.car_color = carColor.getText();
             info.car_plate = carPlate.getText();
@@ -71,40 +76,29 @@ export default function UserDriverBox(props) {
     
 
     const finishSignUp = (props, driver) => {
-        const info = bundleInfo(props, driver);
+        
+        
+        return (context) => { 
+            const info = bundleInfo(props, driver);
         //TODO: implementar el failed callback
         const callBack = createStatusChangerWithChecks(register,
         new Outward(),
         info,
         () => {console.log("Failed")},
         bundleChecks())
-        
-        return (context) => { console.log("Called"); callBack(context)}
+            console.log(info); 
+            callBack(context)
+        }
         }
     
     return(
         <View style={styles.infoView}>
             
 
-            <View style={styles.checkboxView}>
-                <Text style={styles.typeText}>
-                    Account type:
-                </Text>
-                <View style={styles.checkBundle}>
-                    <Text> Passenger </Text>
-                    <Checkbox.Android
-                        style={styles.typeCheckbox}
-                        color="#8f0404"
-                        uncheckedColor="#8f0404"
-                        status={checkedLeft ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                            setCheckedLeft(!checkedLeft);
-                        }}
-                        />
-                </View>
-
-                <View style={styles.checkBundle}>
-                    <Text> Driver </Text>
+        <View style={styles.carTextView}>
+            <Text style={styles.carText}>Are you a driver?</Text>
+            <Text style={styles.driversOnlyText}>(Drivers Only)</Text>
+            <View style={styles.checkBundle}>
                     <Checkbox.Android
                         style={styles.typeCheckbox}
                         color="#8f0404"
@@ -121,19 +115,14 @@ export default function UserDriverBox(props) {
                 </View>
         </View>
 
-        <View style={styles.carTextView}>
-            <Text style={styles.carText}>What car do you plan on using? </Text>
-            <Text style={styles.driversOnlyText}>(Drivers Only)</Text>
-        </View>
-
         <View style={styles.carInputView}>
-            <RegisterCarInput carMakeText={carMake} carYearText={carYear} carPlateText={carPlate} carColorText={carColor} disabled={!checkedRight} />
+            <RegisterCarInput carMakeText={carMake} carModelText={carModel} carYearText={carYear} carPlateText={carPlate} carColorText={carColor} disabled={!checkedRight} />
         </View>
 
         <View style={styles.buttonView}>
            
             <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
-                            disabled={!checkedLeft && !checkedRight} call={finishSignUp(props, checkedRight)} 
+                            disabled={false} call={finishSignUp(props, checkedRight)} 
                             text={"Finish Sign up"}/>
         </View>
     </View>
@@ -157,7 +146,7 @@ const styles = StyleSheet.create({
         flex: 6,
     },
     typeText: {
-        fontSize: 20,
+        fontSize: 18,
         marginLeft: 15,
     },
     typeCheckbox: {
@@ -168,7 +157,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginBottom: 30,
+        marginTop: 15,
     },
     checkBundle: {
         flexDirection: 'row',
@@ -194,7 +183,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '85%',
         marginLeft: 25,
-        marginBottom: 10,
+        marginTop: 10,
         alignItems: 'flex-end',
     },
     finishButton: {
@@ -215,7 +204,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
     },
     buttonView: {
-        flex: 0.3,
+        flex: 0.2,
         alignItems: 'center',
     },
   })
