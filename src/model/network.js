@@ -1,4 +1,5 @@
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import app from "../config/firebase";
 
 const GET = "GET"
 const CONTENT = 'application/json'
@@ -36,19 +37,28 @@ export default class Network{
     }
 
     async tryLogin(credentials){
-
         const auth = getAuth();
+        
 
         if (credentials.email === '' || credentials.password === '') {
-            return 'Invalid log in credentials'
+            return {error: 'No password or E-mail provided'}
         }
-
+        
         try {
             let credencial = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
             return {credential: credencial, result: true};
         } catch (error) {
-            console.log(error);
-            return {}
+            let error_message = "";
+            switch (error.toString()){
+                case "FirebaseError: Firebase: Error (auth/invalid-email).":
+                case "FirebaseError: Firebase: Error (auth/user-not-found).":
+                case "FirebaseError: Firebase: Error (auth/wrong-password).":
+                    error_message = "Invalid E-mail or password";
+                    break;
+                default: 
+                    error_message = "Something went wrong";
+            }
+            return {error: error_message}
         }
 
     }

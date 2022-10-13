@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import ConfirmableTextInput from '../../controler/confirmableText';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
-import { createStatusChanger, createStatusChangerWithChecks, register } from '../../model/status';
+import { callCallback, createStatusChanger, createStatusChangerWithChecks, register } from '../../model/status';
 import { EMAILCHECK, NUMBERCHECK, USERCHECK } from '../../model/textInput';
 import StatusButton from '../components/loginButton';
 import RegisterInput from './registerInputView';
+import UserTypeCheck from './registerUserView';
 
 export default class RegisterInfo extends Component {
 
@@ -46,8 +47,20 @@ export default class RegisterInfo extends Component {
             style: style.inputBox
         });
 
+        this.state.location = new InfoInput(null, {
+            label: "Default Location",
+            mode: "outlined",
+            style: style.inputBox
+        });
+
+        this.state.error = null;
+
+        this.state.stage = 0;
+
         this.failedRegister = this.failedRegister.bind(this);
         this.handlePassWordChange = this.handlePassWordChange.bind(this);
+
+
 
         this.state.password.setNotifyCallback(this.handlePassWordChange);
     }
@@ -88,28 +101,55 @@ export default class RegisterInfo extends Component {
 
         return (
             () => {
+                let error = null;
                 const user = userCheck();
+                if (!user) error="Invalid username";
                 const email = emailCheck();
+                if(!email) error="Invalid E-mail";
                 const phone = phoneCheck();
+                if(!phone) error="Invalid phone";
                 const password = passwordCheck();
+                if(!password) error="Password should be between 8 and 16 characters";
+
+                if(error) this.setState({error});
                 return (user && email && phone && password)
             }
         )
     }
 
+    stage = (callBack) => {
+        
+        return this.state.stage === 0 ? (
+            <React.Fragment>
+                <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} location={this.state.location}/>
+                <Text style={style.errorText}>{this.state.error}</Text>
+                <StatusButton text={"Sign up"} style={style} call={callBack}/>
+            </React.Fragment>) :
+            <UserTypeCheck username={this.state.username} email={this.state.email}
+                            phone={this.state.phone} wallet={this.state.wallet} password={this.state.password} location={this.state.location}/>
+    }
+
+    stageChangeForward = () => {
+        this.state.stage += 1;
+        this.props.textChange("Great! \nyou're almost done");
+        this.setState(this.state);
+    }
+
+    stateChangeBackwards = () => {
+        this.state.stage -= 1;
+        this.setState(this.state);
+    }
+
     render(){
-        const callBack = createStatusChangerWithChecks(register,
-                                            this.connection,
+        const callBack = createStatusChangerWithChecks(callCallback,
+                                            this.stageChangeForward,
                                             {email: this.state.email,
                                             password: this.state.password},
                                             this.failedRegister,
                                             this.bundleChecks())
         
         return (
-        <React.Fragment>
-            <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} />
-            <StatusButton text={"Sign up"} style={style} call={callBack}/>
-        </React.Fragment>);
+        this.stage(callBack));
     }
 }
 
@@ -137,4 +177,8 @@ const style = StyleSheet.create({
       margin: 7,
       paddingLeft: 8,
     },
+    errorText: {
+        fontWeight: "bold",
+        color: "#aa0000"
+      }
     })

@@ -2,10 +2,10 @@ import { Button, Text } from 'react-native-paper';
 import * as Google from 'expo-auth-session/providers/google'
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import {WEBKEY, ANDROIDKEY} from '@env'
 import { UserContext, useUserContext } from './context';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -21,12 +21,23 @@ export default function GoogleLogin(props){
     {
       useProxy: true
     })
+
+    const handleSignIn = async (authentication) => {
+      const credential = GoogleAuthProvider.credential(authentication.idToken, authentication.accessToken);
+      const auth = getAuth();
+
+      const signInResult = await signInWithCredential(auth, credential)
+      .catch((err) => alert(err));
+
+      if (signInResult.user === undefined) return;
+
+      signIn(signInResult);
+
+    };
+
     React.useEffect(() => {
       
-      if (response?.type === "success") {
-        signIn(response);
-        
-      }
+      if (response?.type === "success") handleSignIn(response.authentication);
     }, [response]);
 
     return (

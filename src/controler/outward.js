@@ -34,8 +34,8 @@ export default class Outward{
     }
 
     async tryRegister(usuario, contrasenia){
-        let user = usuario.getText();
-        let password = contrasenia.getText();
+        let user = usuario;
+        let password = contrasenia;
         const auth = getAuth();
 
         if (user === '' || password === ''){

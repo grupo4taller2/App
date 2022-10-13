@@ -22,7 +22,7 @@ export default class TextField extends Component{
 
     handleChange(newState){
         let text = newState;
-
+        
         this.setState({text});
     }
 

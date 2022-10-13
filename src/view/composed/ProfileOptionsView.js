@@ -7,7 +7,9 @@ import { ProfileOption } from "../components/ProfileOption"
 
 export default function ProfileOptionsView({navigation}){
 
-    const {signOut} = useUserContext();
+    const context = useUserContext();
+    const signOut = context.signOut;
+    const userState = context.userState;
 
     const failedLogOut = () => {
         console.log("Failed to log out")
@@ -20,13 +22,15 @@ export default function ProfileOptionsView({navigation}){
         failedLogOut
       )
 
+    const driverCallback = userState.userInfo.car_manufacturer ? null : () => {navigation.push(UserNavConstants.DriverReg)};
+    const driverText = userState.userInfo.car_manufacturer ? "See driver info" : () => {navigation.push(UserNavConstants.DriverReg)};
 
     return (
         <View style={style.privateOptions}>
-                <ProfileOption icon="account-search" text="search users" />
+                <ProfileOption icon="account-search" text="search users" callback={() => {navigation.push(UserNavConstants.UserSearchScreen)}}/>
                 <ProfileOption icon="wallet" text="wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
                 <ProfileOption icon="logout" text="Log out" callback={callBack}/>
-                <ProfileOption icon="card-account-details" text="Become a driver" />
+                <ProfileOption icon="card-account-details" text="Become a driver" callback={driverCallback}/>
             </View>
     )
 }

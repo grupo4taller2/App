@@ -6,6 +6,8 @@ import { Appbar } from 'react-native-paper';
 
 
 export default function RegisterScreen({ navigation }) {
+  const [headerText, setText] = React.useState('Let\'s start off \nby getting you set up');
+
     return (
       <View style={style.registerMainView}>
         
@@ -14,12 +16,12 @@ export default function RegisterScreen({ navigation }) {
               <Appbar.BackAction style={{backgroundColor: "#eaeaba"}} onPress={() => {navigation.pop()}} />
             </Appbar.Header>
             <Text style={style.instructionText}>
-              {'Let\'s start off \nby getting you set up'}
+              {headerText}
             </Text>
         </View>
         
         <View style={style.registerView}>
-          <RegisterInfo nav={navigation} />
+          <RegisterInfo nav={navigation} textChange={setText}/>
         </View>
 
       </View>
@@ -39,11 +41,11 @@ const style = StyleSheet.create({
   instructionText: {
     color: 'black',
     fontWeight: '500',
-    fontSize: 26,
+    fontSize: 24,
     paddingTop: 75,
   },
   registerView: {
-    flex: 5,
+    flex: 6,
     alignItems: 'center',
   },
 })

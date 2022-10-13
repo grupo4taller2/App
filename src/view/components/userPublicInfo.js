@@ -6,7 +6,7 @@ export default function UserPublicInfo(props){
     const username = props.username;
     const userType = props.userType;
 
-    const userCallback = props.userCallback;
+    const userCallback = props.userCallback ? props.userCallback : (dummy) => {};
 
     const userTypeCallback = props.userTypeEditable ? props.userTypeCallback : (dummy) => {};
 

@@ -7,9 +7,15 @@ import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
 
 
-export default function UserTypeCheck() {
-    const location = new InfoInput(null, {
-        label: "Default Location",
+export default function UserTypeCheck(props) {
+    const firstName = new InfoInput(null, {
+        label: "First name",
+        mode: "outlined",
+        style: styles.inputBox
+    });
+
+    const lastName = new InfoInput(null, {
+        label: "Last name",
         mode: "outlined",
         style: styles.inputBox
     });
@@ -18,10 +24,11 @@ export default function UserTypeCheck() {
             <View style={styles.infoView}>
 
                 <View style={styles.locationInputView} >
-                    <TextField text={location} />
+                    <TextField text={firstName} />
+                    <TextField text={lastName} />
                 </View>
 
-                <UserDriverBox/>
+                <UserDriverBox all={props} firstName={firstName} lastName={lastName}/>
                 
             </View>
         </React.Fragment>
@@ -37,7 +44,7 @@ const styles = StyleSheet.create({
   },  
   locationInputView: {
       flex: 1,
-      marginBottom: 15,
+      marginBottom: 10,
       justifyContent: 'center',
       minWidth: 350,
       maxHeight: 150,

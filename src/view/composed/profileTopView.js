@@ -1,19 +1,22 @@
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from 'react-native'
 import { Avatar, Drawer, Text } from 'react-native-paper'
 import Constants  from 'expo-constants'
+import { useUserContext } from '../components/context'
 
-export default function ProfileTopView({navigation}){
+export default function ProfileTopView(props){
+    const {userState} = props.isSearch ? props.result : useUserContext();
 
+    const photo = userState.user.photoURL ? {uri: userState.user.photoURL} : require("../../../assets/no_pic.jpg");
 
     return (
         <>
         <SafeAreaView style={style.ProfileView}>
                 <View style={style.NameReviewView}>
-                <Text style={style.nameText}>Francisco Javier Pereira</Text>
+                <Text style={style.nameText}>{userState.userInfo.first_name +" "+ userState.userInfo.last_name}</Text>
                 <Drawer.Item style={style.stars} label="4.8" icon="star" />
                 </View>
                 <View style={style.ProfilePict}>
-                    <Avatar.Image style={{backgroundColor: "#f0efc0"}} size={60} source={require('../../../assets/fotoMira.jpg')}/>
+                    <Avatar.Image style={{backgroundColor: "#f0efc0"}} size={60} source={photo}/>
                 </View>
         </SafeAreaView>
         </>
@@ -46,7 +49,7 @@ const style = StyleSheet.create(
         nameText: {
             fontSize: 20,
             fontWeight: 'bold',
-            alignSelf: 'center'
+            marginLeft: 20
         },
         backArrow: {
             backgroundColor: "#f0efc0",
