@@ -74,28 +74,28 @@ export default function TripScreen({navigation}){
                 }}
                 showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
                 onRegionChangeComplete={(region) => setRegion(region)}>
-                    {/*[DEBUG] Display user's current region:*/}
-                    <View style={styles.debugInfoView}>
-                        <Text style={styles.text}>Current latitude: {region.latitude}</Text>
-                        <Text style={styles.text}>Current longitude: {region.longitude}</Text>
-                        <Button buttonColor='#50C878' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
-                            icon="navigation-variant"  onPress={() => {console.log('Pressed'), checkTripValidity(start, destination)}}>
-                            Set Route
-                        </Button>
-                        <Button buttonColor='#000' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
-                            icon="car" disabled={!validTrip} onPress={() => {/*//startTrip();  aca returnear el componente OngoingTripScreen, va realmente habria que hacer una
-                            checkbox para que el usuario vea el costo y valide el viaje*/}}>
-                            Start Trip for {tripCost}
-                        </Button>
-                        <Snackbar
-                            visible={visibleSB}
-                            onDismiss={onDismissSnackBar}
-                            duration='2000'
-                            style={styles.snackbar}>
-                            Invalid route. Check start and destination!
-                        </Snackbar>
-                    </View>
                 </MapView>
+                {/*[DEBUG] Display user's current region:*/}
+                <View style={styles.debugInfoView}>
+                    <Text style={styles.text}>Current latitude: {region.latitude}</Text>
+                    <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+                    <Button buttonColor='#50C878' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
+                        icon="navigation-variant"  onPress={() => {console.log('Pressed'), checkTripValidity(start, destination)}}>
+                        Set Route
+                    </Button>
+                    <Button buttonColor='#000' mode='contained' style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
+                        icon="car" disabled={!validTrip} onPress={() => {/*//startTrip();  aca returnear el componente OngoingTripScreen, va realmente habria que hacer una
+                        checkbox para que el usuario vea el costo y valide el viaje*/}}>
+                        Start Trip for {tripCost}
+                    </Button>
+                    <Snackbar
+                        visible={visibleSB}
+                        onDismiss={onDismissSnackBar}
+                        duration='2000'
+                        style={styles.snackbar}>
+                        Invalid route. Check start and destination!
+                    </Snackbar>
+                </View>
             </View>
             <View style={styles.locationView}>
                 <TextInput placeholder="Where are you?" onChangeText={newStart => setStart(newStart)} defaultValue={start}/>
@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
     },
     mapView: {
         flex: 8.5,
+        flexDirection: 'column-reverse',
+        alignItems: 'center',
+        marginBottom: 10
     },
     text: {
         color: "#000",
@@ -128,6 +131,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     checkLocationButton: {
+        marginBottom: 5
     },
     checkLocationButtonContent: {
     },
@@ -135,7 +139,6 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     startTripButton: {
-        marginLeft: 400
     },
     startTripButtonContent: {
     },
@@ -143,8 +146,8 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     debugInfoView: {
-        marginTop: 500,
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute'
     },
     snackbar: {
         backgroundColor: '#D22B2B'
