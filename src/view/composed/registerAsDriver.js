@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#eaeaba",
+        backgroundColor: "#fff",
     },
     finishButton: {
         backgroundColor: '#37a0bd',

@@ -47,10 +47,10 @@ const style = StyleSheet.create(
             flex: 0.2,
             minWidth: 350,
             margin: 5,
-            backgroundColor: "#eaeaba"
+            backgroundColor: "#fff"
         },
         optionArrow: {
-            backgroundColor: '#eaeaba',
+            backgroundColor: '#fff',
             position: 'absolute',
             right: 0
         },

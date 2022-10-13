@@ -14,13 +14,13 @@ export default function WalletView({navigation}){
                 <View style={style.OptionsView}>
                     <TouchableNativeFeedback>
                 <Surface style={style.OptionSurface} elevation={5}>
-                    <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="import" />
+                    <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="import" />
                     <Text>Deposit</Text>
                 </Surface>
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback>
                 <Surface style={style.OptionSurface} elevation={5}>
-                    <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="export" />
+                    <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="export" />
                     <Text>Withdraw</Text>
                 </Surface>
                 </TouchableNativeFeedback>
@@ -30,7 +30,7 @@ export default function WalletView({navigation}){
                     <View style={{minWidth: 250, flexDirection: 'row', justifyContent: 'center'}}>
                         <Text style={{fontSize: 20}}>Total balance</Text>
                         <TouchableNativeFeedback>
-                        <Avatar.Icon style={{backgroundColor: "#eaeaba", marginLeft: 20}}  size={35} icon="eye"/>
+                        <Avatar.Icon style={{backgroundColor: "#fff", marginLeft: 20}}  size={35} icon="eye"/>
                         </TouchableNativeFeedback>
                     </View>
                     <Text style={[style.nameText, {margin: 10}]}>45.78 USD</Text>
@@ -47,7 +47,7 @@ const style = StyleSheet.create(
     {
         PrivateView: {
             flex: 0.9,
-            backgroundColor: "#eaeaba",
+            backgroundColor: "#fff",
             
         },
         OptionsView: {
@@ -63,7 +63,7 @@ const style = StyleSheet.create(
             margin: 12,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: "#eaeaba"
+            backgroundColor: "#fff"
           },
         CreditSurface: {
             
@@ -72,7 +72,7 @@ const style = StyleSheet.create(
             alignItems: 'center',
             justifyContent: 'center',
             alignSelf: "center",
-            backgroundColor: "#eaeaba"
+            backgroundColor: "#fff"
         },
         creditView: {
             flex: 1/2,
@@ -84,7 +84,7 @@ const style = StyleSheet.create(
             alignSelf: 'center'
         },
         backArrow: {
-            backgroundColor: "#eaeaba",
+            backgroundColor: "#fff",
             marginTop: Constants.statusBarHeight
         }
     }

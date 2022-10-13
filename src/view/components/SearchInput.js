@@ -49,7 +49,7 @@ const style = StyleSheet.create({
         maxHeight: 50,
         marginBottom: 5,
         fontWeight: "bold",
-        backgroundColor: "#eaeaba",
+        backgroundColor: "#fff",
         alignSelf: 'center'
     },
     buttonStyle: {

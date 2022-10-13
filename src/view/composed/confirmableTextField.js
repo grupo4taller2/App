@@ -31,6 +31,6 @@ const style = {
     textField: {
         selectionColor: '#000000',
         activeOutlineColor: '#37a0bd',
-        theme: {roundness: 30, colors: {background: "#eaeaba"}}
+        theme: {roundness: 30, colors: {background: "#fff"}}
     }
 }

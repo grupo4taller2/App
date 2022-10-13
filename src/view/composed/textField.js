@@ -61,6 +61,6 @@ const style = {
         selectionColor: '#000',
         activeOutlineColor: '#37a0bd',
 
-        theme: {roundness: 30, colors: {background: "#eaeaba"}},
+        theme: {roundness: 30, colors: {background: "#fff"}},
     }
 }
