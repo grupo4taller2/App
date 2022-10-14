@@ -11,17 +11,22 @@ import TextFieldFunction from './textfieldFunction';
 export default function UserTypeCheck(props) {
     
     const [firstName, setFirstName] = React.useState();
+    const [firstNameError, setFirstNameError] = React.useState(false);
+
     const firstNameInfo = {
-        label: "First name",
+        label: firstNameError ? "Must have first name" : "First name",
         mode: "outlined",
-        style: styles.inputBox
+        style: styles.inputBox,
+        error: firstNameError
     };
     
     const [lastName, setlastName] = React.useState();
+    const [lastNameError, setLasNameError] = React.useState(false);
     const lastNameInfo = {
-        label: "Last name",
+        label: lastNameError ? "Must have last name" : "Last name",
         mode: "outlined",
-        style: styles.inputBox
+        style: styles.inputBox,
+        error: lastNameError
     };
     return(
         <React.Fragment>
@@ -32,7 +37,8 @@ export default function UserTypeCheck(props) {
                     <TextFieldFunction text={lastName} info={lastNameInfo} setText={setlastName}/>
                 </View>
 
-                <UserDriverBox all={props} firstName={firstName} lastName={lastName}/>
+                <UserDriverBox all={props} firstName={{value: firstName, errorSet: setFirstNameError}} 
+                                        lastName={{value: lastName, errorSet: setLasNameError}}/>
                 
             </View>
         </React.Fragment>

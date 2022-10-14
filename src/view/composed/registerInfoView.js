@@ -6,6 +6,7 @@ import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
 import { callCallback, checkUserFree, createStatusChanger, createStatusChangerWithAsyncChecks, createStatusChangerWithChecks, register } from '../../model/status';
 import { EMAILCHECK, NUMBERCHECK, USERCHECK } from '../../model/textInput';
+import ErrorSnackBar from '../components/ErrorSnackBar';
 import StatusButton from '../components/loginButton';
 import RegisterInput from './registerInputView';
 import UserTypeCheck from './registerUserView';
@@ -65,6 +66,11 @@ export default class RegisterInfo extends Component {
         this.state.password.setNotifyCallback(this.handlePassWordChange);
     }
 
+    handleErrorDismiss = () => {
+        this.state.error = null;
+        this.setState(this.state);
+    }
+
     failedRegister(){
         this.state.username.fail();
         this.state.password.fail()
@@ -103,13 +109,13 @@ export default class RegisterInfo extends Component {
             async () => {
                 let error = null;
                 let user = userCheck();
-                if (!user) error="Invalid username";
+                if (!user) this.state.username.changeLabel("Invalid username");
                 let email = emailCheck();
-                if(!email) error="Invalid E-mail";
+                if(!email) this.state.email.changeLabel("Invalid E-mail");
                 const phone = phoneCheck();
-                if(!phone) error="Invalid phone";
+                if(!phone) this.state.phone.changeLabel("Invalid phone");
                 const password = passwordCheck();
-                if(!password) error="Password should be between 8 and 16 characters";
+                if(!password) this.state.password.changeLabel("Is not between 8 and 16 characters");
                 const freeUser = await checkUserFree(this.state.username.getText());
                 if(!freeUser) {
                     error="User already exists";
@@ -130,14 +136,13 @@ export default class RegisterInfo extends Component {
             }
         )
     }
-
+    
     stage = (callBack) => {
-        
         return this.state.stage === 0 ? (
             <React.Fragment>
                 <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} location={this.state.location}/>
-                <Text style={style.errorText}>{this.state.error}</Text>
                 <StatusButton text={"Sign up"} style={style} call={callBack}/>
+                <ErrorSnackBar onDismissSnackBar={this.handleErrorDismiss} error={this.state.error !== null} text={this.state.error} />
             </React.Fragment>) :
             <UserTypeCheck username={this.state.username} email={this.state.email}
                             phone={this.state.phone} wallet={this.state.wallet} password={this.state.password} location={this.state.location}/>

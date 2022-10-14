@@ -10,6 +10,10 @@ export default class InfoInput{
         this.hide = createText(isHideable);
     }
 
+    changeLabel(newLabel){
+        this.info.label = newLabel;
+    }
+
     getText(){
         return this.text.getText();
     }

@@ -5,6 +5,7 @@ import InfoInput from "../../controler/infoInput";
 import { updateInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import EditButton from "../components/editButton";
+import ErrorSnackBar from "../components/ErrorSnackBar";
 import UserPrivateInfo from "../components/userPrivateInfo";
 import UserPublicInfo from "../components/userPublicInfo";
 import TextField from "./textField"
@@ -45,12 +46,15 @@ export default function ProfileInfoView(){
 
     const [address, setAddress] = React.useState(riderInfo.preferred_location_name);
 
+    const [editResult, setEditResult] = React.useState(false);
+    const [editCompleted, setEditCompleted] = React.useState(false);
+
     const onEdit = (setCallback) => {
         return edit ? setCallback : (dummy) => {}
     };
     
     const checkOnSave = (new_value) => {
-        const callback = () => {
+        const callback = async () => {
             if (!new_value) {
                 const newInfo = {
                     first_name: first_name,
@@ -58,9 +62,16 @@ export default function ProfileInfoView(){
                     phone_number: phone,
                     preferred_location_name: address
                 }
-                updateInfo(newInfo, email, context);
+                try{
+                    updateInfo(newInfo, email, context);
+                    setEditResult(true);
+               }catch{
+                    setEditResult(false);
+                }
+                setEditCompleted(true);
             }
             setEdit(new_value)
+            
         }
 
         return callback;
@@ -81,6 +92,8 @@ export default function ProfileInfoView(){
                                                 address={address} addressCallback={onEdit(setAddress)}/>
                 </View>
                 <EditButton edit={edit} callback={checkOnSave(!edit)}/>
+                <ErrorSnackBar error={editCompleted} text={editResult ? "Profile edited" : "Some error ocurred"}  
+                            onDismissSnackBar={() => {setEditCompleted(false)}} success={editResult}/>
             </View>
             </>)
 }
