@@ -19,6 +19,7 @@ export async function signIn(connection, info, failCall, context){
 export async function register(connection, info, failCall, context){
     const result = await postNewUser(info);
     let credentials = {};
+    console.log(info.info.email, info.info.password);
     if (result) credentials = await connection.tryRegister(info.info.email, info.info.password);
     if(result && credentials.result){
         credentials.credential.email = info.info.email;

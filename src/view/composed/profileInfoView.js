@@ -31,7 +31,7 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
-    const riderInfo = userState.userInfo.rider_information;
+    const riderInfo = getUserInfo(userState.userInfo);
     
     const [edit, setEdit] = React.useState(false);
 
@@ -96,3 +96,14 @@ const style = StyleSheet.create(
         }
     }
 )
+
+function getUserInfo(info){
+    if (info.rider_information){
+        return info.rider_information;
+    }
+    if(info.driver_information){
+        return info.driver_information;
+    }
+
+    return info;
+}

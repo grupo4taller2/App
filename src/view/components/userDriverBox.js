@@ -24,12 +24,11 @@ export default function UserDriverBox(props) {
         const info = {};
         info.username = props.all.username.getText();
         info.email = props.all.email.getText().toLowerCase();
-        //TODO: first name and last name
+        info.password = props.all.password.getText();
         info.first_name = props.firstName;
         info.last_name = props.lastName;
         info.phone_number = props.all.phone.getText();
         info.wallet = props.all.wallet.getText();
-        //TODO: convertir a latitud y longitud
         info.preferred_location_name = props.all.location.getText();
 
         if (driver){
