@@ -5,27 +5,31 @@ import TextField from './textField';
 import InfoInput from '../../controler/infoInput';
 import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
+import TextFieldFunction from './textfieldFunction';
 
 
 export default function UserTypeCheck(props) {
-    const firstName = new InfoInput(null, {
+    
+    const [firstName, setFirstName] = React.useState();
+    const firstNameInfo = {
         label: "First name",
         mode: "outlined",
         style: styles.inputBox
-    });
-
-    const lastName = new InfoInput(null, {
+    };
+    
+    const [lastName, setlastName] = React.useState();
+    const lastNameInfo = {
         label: "Last name",
         mode: "outlined",
         style: styles.inputBox
-    });
+    };
     return(
         <React.Fragment>
             <View style={styles.infoView}>
 
                 <View style={styles.locationInputView} >
-                    <TextField text={firstName} />
-                    <TextField text={lastName} />
+                    <TextFieldFunction text={firstName} info={firstNameInfo} setText={setFirstName}/>
+                    <TextFieldFunction text={lastName} info={lastNameInfo} setText={setlastName}/>
                 </View>
 
                 <UserDriverBox all={props} firstName={firstName} lastName={lastName}/>
