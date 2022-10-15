@@ -48,6 +48,7 @@ export default function ProfileInfoView(){
 
     const [editResult, setEditResult] = React.useState(false);
     const [editCompleted, setEditCompleted] = React.useState(false);
+    const [beingEdited, setBeingEdited] = React.useState(false);
 
     const onEdit = (setCallback) => {
         return edit ? setCallback : (dummy) => {}
@@ -55,7 +56,9 @@ export default function ProfileInfoView(){
     
     const checkOnSave = (new_value) => {
         const callback = async () => {
+            
             if (!new_value) {
+                setBeingEdited(true);
                 const newInfo = {
                     first_name: first_name,
                     last_name: last_name,
@@ -63,14 +66,16 @@ export default function ProfileInfoView(){
                     preferred_location_name: address
                 }
                 try{
-                    updateInfo(newInfo, email, context);
+                    await updateInfo(newInfo, email, context);
                     setEditResult(true);
                }catch{
                     setEditResult(false);
                 }
                 setEditCompleted(true);
+                setBeingEdited(false);
             }
-            setEdit(new_value)
+            setEdit(new_value);
+            
             
         }
 
@@ -91,7 +96,7 @@ export default function ProfileInfoView(){
                                                 email={email} emailCallback={onEdit(setEmail)}
                                                 address={address} addressCallback={onEdit(setAddress)}/>
                 </View>
-                <EditButton edit={edit} callback={checkOnSave(!edit)}/>
+                <EditButton edit={edit} callback={checkOnSave(!edit)} loading={beingEdited}/>
                 <ErrorSnackBar error={editCompleted} text={editResult ? "Profile edited" : "Some error ocurred"}  
                             onDismissSnackBar={() => {setEditCompleted(false)}} success={editResult}/>
             </View>

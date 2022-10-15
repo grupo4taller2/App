@@ -74,15 +74,13 @@ export function createStatusChangerWithAsyncChecks(call, connection, info, failC
 }
 
 export async function updateInfo(newInfo, email, context){
-    try{
+    
         const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
         console.log(uri);
         const response = await axios.patch(uri, newInfo);
         context.update();
 
-    }catch{
-        console.log("Failed to save info")
-    }
+    
 }
 
 export async function checkUserFree(user){
