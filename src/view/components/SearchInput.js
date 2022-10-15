@@ -11,8 +11,13 @@ import StatusButton from "./loginButton";
 export default function UserSearch(props){
 
     
-    const [search, setSearch] = React.useState();
+    const [search, setSearch] = React.useState('');
     const [error, setError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+
+    const load = () => {
+        setLoading(true);
+    }
 
     const searchInfo = {
         label: "User",
@@ -28,7 +33,7 @@ export default function UserSearch(props){
         try{
             searchResult = await getUser(search);
         }catch{
-            
+            setLoading(false);
         }
         
         if (searchResult) {
@@ -46,7 +51,7 @@ export default function UserSearch(props){
     <>
             <TextFieldFunction text={search} setText={setSearch} info={searchInfo}/>
             <ErrorSnackBar error={error} text={"No users found for: " + search}  onDismissSnackBar={() => {setError(false)}} />
-            <StatusButton style={style.buttonStyle} text={"Search"} call={doSearch}/>
+            <StatusButton style={style.buttonStyle} text={"Search"} call={doSearch} load={load} loading={loading}/>
     </>
     )
 }

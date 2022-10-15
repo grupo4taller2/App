@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import ConfirmableTextInput from '../../controler/confirmableText';
 import InfoInput from '../../controler/infoInput';
@@ -57,7 +57,7 @@ export default class RegisterInfo extends Component {
         this.state.error = null;
 
         this.state.stage = 0;
-
+        this.state.loading = false;
         this.failedRegister = this.failedRegister.bind(this);
         this.handlePassWordChange = this.handlePassWordChange.bind(this);
 
@@ -129,19 +129,26 @@ export default class RegisterInfo extends Component {
                     this.state.email.fail();
                 }
 
+                const loading = false;
 
-
-                if(error) this.setState({error});
+                if(error) this.setState({error, loading});
                 return (user && email && phone && password)
             }
         )
     }
     
+    load = () => {
+        const loading = true;
+        this.setState({loading})
+    }
+
     stage = (callBack) => {
         return this.state.stage === 0 ? (
             <React.Fragment>
+                <ScrollView>
                 <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} location={this.state.location}/>
-                <StatusButton text={"Sign up"} style={style} call={callBack}/>
+                </ScrollView>
+                <StatusButton text={"Sign up"} style={style} call={callBack} load={this.load} loading={this.state.loading}/>
                 <ErrorSnackBar onDismissSnackBar={this.handleErrorDismiss} error={this.state.error !== null} text={this.state.error} />
             </React.Fragment>) :
             <UserTypeCheck username={this.state.username} email={this.state.email}

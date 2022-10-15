@@ -26,6 +26,11 @@ export default function UserDriverBox(props) {
     const [carModelError, setCarModelError] = React.useState(false);
     
     const [error, setError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+
+    const load = () => {
+        setLoading(true);
+    }
 
     const dismissError = () => {
         setError(!error);
@@ -50,7 +55,7 @@ export default function UserDriverBox(props) {
             info.car_color = carColor;
             info.car_plate = carPlate;
         }
-        console.log(info);
+        
         return {info: info, isDriver: driver};
     };
 
@@ -78,8 +83,11 @@ export default function UserDriverBox(props) {
             firstName ? props.firstName.errorSet(false) : props.firstName.errorSet(true);
             lastName ? props.lastName.errorSet(false) : props.lastName.errorSet(true);
             
+            const condition = firstName && lastName && carOk;
 
-            return firstName && lastName && carOk;
+            if (!condition) setLoading(false);
+
+            return condition;
              
         };
     }
@@ -89,18 +97,20 @@ export default function UserDriverBox(props) {
     const finishSignUp = (props, driver) => {
         
         
-        return (context) => { 
+        return async (context) => { 
         const info = bundleInfo(props, driver);
         const callBack = createStatusChangerWithChecks(register,
         new Outward(),
         info,
-        () => {console.log("Failed")},
+        () => {setLoading(false)},
             bundleChecks())
             try{
-                callBack(context)
+                await callBack(context)
             }catch{
-
+                console.log("Called me"); 
+                setLoading(false)
             }
+            
         }
         }
     
@@ -139,7 +149,8 @@ export default function UserDriverBox(props) {
         <View style={styles.buttonView}>
             <ErrorSnackBar error={error} onDismissSnackBar={dismissError} text={"Unexpected error occured"} />
             <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
-                            disabled={false} call={finishSignUp(props, checkedRight)} 
+                            disabled={false} call={finishSignUp(props, checkedRight)}
+                            load={load} loading={loading} 
                             text={"Finish Sign up"}/>
         </View>
     </View>

@@ -31,7 +31,7 @@ export default class Login extends Component{
           });
 
           this.state.error = null;
-
+          this.state.loading = false;
         
         this.handleFailedLogin = this.handleFailedLogin.bind(this);
     }
@@ -40,7 +40,13 @@ export default class Login extends Component{
         this.state.email.fail();
         this.state.password.fail();
         this.state.error = error;
+        this.state.loading = false;
         this.setState(this.state);
+    }
+
+    load = () => {
+      const loading = true;
+      this.setState({loading});
     }
 
     render(){
@@ -57,7 +63,7 @@ export default class Login extends Component{
         <React.Fragment>
           {this.state.error ? <Text style={style.errorText}>{this.state.error}</Text> : null}
           <LoginInfo emailText={this.state.email} passwordText={this.state.password}/>
-          <StatusButton text={"Sign in"} style={style} call={call}/>
+          <StatusButton text={"Sign in"} style={style} call={call} load={this.load} loading={this.state.loading}/>
         </React.Fragment>);
     }
 }
