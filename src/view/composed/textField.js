@@ -22,7 +22,7 @@ export default class TextField extends Component{
 
     handleChange(newState){
         let text = newState;
-
+        
         this.setState({text});
     }
 
@@ -49,7 +49,7 @@ export default class TextField extends Component{
 
         return (<TextInput
             {...info} 
-            {...style.textField}
+            {...this.props.style ? this.props.style: style.textField}
             right={this.getHideWidget()}
             onChangeText={this.state.text.handleTextChange} />)
     }
@@ -58,8 +58,9 @@ export default class TextField extends Component{
 
 const style = {
     textField: {
-        selectionColor: '#000000',
+        selectionColor: '#000',
         activeOutlineColor: '#37a0bd',
-        theme: {roundness: 30},
+
+        theme: {roundness: 30, colors: {background: "#fff"}},
     }
 }

@@ -5,23 +5,40 @@ import TextField from './textField';
 import InfoInput from '../../controler/infoInput';
 import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
+import TextFieldFunction from './textfieldFunction';
 
 
-export default function UserTypeCheck() {
-    const location = new InfoInput(null, {
-        label: "Default Location",
+export default function UserTypeCheck(props) {
+    
+    const [firstName, setFirstName] = React.useState();
+    const [firstNameError, setFirstNameError] = React.useState(false);
+
+    const firstNameInfo = {
+        label: firstNameError ? "Must have first name" : "First name",
         mode: "outlined",
-        style: styles.inputBox
-    });
+        style: styles.inputBox,
+        error: firstNameError
+    };
+    
+    const [lastName, setlastName] = React.useState();
+    const [lastNameError, setLasNameError] = React.useState(false);
+    const lastNameInfo = {
+        label: lastNameError ? "Must have last name" : "Last name",
+        mode: "outlined",
+        style: styles.inputBox,
+        error: lastNameError
+    };
     return(
         <React.Fragment>
             <View style={styles.infoView}>
 
                 <View style={styles.locationInputView} >
-                    <TextField text={location} />
+                    <TextFieldFunction text={firstName} info={firstNameInfo} setText={setFirstName}/>
+                    <TextFieldFunction text={lastName} info={lastNameInfo} setText={setlastName}/>
                 </View>
 
-                <UserDriverBox/>
+                <UserDriverBox all={props} firstName={{value: firstName, errorSet: setFirstNameError}} 
+                                        lastName={{value: lastName, errorSet: setLasNameError}}/>
                 
             </View>
         </React.Fragment>
@@ -37,7 +54,7 @@ const styles = StyleSheet.create({
   },  
   locationInputView: {
       flex: 1,
-      marginBottom: 15,
+      marginBottom: 10,
       justifyContent: 'center',
       minWidth: 350,
       maxHeight: 150,

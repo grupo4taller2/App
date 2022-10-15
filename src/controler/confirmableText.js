@@ -17,6 +17,11 @@ export default class ConfirmableTextInput{
         this.secondaryText = new InfoInput(isHideable, secondaryInfo);
     }
 
+    changeLabel(newLabel){
+        this.mainText.changeLabel(newLabel);
+        this.secondaryText.changeLabel(newLabel);
+    }
+
     getInfo(){
         return this.mainText.getInfo();
     }
@@ -107,8 +112,12 @@ export default class ConfirmableTextInput{
     compareTexts(){
         
         if(!this.check()){
+            this.mainText.changeLabel("Passwords must match");
+            this.secondaryText.changeLabel("Passwords must match");
             this.fail()
         }else{
+            this.mainText.changeLabel("Password");
+            this.secondaryText.changeLabel("Confirm Password");
             this.mainText.unfail();
             this.secondaryText.unfail();
         }        

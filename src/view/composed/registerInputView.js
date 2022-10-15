@@ -20,6 +20,7 @@ export default class RegisterInput extends Component {
                     <TextField text={this.props.emailText}/>
                     <TextField text={this.props.walletText}/>
                     <TextField text={this.props.phoneText}/>
+                    <TextField text={this.props.location} />
                 </View>);
     }
 }

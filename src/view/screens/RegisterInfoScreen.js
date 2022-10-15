@@ -29,7 +29,7 @@ export default function RegisterInfoScreen({ navigation }) {
 const style = StyleSheet.create({
   registerInfoMainView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     justifyContent: 'center',
   },
   headerView: {

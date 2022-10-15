@@ -6,20 +6,10 @@ import { Avatar, Button, Drawer, List, Menu, Surface, Text } from "react-native-
 import { useUserContext } from '../components/context';
 import { createStatusChanger, signOut } from '../../model/status';
 import Constants from 'expo-constants';
+import { UserNavConstants } from '../../config/userNavConstants';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const context = useUserContext();
-
-  const failedLogOut = () => {
-    console.log("Failed to log out")
-  };
-
-  const callBack = createStatusChanger(
-    signOut, 
-    null,
-    null,
-    failedLogOut
-  )
 
   return (
     <View style={style.mainView}>
@@ -36,21 +26,21 @@ export default function HomeScreen() {
         <Text style={style.greeting}>Good morning, John</Text>
       </View>
       <View style={style.buttonsView}>
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.TripScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="car" />
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="car" />
                 <Text>Ride</Text>
             </Surface>
           </TouchableNativeFeedback>
-          <TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.ProfileScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="account" />
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="account" />
                 <Text>Profile</Text>
             </Surface>
           </TouchableNativeFeedback>
           <TouchableNativeFeedback>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="chat" />
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="chat" />
                 <Text>Messages</Text>
             </Surface>
           </TouchableNativeFeedback>
@@ -85,7 +75,7 @@ export default function HomeScreen() {
         </Surface>
         </TouchableNativeFeedback>
       </View>
-      <StatusButton text={"Sign out"} style={style} call={callBack}/>
+      
     </View>
     )
 }
@@ -105,13 +95,13 @@ export default function HomeScreen() {
         <View style={styles.OptionsView}>
             <TouchableNativeFeedback>
         <Surface style={styles.OptionSurface} elevation={5}>
-            <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="import" />
+            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="import" />
             <Text>Deposit</Text>
         </Surface>
         </TouchableNativeFeedback>
         <TouchableNativeFeedback>
         <Surface style={styles.OptionSurface} elevation={5}>
-            <Avatar.Icon style={{backgroundColor: "#eaeaba"}} size={40} icon="export" />
+            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="export" />
             <Text>Withdraw</Text>
         </Surface>
         </TouchableNativeFeedback>
@@ -121,7 +111,7 @@ export default function HomeScreen() {
             <View style={{minWidth: 250, flexDirection: 'row', justifyContent: 'center'}}>
                 <Text style={{fontSize: 20}}>Total balance</Text>
                 <TouchableNativeFeedback>
-                <Avatar.Icon style={{backgroundColor: "#eaeaba", marginLeft: 20}}  size={35} icon="eye"/>
+                <Avatar.Icon style={{backgroundColor: "#fff", marginLeft: 20}}  size={35} icon="eye"/>
                 </TouchableNativeFeedback>
             </View>
             <Text style={[styles.nameText, {margin: 10}]}>45.78 USD</Text>
@@ -156,7 +146,7 @@ export default function HomeScreen() {
     </View>
   </View>
    */
-  
+
 const style = StyleSheet.create({
   mainView: {
     flex: 1,
@@ -194,6 +184,7 @@ const style = StyleSheet.create({
     width: 100,
     height: 80,
     resizeMode: 'contain',
+    backgroundColor: "#fff"
   },
   balanceView: {
     flex: 1,
@@ -244,16 +235,16 @@ const style = StyleSheet.create({
     flex: 4,
     minWidth: 350,
     margin: 5,
-    backgroundColor: "#eaeaba"
+    backgroundColor: "#fff"
   },
   goAgainSurface: {
     flex: 0.1,
     minWidth: 350,
     margin: 5,
-    backgroundColor: "#eaeaba"
+    backgroundColor: "#fff"
   },
   optionArrow: {
-    backgroundColor: '#eaeaba',
+    backgroundColor: '#fff',
     position: 'absolute',
     right: 0
 },
@@ -318,7 +309,7 @@ const styles = StyleSheet.create(
         margin: 12,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: "#eaeaba"
+        backgroundColor: "#fff"
       },
     CreditSurface: {
         maxWidth: "80%",
@@ -326,17 +317,17 @@ const styles = StyleSheet.create(
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: "center",
-        backgroundColor: "#eaeaba"
+        backgroundColor: "#fff"
     },
     optionStyle: {
         flex: 0.1,
         minWidth: 350,
         margin: 5,
-        backgroundColor: "#eaeaba"
+        backgroundColor: "#fff"
     },
 
     optionArrow: {
-        backgroundColor: '#eaeaba',
+        backgroundColor: '#fff',
         position: 'absolute',
         right: 0
     },

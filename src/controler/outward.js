@@ -34,8 +34,8 @@ export default class Outward{
     }
 
     async tryRegister(usuario, contrasenia){
-        let user = usuario.getText();
-        let password = contrasenia.getText();
+        let user = usuario;
+        let password = contrasenia;
         const auth = getAuth();
 
         if (user === '' || password === ''){
@@ -43,7 +43,9 @@ export default class Outward{
         }
 
         try {
+            console.log("Creating a user: ", usuario);
             let result = await createUserWithEmailAndPassword(auth, user, password);
+            
             return {credential: result, result: true};
           } catch (error) {
             console.log(error)
