@@ -163,7 +163,7 @@ export default function TripScreen({navigation}){
                         <Dialog.Actions>
                             <View style={styles.confirmationButtonsView}>
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
-                                onPress={<OngoingTripScreen/>/*navigation.push(UserNavConstants.OngoingTripScreen)*/}>Yes, let's start my trip</Button>
+                                onPress={<OngoingTripScreen/>/*ACA SE DEBERIA HACER EL COBRO Y ESPERAR UNA RESPUESTA SATISFACTORIA DEL BACK  navigation.push(UserNavConstants.OngoingTripScreen)*/}>Yes, let's start my trip</Button>
                                 <Button buttonColor='#cc3d55' mode='outlined' style={styles.denyButton} contentStyle={styles.denyButtonContent} labelStyle={styles.denyButtonLabel}
                                 onPress={hideConfirmationDialog/*navigation.push(UserNavConstants.OngoingTripScreen)*/}>No, take me back</Button>
                             </View>
@@ -281,7 +281,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     denyButton: {
-        borderColor: 'black'
+        borderColor: 'black',
+        marginTop: 5
     },
     denyButtonContent: {
 
@@ -294,7 +295,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignContent: 'center',
         justifyContent: 'center',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-evenly'
     }
 })
