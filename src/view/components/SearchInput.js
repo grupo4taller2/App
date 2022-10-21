@@ -4,35 +4,53 @@ import { Button, TextInput } from "react-native-paper";
 import InfoInput from "../../controler/infoInput";
 import { getUser } from "../../model/status";
 import TextField from "../composed/textField";
+import TextFieldFunction from "../composed/textfieldFunction";
+import ErrorSnackBar from "./ErrorSnackBar";
 import StatusButton from "./loginButton";
 
 export default function UserSearch(props){
 
-    const search = new InfoInput(null, {
+    const [search, setSearch] = React.useState('');
+    const [error, setError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+
+    const load = () => {
+        setLoading(true);
+    }
+
+    const searchInfo = {
         label: "User",
         mode: "outlined",
-        style: [style.inputBox]
-      });
+        style: [style.inputBox],
+        error: error,
+      };
     
 
     const doSearch = async (context) => {
-        console.log(search.getText());
         //TODO: hace el search aca, si devuelve piola. Llama para arriba con el resultado
         //const searchResult = search(search.getText());
         let searchResult = null;
         try{
-            searchResult = await getUser(search.getText());
+            searchResult = await getUser(search);
         }catch{
-            
+            setLoading(false);
         }
-        if (searchResult) props.callback({user: {}, userInfo: searchResult});
-        if(!searchResult) search.fail();
+        if (searchResult) {
+            setError(false)
+            props.callback({user: {}, userInfo: searchResult});
+        }
+        if(!searchResult) {
+            setError(true)
+        }
+        setSearch(search);
     }
+    console.log(searchInfo);
 
     return (
     <>
-            <TextField text={search}/>
-            <StatusButton style={style.buttonStyle} text={"Search"} call={doSearch}/>
+            <TextFieldFunction text={search} setText={setSearch} info={searchInfo}/>
+            <ErrorSnackBar error={error} text={"No users found for: " + search}  onDismissSnackBar={() => {setError(false)}} />
+            <StatusButton style={style.buttonStyle} text={"Search"} call={doSearch} load={load} loading={loading}/>
     </>
     )
 }

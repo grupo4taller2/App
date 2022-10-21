@@ -19,6 +19,7 @@ export async function signIn(connection, info, failCall, context){
 export async function register(connection, info, failCall, context){
     const result = await postNewUser(info);
     let credentials = {};
+    console.log(info.info.email, info.info.password);
     if (result) credentials = await connection.tryRegister(info.info.email, info.info.password);
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
@@ -72,16 +73,11 @@ export function createStatusChangerWithAsyncChecks(call, connection, info, failC
     return wrapper
 }
 
-export async function updateInfo(newInfo, email, context){
-    try{
-        const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
-        console.log(uri);
-        const response = await axios.patch(uri, newInfo);
-        context.update();
-
-    }catch{
-        console.log("Failed to save info")
-    }
+export async function updateInfo(newInfo, email, context){   
+    const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
+    console.log(uri);
+    const response = await axios.patch(uri, newInfo);
+    context.update();
 }
 
 export async function checkUserFree(user){

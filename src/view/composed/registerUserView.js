@@ -5,30 +5,40 @@ import TextField from './textField';
 import InfoInput from '../../controler/infoInput';
 import UserDriverBox from '../components/userDriverBox';
 import { Text } from 'react-native-paper';
+import TextFieldFunction from './textfieldFunction';
 
 
 export default function UserTypeCheck(props) {
-    const firstName = new InfoInput(null, {
-        label: "First name",
-        mode: "outlined",
-        style: styles.inputBox
-    });
+    const [firstName, setFirstName] = React.useState();
+    const [firstNameError, setFirstNameError] = React.useState(false);
 
-    const lastName = new InfoInput(null, {
-        label: "Last name",
+    const firstNameInfo = {
+        label: firstNameError ? "Must have first name" : "First name",
         mode: "outlined",
-        style: styles.inputBox
-    });
+        style: styles.inputBox,
+        error: firstNameError
+    };
+
+    const [lastName, setlastName] = React.useState();
+    const [lastNameError, setLasNameError] = React.useState(false);
+
+    const lastNameInfo = {
+        label: lastNameError ? "Must have last name" : "Last name",
+        mode: "outlined",
+        style: styles.inputBox,
+        error: lastNameError
+    };
     return(
         <React.Fragment>
             <View style={styles.infoView}>
 
                 <View style={styles.locationInputView} >
-                    <TextField text={firstName} />
-                    <TextField text={lastName} />
+                    <TextFieldFunction text={firstName} info={firstNameInfo} setText={setFirstName}/>
+                    <TextFieldFunction text={lastName} info={lastNameInfo} setText={setlastName}/>
                 </View>
 
-                <UserDriverBox all={props} firstName={firstName} lastName={lastName}/>
+                <UserDriverBox all={props} firstName={{value: firstName, errorSet: setFirstNameError}} 
+                                        lastName={{value: lastName, errorSet: setLasNameError}}/>
                 
             </View>
         </React.Fragment>

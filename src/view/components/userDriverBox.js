@@ -8,69 +8,88 @@ import TextField from '../composed/textField';
 import { createStatusChangerWithChecks, register } from '../../model/status';
 import { useUserContext } from './context';
 import StatusButton from './loginButton';
+import ErrorSnackBar from './ErrorSnackBar';
 
 
 export default function UserDriverBox(props) {
-    const [checkedLeft, setCheckedLeft] = React.useState(false);
     const [checkedRight, setCheckedRight] = React.useState(false);
+    const [carMake, setCarMake] = React.useState();
+    const [carYear, setCarYear] = React.useState();
+    const [carPlate, setCarPlate] = React.useState();
+    const [carColor, setCarColor] = React.useState();
+    const [carModel, setCarModel] = React.useState();
 
-    const carMake = new InfoInput(null, {
-        label: "Car Make",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carYear = new InfoInput(null, {
-        label: "Year of Production",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carPlate = new InfoInput(null, {
-        label: "Plate Number",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carColor = new InfoInput(null, {
-        label: "Color",
-        mode: "outlined",
-        style: styles.inputBox
-    });
+    const [carMakeError, setCarMakeError] = React.useState(false);
+    const [carYearError, setCarYearError] = React.useState(false);
+    const [carPlateError, setCarPlateError] = React.useState(false);
+    const [carColorError, setCarColorError] = React.useState(false);
+    const [carModelError, setCarModelError] = React.useState(false);
 
-    const carModel = new InfoInput(null, {
-        label: "Model",
-        mode: "outlined",
-        style: styles.inputBox
-    });
+    const [error, setError] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
+    const load = () => {
+        setLoading(true);
+    }
+
+    const dismissError = () => {
+        setError(!error);
+    }
     
     const bundleInfo = (props, driver) => {
         const info = {};
         info.username = props.all.username.getText();
-        info.password = props.all.password.getText();
         info.email = props.all.email.getText().toLowerCase();
-        //TODO: first name and last name
-        info.first_name = props.firstName.getText();
-        info.last_name = props.lastName.getText();
+        info.password = props.all.password.getText();
+        info.first_name = props.firstName.value;
+        info.last_name = props.lastName.value;
         info.phone_number = props.all.phone.getText();
         info.wallet = props.all.wallet.getText();
-        //TODO: convertir a latitud y longitud
         info.preferred_location_name = props.all.location.getText();
 
         if (driver){
-            info.car_manufacturer = carMake.getText();
+            info.car_manufacturer = carMake;
             //TODO: agregar modelo de auto
-            info.car_model = carModel.getText();
-            info.car_year_of_production = carYear.getText();
-            info.car_color = carColor.getText();
-            info.car_plate = carPlate.getText();
+            info.car_model = carModel;
+            info.car_year_of_production = Number(carYear);
+            info.car_color = carColor;
+            info.car_plate = carPlate;
         }
-        
         
         return {info: info, isDriver: driver};
     };
 
-    //TODO: implementar estos checks
     const bundleChecks = () => {
-        return () => true;
+        
+        return () => {
+            const firstName = checkNotEmpty(props.firstName.value);
+            const lastName = checkNotEmpty(props.lastName.value);
+            let carOk = true;
+            if(checkedRight){
+                const carMakeChecked = checkNotEmpty(carMake);
+                const carColorChecked = checkNotEmpty(carColor);
+                const carYearChecked =  checkNotEmpty(carYear);
+                const carModelChecked =  checkNotEmpty(carModel);
+                const carPlateChecked = checkNotEmpty(carPlate);
+                carOk = carMakeChecked && carColorChecked && carYearChecked && carModelChecked && carPlateChecked;
+                carMakeChecked ? setCarMakeError(false) : setCarMakeError(true);
+                carModelChecked ? setCarModelError(false) : setCarModelError(true);
+                carYearChecked ? setCarYearError(false) : setCarYearError(true);
+                carPlateChecked ? setCarPlateError(false) : setCarPlateError(true);
+                carColorChecked ? setCarColorError(false) : setCarColorError(true);
+
+            }
+
+            firstName ? props.firstName.errorSet(false) : props.firstName.errorSet(true);
+            lastName ? props.lastName.errorSet(false) : props.lastName.errorSet(true);
+
+            const condition = firstName && lastName && carOk;
+
+            if (!condition) setLoading(false);
+
+            return condition;
+
+        };
     }
 
     
@@ -78,16 +97,20 @@ export default function UserDriverBox(props) {
     const finishSignUp = (props, driver) => {
         
         
-        return (context) => { 
+        return async (context) => { 
             const info = bundleInfo(props, driver);
-        //TODO: implementar el failed callback
+
         const callBack = createStatusChangerWithChecks(register,
         new Outward(),
         info,
-        () => {console.log("Failed")},
-        bundleChecks())
-            console.log(info); 
-            callBack(context)
+        () => {setLoading(false)},
+            bundleChecks())
+            try{
+                await callBack(context)
+            }catch{
+                console.log("Called me"); 
+                setLoading(false)
+            }
         }
         }
     
@@ -116,17 +139,26 @@ export default function UserDriverBox(props) {
         </View>
 
         <View style={styles.carInputView}>
-            <RegisterCarInput carMakeText={carMake} carModelText={carModel} carYearText={carYear} carPlateText={carPlate} carColorText={carColor} disabled={!checkedRight} />
+        <RegisterCarInput carMake={{value: carMake, error: carMakeError}} carModel={{value: carModel, error: carModelError}}
+             carYear={{value: carYear, error: carYearError}} carPlate={{value: carPlate, error: carPlateError}} 
+             carColor={{value: carColor, error: carColorError}} 
+            carMakeSet={setCarMake} carModelSet={setCarModel} carYearSet={setCarYear} carPlateSet={setCarPlate} carColorSet={setCarColor}
+            disabled={!checkedRight} />
         </View>
 
         <View style={styles.buttonView}>
-           
+            <ErrorSnackBar error={error} onDismissSnackBar={dismissError} text={"Unexpected error occured"} />
             <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
-                            disabled={false} call={finishSignUp(props, checkedRight)} 
+                            disabled={false} call={finishSignUp(props, checkedRight)}
+                            load={load} loading={loading} 
                             text={"Finish Sign up"}/>
         </View>
     </View>
     )
+}
+
+function checkNotEmpty(value){
+    return !(!value || value.length === 0)
 }
 
 
