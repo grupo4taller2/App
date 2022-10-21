@@ -45,8 +45,8 @@ export default function TripScreen({navigation}){
     const [confirmationDialog, setConfirmedDialog] = useState(false);
     const [startMarker, setStartMarker] = useState('');
     const [destinationMarker, setDestinationMarker] = useState('');
-    const [distance, setDistance] = useState(undefined);
-    const [duration, setDuration] = useState(undefined);
+    const [distance, setDistance] = useState(undefined);    // measured in km
+    const [duration, setDuration] = useState(undefined);    // measured in min
 
     // testing states
     const [coordinates] = useState([
@@ -93,8 +93,8 @@ export default function TripScreen({navigation}){
     }
 
     async function updatePrice() {
-        console.log(`Distance: ${distance} km`);
-        console.log(`Duration: ${duration} min.`);
+        //console.log(`Distance: ${distance} km`);
+        //console.log(`Duration: ${duration} min.`);
         let tripPrice = distance * 0.2 + duration * 0.1;
         tripPrice = tripPrice.toFixed(3);
         tripPrice = tripPrice.toString() + " ETH";
@@ -111,7 +111,7 @@ export default function TripScreen({navigation}){
 
     /*
     {
-    validTrip == false && <Marker key={1} coordinate={coordinates[0]}/>
+    validTrip == false && <Marker key={1} coordinate={latitude: start.lat, longitude: origin.lat}/>
     }
     <Polyline
     coordinates={coordinates}
@@ -132,6 +132,8 @@ export default function TripScreen({navigation}){
                 }}
                 showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
                 onRegionChangeComplete={(region) => setRegion(region)}>
+                    <Marker tag={1} title={"marker1"} description={"marker1"} coordinate={coordinates[0]}/>
+                    <Marker tag={2} title={"marker2"} description={"marker2"} coordinate={coordinates[1]}/>
                     <MapViewDirections
                         origin={{latitude: startMarker.lat, longitude: startMarker.lng}}
                         destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
@@ -139,12 +141,12 @@ export default function TripScreen({navigation}){
                         strokeWidth={5}
                         strokeColor="red"
                         onReady={result => {
-                            //console.log(`Distance: ${result.distance} km`);
-                            //console.log(`Duration: ${result.duration} min.`);
+                            console.log(`Distance: ${result.distance} km`);
+                            console.log(`Duration: ${result.duration} min.`);
                             setDistance(result.distance);
                             setDuration(result.duration);
-                            //console.log(`Distance: ${distance} km`);
-                            //console.log(`Duration: ${duration} min.`);
+                            console.log(`Distance: ${distance} km`);
+                            console.log(`Duration: ${duration} min.`);
                             updatePrice();
                         }}
                         onError={(errorMessage) => {
