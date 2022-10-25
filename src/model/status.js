@@ -17,11 +17,13 @@ export async function signIn(connection, info, failCall, context){
 }
 
 export async function register(connection, info, failCall, context){
+
     const credentials = await connection.tryRegister(info.info.email, info.info.password);
     
     let result = {};
     
     if (credentials) result = await postNewUser(info, credentials);
+
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
         context.register(credentials.credential, result.data);
@@ -82,7 +84,6 @@ export async function updateInfo(newInfo, email, context){
         
         context.update();
 
-    
 }
 
 export async function checkUserFree(user){

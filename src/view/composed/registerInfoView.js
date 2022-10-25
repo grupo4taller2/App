@@ -142,6 +142,11 @@ export default class RegisterInfo extends Component {
         this.setState({loading})
     }
 
+    load = () => {
+        const loading = true;
+        this.setState({loading})
+    }
+
     stage = (callBack) => {
         return this.state.stage === 0 ? (
             <React.Fragment>

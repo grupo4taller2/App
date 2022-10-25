@@ -56,7 +56,7 @@ export default function ProfileInfoView(){
     
     const checkOnSave = (new_value) => {
         const callback = async () => {
-            
+
             if (!new_value) {
                 setBeingEdited(true);
                 const newInfo = {
@@ -69,14 +69,14 @@ export default function ProfileInfoView(){
                     await updateInfo(newInfo, email, context);
                     setEditResult(true);
                }catch{
+
                     setEditResult(false);
                 }
                 setEditCompleted(true);
                 setBeingEdited(false);
             }
             setEdit(new_value);
-            
-            
+
         }
 
         return callback;
@@ -125,3 +125,4 @@ function getUserInfo(info){
 
     return info;
 }
+

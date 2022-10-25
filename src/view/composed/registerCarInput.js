@@ -44,6 +44,7 @@ const RegisterCarInput = (props) => {
                     <TextFieldFunction text={props.carYear.value} setText={props.carYearSet} info={carYearInfo} disabled={props.disabled}/>
                     <TextFieldFunction text={props.carPlate.value} setText={props.carPlateSet} info={carPlateInfo} disabled={props.disabled}/>
                     <TextFieldFunction text={props.carColor.value} setText={props.carColorSet} info={carColorInfo} disabled={props.disabled}/>
+
         </View>
     )
 }

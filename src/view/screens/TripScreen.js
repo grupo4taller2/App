@@ -1,25 +1,29 @@
 import { React, useState } from 'react';
-import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import Marker, { Polyline } from 'react-native-maps';
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, PROVIDER_GOOGLE, Button, IconButton, Snackbar } from "react-native-paper";
+import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
 import Geocoder from 'react-native-geocoding';
 import { Location } from 'expo';
 import { getCurrentLocation } from '../../controler/getCurrentLocation';
+import MapViewDirections from 'react-native-maps-directions';
+import { UserNavConstants } from '../../config/userNavConstants';
+import OngoingTripScreen from './OngoingTripScreen';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
 
 async function checkLocationValidity(location) {
-    let geocodingAPIKey = "AIzaSyArMKi-b4wEAblYqFMF0B3XEc8nW9mZ9uE";
+    let geocodingAPIKey = "AIzaSyArMKi-b4wEAblYqFMF0B3XEc8nW9mZ9uE";    // geocoding APIKey
     Geocoder.init(geocodingAPIKey);
     try {
         let response = await Geocoder.from(location);
         var location_json = response.results[0].geometry.location;
-        console.log(location_json);
-        return true;
+        // console.log(response);
+        // console.log(location_json);
+        return location_json;
     } catch (error) {   // will enter here if location is invalid
-        console.warn(error);
+        // console.warn(error);
         return false;
     }
 }
@@ -37,31 +41,85 @@ export default function TripScreen({navigation}){
     const [validTrip, setValidTrip] = useState(undefined);
     const [tripCost, setTripCost] = useState("0 ETH");
     const [visibleSB, setVisibleSB] = useState(false);
-    const [confirmedRoute, setConfirmedRoute] = useState(false);
+    const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
+    const [confirmationDialog, setConfirmedDialog] = useState(false);
+    const [startMarker, setStartMarker] = useState('');
+    const [destinationMarker, setDestinationMarker] = useState('');
+    const [distance, setDistance] = useState(undefined);    // measured in km
+    const [duration, setDuration] = useState(undefined);    // measured in min
+
+    // testing states
+    const [coordinates] = useState([
+        {
+          latitude: -34.5523782,
+          longitude: -58.45627210000001,
+        },
+        {
+          latitude: -34.5482229,
+          longitude: -58.4558864,
+        },
+      ]);
+    
+    const origin = {latitude: -34.5523782, longitude: -58.45627210000001};
+    const adestination = {latitude: -34.5482229, longitude: -58.4558864};
 
 
-    const onToggleSnackBar = () => {setVisibleSB(!visibleSB); console.log("holis")}
+    const onToggleSnackBar = () => setVisibleSB(!visibleSB);
 
     const onDismissSnackBar = () => setVisibleSB(false);
 
+    const onToggleGeneralSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
+
+    const onDismissGeneralSnackBar = () => setVisibleGeneralSB(false);
+
+    const showConfirmationDialog = () => setConfirmedDialog(!confirmationDialog);
+
+    const hideConfirmationDialog = () => setConfirmedDialog(false);
+
     async function checkTripValidity(start_location, destination_location) {
-        let validity1 = await checkLocationValidity(start_location);
-        let validity2 = await checkLocationValidity(destination_location);
+        let validityStart = await checkLocationValidity(start_location);
+        let validityDest = await checkLocationValidity(destination_location);
         
-        if (validity1 && validity2) {
+        if (validityStart && validityDest) {
             console.log("Valid trip from: " + start_location + " to " + destination_location + ".");
+            setStartMarker(validityStart);
+            setDestinationMarker(validityDest);
             setValidTrip(true);
-            // tripPrice = getPriceFromBack();
-            // setTripCost(tripPrice);
         }
         else {
             setValidTrip(false);
-            console.log(visibleSB);
             onToggleSnackBar();
         }
     }
 
-    
+    async function updatePrice() {
+        //console.log(`Distance: ${distance} km`);
+        //console.log(`Duration: ${duration} min.`);
+        let tripPrice = distance * 0.2 + duration * 0.1;
+        tripPrice = tripPrice.toFixed(3);
+        tripPrice = tripPrice.toString() + " ETH";
+        setTripCost(tripPrice);
+        // tripPrice = await getPriceFromBack(distance, duration);
+        // setTripCost(tripPrice);
+    }
+
+    function mapMarkers() {
+        return(
+            <Marker coordinate={coordinates[0]} />      
+        )
+    }
+
+    /*
+    {
+    validTrip == false && <Marker key={1} coordinate={latitude: start.lat, longitude: origin.lat}/>
+    }
+    <Polyline
+    coordinates={coordinates}
+    strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+    strokeColors={['#7F0000']}
+    strokeWidth={6}
+    />
+    */
     return (
         <View style={styles.mainView}>
             <View style={styles.mapView}>
@@ -74,18 +132,55 @@ export default function TripScreen({navigation}){
                 }}
                 showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
                 onRegionChangeComplete={(region) => setRegion(region)}>
+                    <Marker tag={1} title={"marker1"} description={"marker1"} coordinate={coordinates[0]}/>
+                    <Marker tag={2} title={"marker2"} description={"marker2"} coordinate={coordinates[1]}/>
+                    <MapViewDirections
+                        origin={{latitude: startMarker.lat, longitude: startMarker.lng}}
+                        destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
+                        apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+                        strokeWidth={5}
+                        strokeColor="red"
+                        onReady={result => {
+                            console.log(`Distance: ${result.distance} km`);
+                            console.log(`Duration: ${result.duration} min.`);
+                            setDistance(result.distance);
+                            setDuration(result.duration);
+                            console.log(`Distance: ${distance} km`);
+                            console.log(`Duration: ${duration} min.`);
+                            updatePrice();
+                        }}
+                        onError={(errorMessage) => {
+                            console.warn('Error while creating route: ' + errorMessage);
+                            onToggleGeneralSnackBar();
+                        }} />
                 </MapView>
-                {/*[DEBUG] Display user's current region:*/}
-                <View style={styles.debugInfoView}>
+                <View style={styles.buttonView}>
+                    <Button style={styles.backButton} contentStyle={styles.backButtonContent} labelStyle={styles.backButtonLabel} buttonColor='white' mode='outlined' icon={'arrow-left-thick'} onPress={() => {navigation.pop()}}/>
+                </View>
+                <Dialog style={styles.dialogBox} visible={confirmationDialog} onDismiss={hideConfirmationDialog}>
+                        <Dialog.Title>Alert</Dialog.Title>
+                        <Dialog.Content>
+                            <Paragraph>Are you sure you want to confirm your trip from {start} to {destination} for {tripCost}</Paragraph>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <View style={styles.confirmationButtonsView}>
+                                <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
+                                onPress={<OngoingTripScreen/>/*ACA SE DEBERIA HACER EL COBRO Y ESPERAR UNA RESPUESTA SATISFACTORIA DEL BACK  navigation.push(UserNavConstants.OngoingTripScreen)*/}>Yes, let's start my trip</Button>
+                                <Button buttonColor='#cc3d55' mode='outlined' style={styles.denyButton} contentStyle={styles.denyButtonContent} labelStyle={styles.denyButtonLabel}
+                                onPress={hideConfirmationDialog/*navigation.push(UserNavConstants.OngoingTripScreen)*/}>No, take me back</Button>
+                            </View>
+                        </Dialog.Actions>
+                    </Dialog>
+                <View style={styles.infoView}>
+                    {/*[DEBUG] Display user's current region:*/}
                     <Text style={styles.text}>Current latitude: {region.latitude}</Text>
                     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
                     <Button buttonColor='#50C878' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
-                        icon="navigation-variant"  onPress={() => {console.log('Pressed'), checkTripValidity(start, destination)}}>
+                        icon="navigation-variant"  onPress={() => {checkTripValidity(start, destination)}}>
                         Set Route
                     </Button>
                     <Button buttonColor='#000' mode='contained' style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
-                        icon="car" disabled={!validTrip} onPress={() => {/*//startTrip();  aca returnear el componente OngoingTripScreen, va realmente habria que hacer una
-                        checkbox para que el usuario vea el costo y valide el viaje*/}}>
+                        icon="car" disabled={!validTrip} onPress={() => {showConfirmationDialog()}}>
                         Start Trip for {tripCost}
                     </Button>
                     <Snackbar
@@ -94,6 +189,13 @@ export default function TripScreen({navigation}){
                         duration='2000'
                         style={styles.snackbar}>
                         Invalid route. Check start and destination!
+                    </Snackbar>
+                    <Snackbar
+                        visible={visibleGeneralSB}
+                        onDismiss={onDismissGeneralSnackBar}
+                        duration='2000'
+                        style={styles.snackbar}>
+                        There was an error processing the route, try again later.
                     </Snackbar>
                 </View>
             </View>
@@ -121,9 +223,8 @@ const styles = StyleSheet.create({
     },
     mapView: {
         flex: 8.5,
-        flexDirection: 'column-reverse',
         alignItems: 'center',
-        marginBottom: 10
+        flexDirection: "column-reverse",
     },
     text: {
         color: "#000",
@@ -145,11 +246,58 @@ const styles = StyleSheet.create({
     startTripButtonLabel: {
         color: '#fff'
     },
-    debugInfoView: {
+    infoView: {
+        flex: 1,
         alignItems: 'center',
-        position: 'absolute'
+        position: 'absolute',
+        marginBottom: 10
     },
     snackbar: {
         backgroundColor: '#D22B2B'
     },
+    buttonView: {
+        flex: 1,
+        alignSelf: 'flex-start',
+        position: 'absolute',
+    },
+    backButton: {     
+        marginLeft: 15,
+        marginBottom: 550,                             
+    },
+    backButtonContent: {
+    },
+    backButtonLabel: {
+        color: '#888888'
+    },
+    dialogBox: {
+        
+    },
+    confirmButton: {
+        borderColor: 'black'
+    },
+    confirmButtonContent: {
+
+    },
+    confirmButtonLabel: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    denyButton: {
+        borderColor: 'black',
+        marginTop: 5
+    },
+    denyButtonContent: {
+
+    },
+    denyButtonLabel: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    confirmationButtonsView: {
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
+    }
 })

@@ -18,6 +18,7 @@ export default function UserDriverBox(props) {
     const [carPlate, setCarPlate] = React.useState();
     const [carColor, setCarColor] = React.useState();
     const [carModel, setCarModel] = React.useState();
+
     
     const [carMakeError, setCarMakeError] = React.useState(false);
     const [carYearError, setCarYearError] = React.useState(false);
@@ -77,18 +78,16 @@ export default function UserDriverBox(props) {
                 carYearChecked ? setCarYearError(false) : setCarYearError(true);
                 carPlateChecked ? setCarPlateError(false) : setCarPlateError(true);
                 carColorChecked ? setCarColorError(false) : setCarColorError(true);
-                
-            }
+ }
 
             firstName ? props.firstName.errorSet(false) : props.firstName.errorSet(true);
             lastName ? props.lastName.errorSet(false) : props.lastName.errorSet(true);
-            
             const condition = firstName && lastName && carOk;
 
             if (!condition) setLoading(false);
 
             return condition;
-             
+
         };
     }
 
@@ -98,7 +97,9 @@ export default function UserDriverBox(props) {
         
         
         return async (context) => { 
+
         const info = bundleInfo(props, driver);
+
         const callBack = createStatusChangerWithChecks(register,
         new Outward(),
         info,
@@ -110,7 +111,7 @@ export default function UserDriverBox(props) {
                 console.log("Called me"); 
                 setLoading(false)
             }
-            
+
         }
         }
     
@@ -139,7 +140,9 @@ export default function UserDriverBox(props) {
         </View>
                             
         <View style={styles.carInputView}>
+
             <RegisterCarInput carMake={{value: carMake, error: carMakeError}} carModel={{value: carModel, error: carModelError}}
+
              carYear={{value: carYear, error: carYearError}} carPlate={{value: carPlate, error: carPlateError}} 
              carColor={{value: carColor, error: carColorError}} 
             carMakeSet={setCarMake} carModelSet={setCarModel} carYearSet={setCarYear} carPlateSet={setCarPlate} carColorSet={setCarColor}
@@ -155,6 +158,10 @@ export default function UserDriverBox(props) {
         </View>
     </View>
     )
+}
+
+function checkNotEmpty(value){
+    return !(!value || value.length === 0)
 }
 
 

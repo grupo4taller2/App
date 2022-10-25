@@ -9,7 +9,7 @@ import TextFieldFunction from './textfieldFunction';
 
 
 export default function UserTypeCheck(props) {
-    
+
     const [firstName, setFirstName] = React.useState();
     const [firstNameError, setFirstNameError] = React.useState(false);
 
@@ -19,9 +19,10 @@ export default function UserTypeCheck(props) {
         style: styles.inputBox,
         error: firstNameError
     };
-    
+
     const [lastName, setlastName] = React.useState();
     const [lastNameError, setLasNameError] = React.useState(false);
+
     const lastNameInfo = {
         label: lastNameError ? "Must have last name" : "Last name",
         mode: "outlined",
