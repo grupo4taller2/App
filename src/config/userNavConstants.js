@@ -4,5 +4,5 @@ export const UserNavConstants = {
     WalletView: "Wallet",
     TripScreen: "Trip",
     UserSearchScreen: "SearchUser",
-    DriverReg: "Driver register"
+    DriverInfo: "Driver info"
 }
