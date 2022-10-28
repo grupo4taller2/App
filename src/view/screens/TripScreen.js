@@ -102,20 +102,12 @@ export default function TripScreen({navigation}){
         setTripCost(tripPrice);
     }
 
-    async function executePayment(start, end, passenger, passenger_rating, totalDistance, totalDuration, cost) {
-        /* 
-        let payment = axios.put(/trips/newtrip?=${start},${end},${passenger},${passenger_rating},${totalDistance},${totalDuration},${cost})
-        if (mandarPaymentABack) {
-            let newTrip = {
-            start: start,
-            end: destination,
-            passenger: context.user.name,
-            passenger_rating: context.user.rating}
-        */    return true
-        /*
-        }
-        else return false
-        */
+    async function executePayment(start, end, passenger, type, totalDistance, totalDuration) {
+        let payment = axios.put('/trips/newtrip?=${start},${end},${passenger},${type},${totalDistance},${totalDuration}')
+        if (payment)
+            return payment
+        else
+            return false;
     }
 
     return (
@@ -168,7 +160,8 @@ export default function TripScreen({navigation}){
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     () => {
-                                        // let validPayment = executePayment(startMarker, destinationMarker, context.user.fullname, context.user.rating, distance, duration, tripCost);
+                                        // let tripTrip = 'regular';
+                                        // let validPayment = executePayment(startMarker, destinationMarker, context.user.fullname, context.user.rating, distance, duration);
                                         let validPayment = true;
                                         if (validPayment) {
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
