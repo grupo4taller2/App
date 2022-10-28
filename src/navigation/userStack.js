@@ -9,6 +9,8 @@ import WalletView from '../view/composed/walletView';
 import TripScreen from '../view/screens/TripScreen';
 import UserSearchView from '../view/screens/UserSearchScreen';
 import RegisterAsDriver from '../view/composed/registerAsDriver';
+import OngoingTripScreen from '../view/screens/OngoingTripScreen';
+import AvailableJobsScreen from '../view/screens/AvailableJobsScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,8 +22,10 @@ export default function UserStack() {
         <Stack.Screen name={UserNavConstants.ProfileScreen} component={Profile} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.WalletView} component={WalletView} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.TripScreen} component={TripScreen} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.OngoingTripScreen} component={OngoingTripScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.UserSearchScreen} component={UserSearchView} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.DriverReg} component={RegisterAsDriver} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.AvailableJobsScreen} component={AvailableJobsScreen} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

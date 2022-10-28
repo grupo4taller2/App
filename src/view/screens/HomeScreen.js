@@ -38,17 +38,33 @@ export default function HomeScreen({navigation}) {
                 <Text>Profile</Text>
             </Surface>
           </TouchableNativeFeedback>
+        </View>
+        <View style={style.buttonsView}>
           <TouchableNativeFeedback>
             <Surface style={styles.OptionSurface} elevation={5}>
                 <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="chat" />
                 <Text>Messages</Text>
             </Surface>
           </TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.AvailableJobsScreen)}>
+            <Surface style={styles.OptionSurface} elevation={5}>
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="car-traction-control" />
+                <Text>Drive</Text>
+                <Text style={style.driversOnly}>(Drivers only)</Text>
+            </Surface>
+          </TouchableNativeFeedback>
       </View>
       
+    
+    </View>
+    )
+}
+
+/*
+Go again component:
       <View style={style.goAgainView}>
         <Text style={style.goAgainText} >Go Again</Text>
-      </View>
+      </View>  
       <View style={style.goAgainButtonsView}>
       <TouchableNativeFeedback>
         <Surface style={style.goAgainSurface} elevation={4}>
@@ -75,12 +91,39 @@ export default function HomeScreen({navigation}) {
         </Surface>
         </TouchableNativeFeedback>
       </View>
-      
-    </View>
-    )
-}
 
-/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  <View style={styles.Mainview}>
     <SafeAreaView style={styles.ProfileView}>
         <View style={styles.NameReviewView}>
@@ -175,7 +218,7 @@ const style = StyleSheet.create({
     paddingLeft: 8,
   },  
   header: {
-    flex: 1,
+    flex: .5,
     flexDirection: 'row',
     marginLeft: 40,
     marginTop: 40,
@@ -210,18 +253,22 @@ const style = StyleSheet.create({
     alignSelf: 'center',
   },
   greetView: {
-    flex: 1,
+    flex: .3,
     justifyContent: 'center',
   },
   greeting: {
+    flex: 1,
     marginLeft: 25,
     fontSize: 32,
     fontWeight: '600',
   },
   buttonsView: {
-    flex: 2.5,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+  },
+  driversOnly: {
+    fontSize: 10
   },
   goAgainView: {
     flex: 1,
@@ -303,10 +350,10 @@ const styles = StyleSheet.create(
         
     },
     OptionSurface: {
-        padding: 8,
-        flex: 1/2,
+        padding: 35,
         minHeight: 100,
-        margin: 12,
+        margin: 6,
+        borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: "#fff"
