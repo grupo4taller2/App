@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import InfoInput from "../../controler/infoInput";
+import { updateDriverInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import StatusButton from "../components/loginButton";
 import RegisterCarInput from "./registerCarInput";
 
 export default function RegisterAsDriver(){
-    const {userState,asDriver} = useUserContext();
-
+    const context = useUserContext();
+    const {userState,asDriver} = context;
     const props = userState.userInfo.driver_information.car;
     
     const [carMakeText, setCarMake] = React.useState(props.manufacturer);
@@ -55,6 +56,22 @@ export default function RegisterAsDriver(){
         return carMakeEmpty || carColorEmpty || carPlateEmpty || carModelEmpty || carYearEmpty;
     }
 
+    const bundleInfo = () => {
+        const info = {};
+        info.first_name = userState.userInfo.first_name;
+        info.last_name = userState.userInfo.last_name;
+        info.phone_number = userState.userInfo.driver_information.phone_number;
+        info.wallet = userState.userInfo.driver_information.wallet;
+        info.preferred_location_name = userState.userInfo.preferred_location_name;
+        info.car_manufacturer = carMakeText;
+        info.car_model = carModelText;
+        info.car_year_of_production = parseInt(carYearText);
+        info.car_color = carColorText;
+        info.car_plate = carPlateText;
+
+        return info;
+    };
+
     const handleEdition = async () => {
         if (checkNotEmpty()){
             return;
@@ -62,9 +79,10 @@ export default function RegisterAsDriver(){
         setLoading(true);
 
         try{
-            //connect and update info
+            const newInfo = bundleInfo();
+            await updateDriverInfo(newInfo, userState.userInfo.email, context)
         }catch (error){
-            //Set error state
+            console.log("ERRRRRRROOOOOOORRRRR");
         }
 
         setLoading(false);

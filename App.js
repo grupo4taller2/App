@@ -51,12 +51,9 @@ export default function App() {
           })
       },
       update: async () => {
-        const newInfo = await getUser(userState.userInfo.email);
+        const newInfo = await getMyInfo(userState.userInfo.email, userState);
         dispatch({token: userState.token , user: userState.user, userInfo: newInfo})
       },
-      asDriver: (driverInfo) => {
-        console.log("Generating a driver!");
-      }
     })
   })
   return (

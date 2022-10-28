@@ -86,6 +86,14 @@ export async function updateInfo(newInfo, email, context){
 
 }
 
+export async function updateDriverInfo(newInfo, email, context){
+    const uri = ROUTE + DRIVERREG + "/" + email + "/" + STATUS;
+    const headers = getHeader(context);
+    const response = await axios.patch(uri, newInfo, headers);
+
+    context.update()
+} 
+
 export async function checkUserFree(user){
     
     try{

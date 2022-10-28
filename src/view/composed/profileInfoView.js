@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native"
 import { Button, List, Surface, Text, TextInput } from "react-native-paper";
 import InfoInput from "../../controler/infoInput";
-import { updateInfo } from "../../model/status";
+import { updateDriverInfo, updateInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import EditButton from "../components/editButton";
 import ErrorSnackBar from "../components/ErrorSnackBar";
@@ -66,7 +66,8 @@ export default function ProfileInfoView(){
                     preferred_location_name: address
                 }
                 try{
-                    await updateInfo(newInfo, email, context);
+                    if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
+                    else await updateInfo(newInfo, email, context)
                     setEditResult(true);
                }catch{
 
