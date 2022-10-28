@@ -24,7 +24,7 @@ export default function AvailableJobsScreen({navigation}){
     useInterval(() => {
         // hardcoded list for now
         let listOfJobs = [{
-            id: 4443,
+            trip_id: 4443,
             start: 'Paseo Colon 850',
             end: 'Av. Cabildo 4200',
             passenger: 'John Doe',
@@ -34,7 +34,7 @@ export default function AvailableJobsScreen({navigation}){
             pay: '6,43 ETH'
         },
         {
-            id: 4444,
+            trip_id: 4444,
             start: 'Av. Libertador 7000',
             end: 'Av. Cabildo 1400',
             passenger: 'Mary Sue',
@@ -44,7 +44,7 @@ export default function AvailableJobsScreen({navigation}){
             pay: '4,31 ETH'
         },
         {
-            id: 4445,
+            trip_id: 4445,
             start: 'Av. Monroe 2000',
             end: 'Paseo Colon 850',
             passenger: 'Paul Smith',
@@ -54,7 +54,7 @@ export default function AvailableJobsScreen({navigation}){
             pay: '3,92 ETH'
         },];
         /*
-        listOfJobs = await axios.get(/locations/self);
+        listOfJobs = await axios.get(/trips/available);
         */
         setJobs(listOfJobs);
       }, delay);
@@ -62,7 +62,7 @@ export default function AvailableJobsScreen({navigation}){
     function isJobAvailable(id) {
         /*
         let trip_info = await axios.get(/trips/${id});
-        if (trip_info.state == 'available') { return true }
+        if (trip_info.state == 'available') { return true }             waiting_for_driver -> driver_accepted -> ongoing_trip -> finished_trip
         */
         return false;
     }

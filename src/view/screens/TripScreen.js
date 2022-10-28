@@ -9,16 +9,27 @@ import { getCurrentLocation } from '../../controler/getCurrentLocation';
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import OngoingTripScreen from './OngoingTripScreen';
+import axios from 'axios';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
 
 // NOTAS REUNION: COMO HACER FUNCIONAR <MapView.Marker> PARA QUE FUNCIONE LA APP EN ANDROID --- IN APP NOTIFICATIONS Y PUSH NOTIFS O SOLO PUSH NOTIFS? --- HACER
 // navigation.navigate() EN VEZ DE navigation.push() PARA VENTANAS DE VIAJE EN CURSO DE PASAJERO Y CONDUCTOR PARA QUE NO PUEDAN SALIR DE ELLAS HASTA QUE TERMINE EL VIAJE Y
-// QUE LA APP CHECKEE EL ESTADO context.user.state Y SI ES == travelling ENTONCES LA APP SE ABRE AUTOMATICAMENTE EN LAS RESPECTIVAS VENTANAS DE VIAJE --- COMO VERIFICAR SI
-// UN VIAJE ESTA AVAILABLE (el back le attachea una trip_id? pero como hago el put inicial entonces?) --- CONDICIONES DE CARRERA PARA EL MARCADO DE TRIPS COMO 'available' --
-// PUSH Y PUT DE AXIOS ESPERAN RESPONSE?
+// QUE LA APP CHECKEE EL ESTADO context.user.state Y SI ES == travelling ENTONCES LA APP SE ABRE AUTOMATICAMENTE EN LAS RESPECTIVAS VENTANAS DE VIAJE --- CONDICIONES DE CARRERA PARA EL MARCADO DE TRIPS COMO 'available' --
+
 async function checkLocationValidity(location) {
+    /*let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/locations';
+    try {
+        let response = await axios.get(url, {params: {address: location}});
+        console.log('valid');
+        return response;
+    }
+    catch(error) {
+        console.warn(error);
+        return false;
+    }*/
+    
     let geocodingAPIKey = "AIzaSyArMKi-b4wEAblYqFMF0B3XEc8nW9mZ9uE";    // geocoding APIKey
     Geocoder.init(geocodingAPIKey);
     try {
@@ -102,10 +113,10 @@ export default function TripScreen({navigation}){
         setTripCost(tripPrice);
     }
 
-    async function executePayment(start, end, passenger, type, totalDistance, totalDuration) {
-        let payment = axios.put('/trips/newtrip?=${start},${end},${passenger},${type},${totalDistance},${totalDuration}')
+    async function executePayment(start, end, passenger, passenger_rating, type, totalDistance, totalDuration) {
+        let payment = axios.put('/trips/newtrip?=${start},${end},${passenger},${passenger_rating},${type},${totalDistance},${totalDuration}');
         if (payment)
-            return payment
+            return payment;
         else
             return false;
     }
@@ -160,8 +171,8 @@ export default function TripScreen({navigation}){
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     () => {
-                                        // let tripTrip = 'regular';
-                                        // let validPayment = executePayment(startMarker, destinationMarker, context.user.fullname, context.user.rating, distance, duration);
+                                        // let tripType = 'regular';
+                                        // let validPayment = executePayment(startMarker, destinationMarker, context.user.fullname, context.user.rating, tripType, distance, duration);
                                         let validPayment = true;
                                         if (validPayment) {
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
