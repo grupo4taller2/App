@@ -14,10 +14,6 @@ import axios from 'axios';
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
 
-// NOTAS REUNION: COMO HACER FUNCIONAR <MapView.Marker> PARA QUE FUNCIONE LA APP EN ANDROID --- IN APP NOTIFICATIONS Y PUSH NOTIFS O SOLO PUSH NOTIFS? --- HACER
-// navigation.navigate() EN VEZ DE navigation.push() PARA VENTANAS DE VIAJE EN CURSO DE PASAJERO Y CONDUCTOR PARA QUE NO PUEDAN SALIR DE ELLAS HASTA QUE TERMINE EL VIAJE Y
-// QUE LA APP CHECKEE EL ESTADO context.user.state Y SI ES == travelling ENTONCES LA APP SE ABRE AUTOMATICAMENTE EN LAS RESPECTIVAS VENTANAS DE VIAJE --- CONDICIONES DE CARRERA
-// PARA EL MARCADO DE TRIPS COMO 'available' --- CUANDO COBRAR?
 
 async function checkLocationValidity(location) {
     /*let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/locations';

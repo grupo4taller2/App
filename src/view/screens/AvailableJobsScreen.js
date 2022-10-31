@@ -76,9 +76,8 @@ export default function AvailableJobsScreen({navigation}){
         let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/${id}';
 
         try {
-            let trip_info = await axios.get(url, null);
+            let trip_info = await axios.patch(url, {state: driver_accepted});
             if (trip_info.trip_state == 'waiting_for_driver') { return true }        //     waiting_for_driver -> driver_accepted -> ongoing_trip -> finished_trip
-            // marcar como empezado aca para que sea lo mas atomico posible?
             return false
         }
         catch(error) {
@@ -88,30 +87,22 @@ export default function AvailableJobsScreen({navigation}){
         return false;
     }
 
-    async function markAsStarted(id) {
-        /*
-        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/${id}';
-
-        axios.patch(url, {trip_state: });
-        */
-        return true;
-    }
       
     function renderJobList() {
         if (jobs.length) {
             return(
-                jobs.map(({ start, end, passenger, passenger_rating, distance, duration, pay, id }) => (
+                jobs.map(({ start, end, rider_username, rider_rating, distance, estimated_time, estimated_price, trip_id }) => (
                     <List.Item
                         style={styles.jobItem}
                         titleStyle={styles.jobItemTitle}
                         descriptionStyle={styles.jobItemDescription}
                         title={`From: ${start} to: ${end}`}
                         titleNumberOfLines={3}
-                        description={`(${distance} km, ETA: ${duration} min)\nPassenger: ${passenger} (${passenger_rating} ★)`}
+                        description={`(${distance} km, ETA: ${estimated_time} min)\nPassenger: ${rider_username} (${rider_rating} ★)`}
                         descriptionNumberOfLines={3}
-                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{pay}</Text>}
+                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{estimated_price}</Text>}
                         onPress={() => {
-                            if (isJobAvailable(id)) {
+                            if (isJobAvailable(trip_id)) {
                                 // let marked = await markAsStarted(id);
                                 // context.user.state = 'travelling';
                                 // navigation.push(UserNavConstants.OngoingJobScreen)
