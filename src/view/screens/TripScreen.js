@@ -16,7 +16,8 @@ import axios from 'axios';
 
 // NOTAS REUNION: COMO HACER FUNCIONAR <MapView.Marker> PARA QUE FUNCIONE LA APP EN ANDROID --- IN APP NOTIFICATIONS Y PUSH NOTIFS O SOLO PUSH NOTIFS? --- HACER
 // navigation.navigate() EN VEZ DE navigation.push() PARA VENTANAS DE VIAJE EN CURSO DE PASAJERO Y CONDUCTOR PARA QUE NO PUEDAN SALIR DE ELLAS HASTA QUE TERMINE EL VIAJE Y
-// QUE LA APP CHECKEE EL ESTADO context.user.state Y SI ES == travelling ENTONCES LA APP SE ABRE AUTOMATICAMENTE EN LAS RESPECTIVAS VENTANAS DE VIAJE --- CONDICIONES DE CARRERA PARA EL MARCADO DE TRIPS COMO 'available' --
+// QUE LA APP CHECKEE EL ESTADO context.user.state Y SI ES == travelling ENTONCES LA APP SE ABRE AUTOMATICAMENTE EN LAS RESPECTIVAS VENTANAS DE VIAJE --- CONDICIONES DE CARRERA
+// PARA EL MARCADO DE TRIPS COMO 'available' --- CUANDO COBRAR?
 
 async function checkLocationValidity(location) {
     /*let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/locations';
@@ -59,6 +60,7 @@ export default function TripScreen({navigation}){
     const [visibleSB, setVisibleSB] = useState(false);
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
+    const [visiblePriceSB, setVisiblePriceSB] = useState(false);
     const [confirmationDialog, setConfirmedDialog] = useState(false);
     const [startMarker, setStartMarker] = useState('');
     const [destinationMarker, setDestinationMarker] = useState('');
@@ -86,6 +88,10 @@ export default function TripScreen({navigation}){
 
     const onDismissPaymentSnackBar = () => setVisiblePaymentSB(false);
 
+    const onTogglePriceSnackBar = () => setVisiblePriceSB(!visiblePriceSB);
+
+    const onDismissPriceSnackBar = () => setVisiblePriceSB(false);
+
     const showConfirmationDialog = () => setConfirmedDialog(!confirmationDialog);
 
     const hideConfirmationDialog = () => setConfirmedDialog(false);
@@ -107,14 +113,28 @@ export default function TripScreen({navigation}){
     }
 
     async function updatePrice() {
+        /*
+        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/price';
+        try {
+            let newPrice = await axios.get(url, {params: {origin_address: startMarker, destination_address: destinationMarker, trip_type: regular}});
+            newPrice = newPrice.estimated_price.toFixed(3);
+            newPrice = newPrice.toString() + " ETH";
+            setTripCost(newPrice);
+        }
+        catch(error) {
+            console.warn(error);
+            onTogglePriceSnackBar();
+        }
+        */
         let tripPrice = distance * 0.2 + duration * 0.1;
         tripPrice = tripPrice.toFixed(3);
         tripPrice = tripPrice.toString() + " ETH";
         setTripCost(tripPrice);
     }
 
-    async function executePayment(start, end, passenger, passenger_rating, type, totalDistance, totalDuration) {
-        let payment = axios.put('/trips/newtrip?=${start},${end},${passenger},${passenger_rating},${type},${totalDistance},${totalDuration}');
+    async function executePayment(start, end, passenger, type) {
+        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips';
+        let payment = await axios.post(url, {params: {rider_username: passenger, rider_origin_address: start, rider_destination_address: end, trip_type: type}});
         if (payment)
             return payment;
         else
@@ -172,7 +192,7 @@ export default function TripScreen({navigation}){
                                 onPress={
                                     () => {
                                         // let tripType = 'regular';
-                                        // let validPayment = executePayment(startMarker, destinationMarker, context.user.fullname, context.user.rating, tripType, distance, duration);
+                                        // let validPayment = executePayment(startMarker, destinationMarker, userContext.username, tripType);
                                         let validPayment = true;
                                         if (validPayment) {
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
@@ -204,6 +224,13 @@ export default function TripScreen({navigation}){
                         duration='2500'
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>Invalid route. Check start and destination!</Text>
+                    </Snackbar>
+                    <Snackbar
+                        visible={visiblePriceSB}
+                        onDismiss={onDismissPriceSnackBar}
+                        duration='2500'
+                        style={styles.snackbar}>
+                        <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the price of your trip, try again later.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visibleGeneralSB}

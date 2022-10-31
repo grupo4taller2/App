@@ -27,49 +27,72 @@ export default function AvailableJobsScreen({navigation}){
             trip_id: 4443,
             start: 'Paseo Colon 850',
             end: 'Av. Cabildo 4200',
-            passenger: 'John Doe',
-            passenger_rating: '4.1',
+            rider_username: 'John Doe',
+            trip_type: 'regular',
+            rider_rating: '4.1',
             distance: '31.42',
-            duration: '34.7',
-            pay: '6,43 ETH'
+            estimated_time: '34.7',
+            timestamp: "2022-10-31T18:29:34.829Z",
+            trip_state: "waiting_for_driver",
+            estimated_price: '6,43 ETH'
         },
         {
             trip_id: 4444,
             start: 'Av. Libertador 7000',
             end: 'Av. Cabildo 1400',
-            passenger: 'Mary Sue',
-            passenger_rating: '3.6',
+            rider_username: 'Mary Sue',
+            trip_type: 'regular',
+            rider_rating: '3.6',
             distance: '17.63',
-            duration: '24.3',
-            pay: '4,31 ETH'
+            estimated_time: '24.3',
+            timestamp: "2022-10-31T18:34:33.829Z",
+            trip_state: "driver_waiting",
+            trip_state: "waiting_for_driver",
+            estimated_price: '4,31 ETH'
         },
         {
             trip_id: 4445,
             start: 'Av. Monroe 2000',
             end: 'Paseo Colon 850',
-            passenger: 'Paul Smith',
-            passenger_rating: '1.8',
+            rider_username: 'Paul Smith',
+            trip_type: 'regular',
+            rider_rating: '1.8',
             distance: '33.11',
-            duration: '29.8',
-            pay: '3,92 ETH'
+            estimated_time: '29.8',
+            timestamp: "2022-10-31T18:11:53.829Z",
+            trip_state: "waiting_for_driver",
+            estimated_price: '3,92 ETH'
         },];
         /*
-        listOfJobs = await axios.get(/trips/available);
+        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/available';
+
+        let listOfJobs = await axios.get(url, null);
         */
         setJobs(listOfJobs);
       }, delay);
 
     function isJobAvailable(id) {
         /*
-        let trip_info = await axios.get(/trips/${id});
-        if (trip_info.state == 'available') { return true }             waiting_for_driver -> driver_accepted -> ongoing_trip -> finished_trip
+        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/${id}';
+
+        try {
+            let trip_info = await axios.get(url, null);
+            if (trip_info.trip_state == 'waiting_for_driver') { return true }        //     waiting_for_driver -> driver_accepted -> ongoing_trip -> finished_trip
+            // marcar como empezado aca para que sea lo mas atomico posible?
+            return false
+        }
+        catch(error) {
+            return false
+        }
         */
         return false;
     }
 
     async function markAsStarted(id) {
         /*
-        axios.push(/trips/${id}/start);
+        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/${id}';
+
+        axios.patch(url, {trip_state: });
         */
         return true;
     }
