@@ -1,12 +1,14 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import InfoInput from "../../controler/infoInput";
 import { updateDriverInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import StatusButton from "../components/loginButton";
 import RegisterCarInput from "./registerCarInput";
+import Constants from 'expo-constants';
+import { Avatar } from "react-native-paper";
 
-export default function RegisterAsDriver(){
+export default function RegisterAsDriver({navigation}){
     const context = useUserContext();
     const {userState,asDriver} = context;
     const props = userState.userInfo.driver_information.car;
@@ -101,7 +103,14 @@ export default function RegisterAsDriver(){
 
 
     return (
+        <>
+        <SafeAreaView style={styles.backView}>
+            <TouchableNativeFeedback onPress={() => navigation.pop()}>
+                <Avatar.Icon style={styles.backArrow} size={50} icon="chevron-left" />
+            </TouchableNativeFeedback>
+        </SafeAreaView>
         <View style={styles.mainView}>
+            
         <View style={styles.carInputView}>
             <RegisterCarInput carMake={carMake} carModel={carModel} carYear={carYear} carPlate={carPlate} carColor={carColor} 
                                 carMakeSet={setCarMake} carModelSet={setCarModel} carYearSet={setCarYear} carPlateSet={setCarPlate} carColorSet={setCarColor}
@@ -111,6 +120,7 @@ export default function RegisterAsDriver(){
                             disabled={false} call={edit} load={() => {}} loading={loading}
                             text={editing ? "Save information" : "Edit car information"}/>
         </View>
+        </>
     )
 }
 
@@ -151,4 +161,13 @@ const styles = StyleSheet.create({
         flex: 0.2,
         alignItems: 'center',
     },
+    backView: {
+        flex: 0.1,
+        backgroundColor: "#fff",
+        
+    },
+    backArrow: {
+        backgroundColor: "#fff",
+        marginTop: Constants.statusBarHeight
+    }
 })
