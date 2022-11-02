@@ -1,7 +1,7 @@
 import { React, useEffect, useState, useRef } from 'react';
 import MapView from 'react-native-maps';
 import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent, Platform } from "react-native";
 import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
 import Geocoder from 'react-native-geocoding';
 import { Location } from 'expo';
@@ -10,32 +10,19 @@ import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import OngoingTripScreen from './OngoingTripScreen';
 import axios from 'axios';
+import { UserContext } from '../components/context';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
 
 
 async function checkLocationValidity(location) {
-    /*let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/locations';
+    let url = 'http://g4-fiuber.herokuapp.com/api/v1/locations/search/';
     try {
         let response = await axios.get(url, {params: {address: location}});
-        console.log('valid');
-        return response;
+        return response.data;
     }
     catch(error) {
-        console.warn(error);
-        return false;
-    }*/
-    
-    let geocodingAPIKey = "AIzaSyArMKi-b4wEAblYqFMF0B3XEc8nW9mZ9uE";    // geocoding APIKey
-    Geocoder.init(geocodingAPIKey);
-    try {
-        let response = await Geocoder.from(location);
-        var location_json = response.results[0].geometry.location;
-        // console.log(response);
-        // console.log(location_json);
-        return location_json;
-    } catch (error) {   // will enter here if location is invalid
         console.warn(error);
         return false;
     }
@@ -62,6 +49,7 @@ export default function TripScreen({navigation}){
     const [destinationMarker, setDestinationMarker] = useState('');
     const [distance, setDistance] = useState(undefined);    // measured in km
     const [duration, setDuration] = useState(undefined);    // measured in min
+    const [tripType, setTripType] = useState("regular");
     const previousRouteValues = useRef({ distance, duration });
 
     useEffect(() => {
@@ -96,10 +84,12 @@ export default function TripScreen({navigation}){
         let validityStart = await checkLocationValidity(start_location);
         let validityDest = await checkLocationValidity(destination_location);
         
-        if (validityStart && validityDest) {
+        if (validityStart != false && validityDest != false) {
             console.log("Valid trip from: " + start_location + " to " + destination_location + ".");
-            setStartMarker(validityStart);
-            setDestinationMarker(validityDest);
+            let newStart = {latitude: validityStart.latitude, longitude: validityStart.longitude};
+            let newDest = {latitude: validityDest.latitude, longitude: validityDest.longitude};
+            setStartMarker(newStart);
+            setDestinationMarker(newDest);
             setValidTrip(true);
         }
         else {
@@ -109,11 +99,10 @@ export default function TripScreen({navigation}){
     }
 
     async function updatePrice() {
-        /*
-        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/price';
+        let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips/price';
         try {
-            let newPrice = await axios.get(url, {params: {origin_address: startMarker, destination_address: destinationMarker, trip_type: regular}});
-            newPrice = newPrice.estimated_price.toFixed(3);
+            let newPrice = await axios.get(url, {params: {origin_address: start, destination_address: destination, trip_type: tripType}});
+            newPrice = newPrice.data.estimated_price.toFixed(3);
             newPrice = newPrice.toString() + " ETH";
             setTripCost(newPrice);
         }
@@ -121,18 +110,13 @@ export default function TripScreen({navigation}){
             console.warn(error);
             onTogglePriceSnackBar();
         }
-        */
-        let tripPrice = distance * 0.2 + duration * 0.1;
-        tripPrice = tripPrice.toFixed(3);
-        tripPrice = tripPrice.toString() + " ETH";
-        setTripCost(tripPrice);
     }
 
-    async function executePayment(start, end, passenger, type) {
-        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips';
-        let payment = await axios.post(url, {params: {rider_username: passenger, rider_origin_address: start, rider_destination_address: end, trip_type: type}});
-        if (payment)
-            return payment;
+    async function startTrip(passenger) {
+        let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
+        let validStart = await axios.post(url, {rider_username: 'si', rider_origin_address: start, rider_destination_address: destination, trip_type: tripType});
+        if (validStart)
+            return validStart;
         else
             return false;
     }
@@ -149,16 +133,22 @@ export default function TripScreen({navigation}){
                 }}
                 showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
                 onRegionChangeComplete={(region) => setRegion(region)}>
-                    {validTrip == true &&
-                        <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={{latitude: startMarker.lat, longitude: startMarker.lng}}/>
+                    {validTrip == true && Platform.OS == 'ios' &&
+                        <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
                     }
-                    {validTrip == true &&
-                        <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}/>
+                    {validTrip == true && Platform.OS == 'ios' &&
+                        <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
+                    }
+                    {validTrip == true && Platform.OS == 'android' &&
+                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
+                    }
+                    {validTrip == true && Platform.OS == 'android' &&
+                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
                     }
                     {validTrip == true &&
                     <MapViewDirections
-                        origin={{latitude: startMarker.lat, longitude: startMarker.lng}}
-                        destination={{latitude: destinationMarker.lat, longitude: destinationMarker.lng}}
+                        origin={startMarker}
+                        destination={destinationMarker}
                         apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
                         strokeWidth={5}
                         strokeColor="red"
@@ -186,13 +176,14 @@ export default function TripScreen({navigation}){
                             <View style={styles.confirmationButtonsView}>
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
-                                    () => {
-                                        // let tripType = 'regular';
-                                        // let validPayment = executePayment(startMarker, destinationMarker, userContext.username, tripType);
-                                        let validPayment = true;
-                                        if (validPayment) {
+                                    async () => {
+                                        let validStart = await startTrip(UserContext.displayName);
+                                        if (validStart != false) {
+                                            let tripStartResponse = JSON.stringify(validStart);
+                                            console.log(tripStartResponse);
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
-                                            navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration})}
+                                            navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration});
+                                        }
                                         else {onTogglePaymentSnackBar()}
                                     }}>
                                         Yes, let's start my trip

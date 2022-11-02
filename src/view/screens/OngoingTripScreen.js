@@ -54,18 +54,18 @@ export default function OngoingTripScreen({route, navigation}){
             <View style={styles.mapView}>
                 <MapView style={styles.map} 
                 initialRegion={{
-                latitude: currentLocation.lat,
-                longitude: currentLocation.lng,
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
                 latitudeDelta: 0.1,
                 longitudeDelta: 0.1,
                 }}
                 showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
                 onRegionChangeComplete={(region) => setRegion(region)}>
-                    <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={{latitude: currentLocation.lat, longitude: currentLocation.lng}}/>
-                    <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={{latitude: destination.lat, longitude: destination.lng}}/>
+                    <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
+                    <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
                     <MapViewDirections
-                        origin={{latitude: currentLocation.lat, longitude: currentLocation.lng}}
-                        destination={{latitude: destination.lat, longitude: destination.lng}}
+                        origin={currentLocation}
+                        destination={destination}
                         apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
                         strokeWidth={5}
                         strokeColor="red"
