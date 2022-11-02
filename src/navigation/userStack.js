@@ -26,6 +26,7 @@ export default function UserStack() {
         <Stack.Screen name={UserNavConstants.UserSearchScreen} component={UserSearchView} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.DriverReg} component={RegisterAsDriver} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.AvailableJobsScreen} component={AvailableJobsScreen} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.DriverInfo} component={RegisterAsDriver} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

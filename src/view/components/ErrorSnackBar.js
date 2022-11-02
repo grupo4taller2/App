@@ -4,7 +4,6 @@ import { Button, Snackbar, Text } from 'react-native-paper';
 
 export default function ErrorSnackBar(props) {
 
-
   return (
       <Snackbar
         visible={props.error}

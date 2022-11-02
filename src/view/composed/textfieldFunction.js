@@ -10,9 +10,10 @@ export default function TextFieldFunction(props){
 
 
         let info = props.info;
-
+        console.log(props);
         if (props.disabled) {
             return (<TextInput
+                value={props.text}
                 {...info} 
                 {...style.textField}
                 disabled={true}
@@ -20,6 +21,7 @@ export default function TextFieldFunction(props){
         }
 
         return (<TextInput
+            value={props.text}
             {...info} 
             {...props.style ? props.style: style.textField}
             onChangeText={props.setText} />)
@@ -33,4 +35,6 @@ const style = {
 
         theme: {roundness: 30, colors: {background: "#fff"}},
     }
+
 }
+

@@ -17,10 +17,13 @@ export async function signIn(connection, info, failCall, context){
 }
 
 export async function register(connection, info, failCall, context){
-    const result = await postNewUser(info);
-    let credentials = {};
-    console.log(info.info.email, info.info.password);
-    if (result) credentials = await connection.tryRegister(info.info.email, info.info.password);
+
+    const credentials = await connection.tryRegister(info.info.email, info.info.password);
+    
+    let result = {};
+    
+    if (credentials) result = await postNewUser(info, credentials);
+
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
         context.register(credentials.credential, result.data);
@@ -73,12 +76,23 @@ export function createStatusChangerWithAsyncChecks(call, connection, info, failC
     return wrapper
 }
 
-export async function updateInfo(newInfo, email, context){   
-    const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
-    console.log(uri);
-    const response = await axios.patch(uri, newInfo);
-    context.update();
+export async function updateInfo(newInfo, email, context){
+    
+        const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
+        const headers = getHeader(context);
+        const response = await axios.patch(uri, newInfo, headers);
+        
+        context.update();
+
 }
+
+export async function updateDriverInfo(newInfo, email, context){
+    const uri = ROUTE + DRIVERREG + "/" + email + "/" + STATUS;
+    const headers = getHeader(context);
+    const response = await axios.patch(uri, newInfo, headers);
+
+    context.update()
+} 
 
 export async function checkUserFree(user){
     
@@ -100,6 +114,22 @@ export async function getUser(userOrEmail) {
     if (result) return result.data;
 }
 
+export async function getMyInfo(userOrEmail, userState){
+    const header = getToken(userState.user.stsTokenManager.accessToken);
+
+    try{
+        console.log(header);
+        const uri = ROUTE + USERS + '/' + userOrEmail;
+        const result = await axios.get(uri, header);
+        if(result) return result.data;
+    }catch{
+        const uri = ROUTE + USERS + '/' + userOrEmail;
+        const result = await axios.get(uri, header);
+        if(result) return result.data;
+    }
+
+}
+
 export async function googleGetUser(userCredential){
     const email = userCredential.user.email;
     let endResult = null;
@@ -107,11 +137,11 @@ export async function googleGetUser(userCredential){
 
 }
 
-async function postNewUser(info){
-    
+async function postNewUser(info, user){
+    console.log(info);
     const uri = ROUTE + (info.isDriver ? DRIVERREG : PASSENGERREG);
     
-    const result = await axios.post(uri, info.info);
+    const result = await axios.post(uri, info.info, getToken(user.credential.user.stsTokenManager.accessToken));
 
     return result;
 }
@@ -150,3 +180,11 @@ async function tryGenerate(email, number, user){
     
 }
 
+function getHeader(context){
+    
+    return context.userState.user ? getToken(context.userState.user.stsTokenManager.accessToken) : null;
+}
+
+function getToken(accessToken){
+    return {headers: {Authorization: `bearer ${accessToken}`}}
+}

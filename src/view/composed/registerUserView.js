@@ -9,6 +9,7 @@ import TextFieldFunction from './textfieldFunction';
 
 
 export default function UserTypeCheck(props) {
+
     const [firstName, setFirstName] = React.useState();
     const [firstNameError, setFirstNameError] = React.useState(false);
 

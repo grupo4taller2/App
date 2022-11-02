@@ -10,6 +10,7 @@ import StatusButton from "./loginButton";
 
 export default function UserSearch(props){
 
+
     const [search, setSearch] = React.useState('');
     const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
@@ -24,7 +25,6 @@ export default function UserSearch(props){
         style: [style.inputBox],
         error: error,
       };
-    
 
     const doSearch = async (context) => {
         //TODO: hace el search aca, si devuelve piola. Llama para arriba con el resultado
@@ -35,6 +35,7 @@ export default function UserSearch(props){
         }catch{
             setLoading(false);
         }
+        
         if (searchResult) {
             setError(false)
             props.callback({user: {}, userInfo: searchResult});
@@ -45,7 +46,6 @@ export default function UserSearch(props){
         setSearch(search);
     }
     console.log(searchInfo);
-
     return (
     <>
             <TextFieldFunction text={search} setText={setSearch} info={searchInfo}/>

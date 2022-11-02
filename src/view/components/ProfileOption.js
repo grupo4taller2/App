@@ -22,7 +22,9 @@ const style = StyleSheet.create({
     optionArrow: {
         backgroundColor: '#fff',
         position: 'absolute',
-        right: 0
+        right: 0,
+        maxWidth: 50,
+        maxHeight: 50
     },
     optionItem: {
         
