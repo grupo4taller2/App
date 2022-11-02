@@ -10,7 +10,7 @@ import StatusButton from "./loginButton";
 
 export default function UserSearch(props){
 
-    
+
     const [search, setSearch] = React.useState('');
     const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
@@ -39,7 +39,6 @@ export default function UserSearch(props){
         if (searchResult) {
             setError(false)
             props.callback({user: {}, userInfo: searchResult});
-
         }
         if(!searchResult) {
             setError(true)

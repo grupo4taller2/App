@@ -31,7 +31,9 @@ export default class Login extends Component{
           });
 
           this.state.error = null;
+
           this.state.loading = false;
+
         
         this.handleFailedLogin = this.handleFailedLogin.bind(this);
     }
@@ -48,6 +50,7 @@ export default class Login extends Component{
       const loading = true;
       this.setState({loading});
     }
+
 
     render(){
 
