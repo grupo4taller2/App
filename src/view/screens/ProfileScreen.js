@@ -26,12 +26,10 @@ const style = StyleSheet.create(
         Mainview: {
             flex: 1,
             backgroundColor: "#fff"
-            
         },
         backView: {
             flex: 0.1,
             backgroundColor: "#fff",
-            
         },
         backArrow: {
             backgroundColor: "#fff",

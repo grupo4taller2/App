@@ -61,11 +61,4 @@ export default function App() {
       {userState.user ? <UserStack /> : <AuthStack />}
     </UserContext.Provider>
   );
-  
-  
-  /*
-  return (
-    <TripScreen/>
-    )
-  */
 }
