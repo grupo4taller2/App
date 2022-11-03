@@ -1,7 +1,7 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
-import { getUser } from './src/model/status';
+import { getMyInfo, getUser } from './src/model/status';
 import RootNavigation from './src/navigation';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
@@ -30,8 +30,9 @@ export default function App() {
     return ({
       userState,
       signIn: async (responseToken) => {
-          const userInfo = await getUser(responseToken.user.email.toLowerCase());
-          dispatch({token: responseToken._tokenResponse, user: responseToken.user, userInfo: userInfo})
+          const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
+          console.log(userInfo);
+          dispatch({token: responseToken._tokenResponse.idToken, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {
         const auth = getAuth();
@@ -50,12 +51,9 @@ export default function App() {
           })
       },
       update: async () => {
-        const newInfo = await getUser(userState.userInfo.email);
+        const newInfo = await getMyInfo(userState.userInfo.email, userState);
         dispatch({token: userState.token , user: userState.user, userInfo: newInfo})
       },
-      asDriver: (driverInfo) => {
-        console.log("Generating a driver!");
-      }
     })
   })
 

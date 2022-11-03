@@ -22,15 +22,15 @@ export default function ProfileOptionsView({navigation}){
         failedLogOut
       )
 
-    const driverCallback = userState.userInfo.car_manufacturer ? null : () => {navigation.push(UserNavConstants.DriverReg)};
-    const driverText = userState.userInfo.car_manufacturer ? "See driver info" : () => {navigation.push(UserNavConstants.DriverReg)};
+    const driverCallback = userState.userInfo.driver_information ? () => navigation.push(UserNavConstants.DriverInfo): null;
+    console.log(userState);
 
     return (
         <View style={style.privateOptions}>
                 <ProfileOption icon="account-search" text="search users" callback={() => {navigation.push(UserNavConstants.UserSearchScreen)}}/>
                 <ProfileOption icon="wallet" text="wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
                 <ProfileOption icon="logout" text="Log out" callback={callBack}/>
-                <ProfileOption icon="card-account-details" text="Become a driver" callback={driverCallback}/>
+                {driverCallback ? <ProfileOption icon="card-account-details" text="see driver info" callback={driverCallback}/> : null}
             </View>
     )
 }

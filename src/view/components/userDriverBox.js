@@ -157,9 +157,6 @@ export default function UserDriverBox(props) {
     )
 }
 
-function checkNotEmpty(value){
-    return !(!value || value.length === 0)
-}
 
 
 const styles = StyleSheet.create({

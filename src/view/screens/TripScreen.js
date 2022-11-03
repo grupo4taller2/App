@@ -179,8 +179,6 @@ export default function TripScreen({navigation}){
                                     async () => {
                                         let validStart = await startTrip(UserContext.displayName);
                                         if (validStart != false) {
-                                            let tripStartResponse = JSON.stringify(validStart);
-                                            console.log(tripStartResponse);
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
                                             navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration});
                                         }

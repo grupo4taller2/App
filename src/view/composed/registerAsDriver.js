@@ -1,90 +1,123 @@
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import InfoInput from "../../controler/infoInput";
+import { updateDriverInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import StatusButton from "../components/loginButton";
 import RegisterCarInput from "./registerCarInput";
+import Constants from 'expo-constants';
+import { Avatar } from "react-native-paper";
 
-export default function RegisterAsDriver(props){
-    const {asDriver} = useUserContext();
+export default function RegisterAsDriver({navigation}){
+    const context = useUserContext();
+    const {userState,asDriver} = context;
 
-    const carMake = new InfoInput(null, {
-        label: "Car Make",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carYear = new InfoInput(null, {
-        label: "Year of Production",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carPlate = new InfoInput(null, {
-        label: "Plate Number",
-        mode: "outlined",
-        style: styles.inputBox
-    });
-    const carColor = new InfoInput(null, {
-        label: "Color",
-        mode: "outlined",
-        style: styles.inputBox
-    });
+    const props = userState.userInfo.driver_information.car;
 
-    const carModel = new InfoInput(null, {
-        label: "Model",
-        mode: "outlined",
-        style: styles.inputBox
-    });
+    const [carMakeText, setCarMake] = React.useState(props.manufacturer);
+    const [carMakeError, setCarMakeError] = React.useState(false);
+    const carMake = {value: carMakeText, error: carMakeError};
+    const [carYearText, setCarYear] = React.useState(props.year_of_production.toString());
+    const [carYearError, setCarYearError] = React.useState(false);
+    const carYear = {value: carYearText, error: carYearError}
+    const [carPlateText, setCarPlate] = React.useState(props.plate);
+    const [carPlateError, setCarPlateError] = React.useState(false);
+    const carPlate = {value: carPlateText, error: carPlateError}
+    const [carColorText, setCarColor] = React.useState(props.color);
+    const [carColorError, setCarColorError] = React.useState(false);
+    const carColor = {value: carColorText, error: carColorError}
+    const [carModelText, setCarModel] = React.useState(props.model);
+    const [carModelError, setCarModelError] = React.useState(false);
+    const carModel = {value: carModelText, error: carModelError};
 
-    const toDriver = () => {
-        let ok = true;
-        const info = {
-            car_manufacturer: carMake.getText(),
-            //TODO: agregar modelo de auto
-            car_model: carModel.getText(),
-            car_year_of_production: carYear.getText(),
-            car_color: carColor.getText(),
-            car_plate: carPlate.getText(),
-        };
+    const [editing, setEditing] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
 
-        if (!info.car_manufacturer){
-            ok = false;
-            carMake.fail();
-        } 
-        if (!info.car_model){ 
-            ok = false;
-            carModel.fail();
+    const checkNotEmpty = () => {
+        const carMakeEmpty = carMakeText === '';
+        const carYearEmpty = carYearText === '';
+        const carPlateEmpty = carPlateText === '';
+        const carColorEmpty = carColorText === '';
+        const carModelEmpty = carModelText === '';
+
+        if (carMakeEmpty) {
+            setCarMakeError(true)
         }
-        if (!info.car_year_of_production) {
-            ok =false;
-            carYear.fail();
+        if (carYearEmpty) {
+            setCarYearError(true)
         }
-
-        if (!info.car_plate) {
-            ok =false;
-            carPlate.fail();
+        if (carPlateEmpty) {
+            setCarPlateError(true)
         }
-        
-
-        if (!info.car_color) {
-            ok =false;
-            carColor.fail();
+        if (carColorEmpty) {
+            setCarColorError(true)
         }
-        
-
-        if (ok){
-            asDriver(info);
+        if (carModelEmpty) {
+            setCarModelError(true)
         }
+    
+        return carMakeEmpty || carColorEmpty || carPlateEmpty || carModelEmpty || carYearEmpty;
     };
 
+    const bundleInfo = () => {
+        const info = {};
+        info.first_name = userState.userInfo.first_name;
+        info.last_name = userState.userInfo.last_name;
+        info.phone_number = userState.userInfo.driver_information.phone_number;
+        info.wallet = userState.userInfo.driver_information.wallet;
+        info.preferred_location_name = userState.userInfo.preferred_location_name;
+        info.car_manufacturer = carMakeText;
+        info.car_model = carModelText;
+        info.car_year_of_production = parseInt(carYearText);
+        info.car_color = carColorText;
+        info.car_plate = carPlateText;
+
+        return info;
+    };
+
+        
+    const handleEdition = async () => {
+        if (checkNotEmpty()){
+            return;
+        }
+
+        setLoading(true);
+        try{
+            const newInfo = bundleInfo();
+            await updateDriverInfo(newInfo, userState.userInfo.email, context)
+        }catch (error){
+            console.log("ERRRRRRROOOOOOORRRRR");
+        }
+        setLoading(false);
+    };
+
+    const edit = async () => {
+        if (editing) {
+            await handleEdition();
+            setEditing(false);
+        }else{
+            setEditing(true);
+        }
+    }
 
     return (
+        <>
+        <SafeAreaView style={styles.backView}>
+            <TouchableNativeFeedback onPress={() => navigation.pop()}>
+                <Avatar.Icon style={styles.backArrow} size={50} icon="chevron-left" />
+            </TouchableNativeFeedback>
+        </SafeAreaView>
         <View style={styles.mainView}>
+
         <View style={styles.carInputView}>
-            <RegisterCarInput carMakeText={carMake} carModelText={carModel} carYearText={carYear} carPlateText={carPlate} carColorText={carColor} />
+        <RegisterCarInput carMake={carMake} carModel={carModel} carYear={carYear} carPlate={carPlate} carColor={carColor} 
+                                carMakeSet={setCarMake} carModelSet={setCarModel} carYearSet={setCarYear} carPlateSet={setCarPlate} carColorSet={setCarColor}
+                                disabled={!editing}/>
         </View>
         <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
-                            disabled={false} call={toDriver} 
-                            text={"Become a driver"}/>
+                            disabled={false} call={edit} load={() => {}} loading={loading}
+                            text={editing ? "Save information" : "Edit car information"}/>
         </View>
+        </>
     )
 }
 
@@ -103,6 +136,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     finishButton: {
+        position: "absolute",
+        bottom: 5,
         backgroundColor: '#37a0bd',
         borderRadius: 100,
     },
@@ -123,4 +158,13 @@ const styles = StyleSheet.create({
         flex: 0.2,
         alignItems: 'center',
     },
+    backView: {
+        flex: 0.1,
+        backgroundColor: "#fff",
+
+    },
+    backArrow: {
+        backgroundColor: "#fff",
+        marginTop: Constants.statusBarHeight
+    }
 })
