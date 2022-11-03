@@ -24,7 +24,6 @@ export default function ProfileOptionsView({navigation}){
 
     const driverCallback = userState.userInfo.driver_information ? () => navigation.push(UserNavConstants.DriverInfo): null;
     console.log(userState);
-
     return (
         <View style={style.privateOptions}>
                 <ProfileOption icon="account-search" text="search users" callback={() => {navigation.push(UserNavConstants.UserSearchScreen)}}/>

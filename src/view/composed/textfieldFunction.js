@@ -35,4 +35,6 @@ const style = {
 
         theme: {roundness: 30, colors: {background: "#fff"}},
     }
+
 }
+

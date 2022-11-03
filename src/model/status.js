@@ -17,11 +17,13 @@ export async function signIn(connection, info, failCall, context){
 }
 
 export async function register(connection, info, failCall, context){
+
     const credentials = await connection.tryRegister(info.info.email, info.info.password);
-
+    
     let result = {};
-
+    
     if (credentials) result = await postNewUser(info, credentials);
+
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
         context.register(credentials.credential, result.data);
@@ -177,7 +179,6 @@ async function tryGenerate(email, number, user){
 }
 
 function getHeader(context){
-
     return context.userState.user ? getToken(context.userState.user.stsTokenManager.accessToken) : null;
 }
 

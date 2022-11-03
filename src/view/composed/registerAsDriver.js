@@ -1,3 +1,4 @@
+import React from "react";
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import InfoInput from "../../controler/infoInput";
 import { updateDriverInfo } from "../../model/status";
@@ -10,9 +11,8 @@ import { Avatar } from "react-native-paper";
 export default function RegisterAsDriver({navigation}){
     const context = useUserContext();
     const {userState,asDriver} = context;
-
     const props = userState.userInfo.driver_information.car;
-
+    
     const [carMakeText, setCarMake] = React.useState(props.manufacturer);
     const [carMakeError, setCarMakeError] = React.useState(false);
     const carMake = {value: carMakeText, error: carMakeError};
@@ -31,14 +31,14 @@ export default function RegisterAsDriver({navigation}){
 
     const [editing, setEditing] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-
+    
     const checkNotEmpty = () => {
         const carMakeEmpty = carMakeText === '';
         const carYearEmpty = carYearText === '';
         const carPlateEmpty = carPlateText === '';
         const carColorEmpty = carColorText === '';
         const carModelEmpty = carModelText === '';
-
+        
         if (carMakeEmpty) {
             setCarMakeError(true)
         }
@@ -54,9 +54,9 @@ export default function RegisterAsDriver({navigation}){
         if (carModelEmpty) {
             setCarModelError(true)
         }
-    
+        
         return carMakeEmpty || carColorEmpty || carPlateEmpty || carModelEmpty || carYearEmpty;
-    };
+    }
 
     const bundleInfo = () => {
         const info = {};
@@ -74,22 +74,23 @@ export default function RegisterAsDriver({navigation}){
         return info;
     };
 
-        
     const handleEdition = async () => {
         if (checkNotEmpty()){
             return;
         }
-
         setLoading(true);
+
         try{
             const newInfo = bundleInfo();
             await updateDriverInfo(newInfo, userState.userInfo.email, context)
         }catch (error){
             console.log("ERRRRRRROOOOOOORRRRR");
         }
+
         setLoading(false);
     };
-
+    
+    
     const edit = async () => {
         if (editing) {
             await handleEdition();
@@ -99,6 +100,8 @@ export default function RegisterAsDriver({navigation}){
         }
     }
 
+
+
     return (
         <>
         <SafeAreaView style={styles.backView}>
@@ -107,9 +110,9 @@ export default function RegisterAsDriver({navigation}){
             </TouchableNativeFeedback>
         </SafeAreaView>
         <View style={styles.mainView}>
-
+            
         <View style={styles.carInputView}>
-        <RegisterCarInput carMake={carMake} carModel={carModel} carYear={carYear} carPlate={carPlate} carColor={carColor} 
+            <RegisterCarInput carMake={carMake} carModel={carModel} carYear={carYear} carPlate={carPlate} carColor={carColor} 
                                 carMakeSet={setCarMake} carModelSet={setCarModel} carYearSet={setCarYear} carPlateSet={setCarPlate} carColorSet={setCarColor}
                                 disabled={!editing}/>
         </View>
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
     backView: {
         flex: 0.1,
         backgroundColor: "#fff",
-
+        
     },
     backArrow: {
         backgroundColor: "#fff",

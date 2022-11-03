@@ -136,6 +136,11 @@ export default class RegisterInfo extends Component {
             }
         )
     }
+    
+    load = () => {
+        const loading = true;
+        this.setState({loading})
+    }
 
     load = () => {
         const loading = true;
@@ -143,7 +148,6 @@ export default class RegisterInfo extends Component {
     }
 
     stage = (callBack) => {
-        
         return this.state.stage === 0 ? (
             <React.Fragment>
                 <ScrollView>

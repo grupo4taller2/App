@@ -69,7 +69,8 @@ export default function ProfileInfoView(){
                     if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
                     else await updateInfo(newInfo, email, context)
                     setEditResult(true);
-                }catch{
+               }catch{
+
                     setEditResult(false);
                 }
                 setEditCompleted(true);
@@ -125,3 +126,4 @@ function getUserInfo(info){
 
     return info;
 }
+

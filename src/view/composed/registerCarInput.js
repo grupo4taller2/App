@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
+import Outward from '../../controler/outward';
+import ConfirmableTextField from './confirmableTextField';
+import TextField from './textField';
 import TextFieldFunction from './textfieldFunction';
 
 
-const RegisterCarInput = (props) => {    
-    
+const RegisterCarInput = (props) => {
+       
     const carMakeInfo = {
         label: props.carMake.error ? "No car make given" : "Car Make",
         mode: "outlined",
@@ -37,11 +40,12 @@ const RegisterCarInput = (props) => {
     };
     return(
         <View style={inputViewStyle}>
-            <TextFieldFunction text={props.carMake.value} setText={props.carMakeSet} info={carMakeInfo} disabled={props.disabled}/>
-            <TextFieldFunction text={props.carModel.value} setText={props.carModelSet} info={carModelInfo} disabled={props.disabled}/>
-            <TextFieldFunction text={props.carYear.value} setText={props.carYearSet} info={carYearInfo} disabled={props.disabled}/>
-            <TextFieldFunction text={props.carPlate.value} setText={props.carPlateSet} info={carPlateInfo} disabled={props.disabled}/>
-            <TextFieldFunction text={props.carColor.value} setText={props.carColorSet} info={carColorInfo} disabled={props.disabled}/>
+                    <TextFieldFunction text={props.carMake.value} setText={props.carMakeSet} info={carMakeInfo} disabled={props.disabled}/>
+                    <TextFieldFunction text={props.carModel.value} setText={props.carModelSet} info={carModelInfo} disabled={props.disabled}/>
+                    <TextFieldFunction text={props.carYear.value} setText={props.carYearSet} info={carYearInfo} disabled={props.disabled}/>
+                    <TextFieldFunction text={props.carPlate.value} setText={props.carPlateSet} info={carPlateInfo} disabled={props.disabled}/>
+                    <TextFieldFunction text={props.carColor.value} setText={props.carColorSet} info={carColorInfo} disabled={props.disabled}/>
+
         </View>
     )
 }
