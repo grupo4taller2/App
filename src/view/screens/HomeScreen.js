@@ -17,8 +17,10 @@ export default function HomeScreen({navigation}) {
       <View style={style.header}>
         <Image style={style.logo} source={require('../../../resources/images/logo.png')}/>
         <View style={style.balanceView}>
-          <Button style={style.balanceButton} contentStyle={style.contentStyle} labelStyle={style.balanceButtonText} >
-            4.32 ETH
+          <Text style={style.creditText}>Credit left: </Text>
+          <Button style={style.balanceButton} contentStyle={style.contentStyle} labelStyle={style.balanceButtonText} 
+            onPress={() => {navigation.push(UserNavConstants.WalletView)}}>
+            45.78 USD
           </Button>
         </View>
       </View>
@@ -91,38 +93,6 @@ Go again component:
         </Surface>
         </TouchableNativeFeedback>
       </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
  <View style={styles.Mainview}>
     <SafeAreaView style={styles.ProfileView}>
@@ -197,17 +167,17 @@ const style = StyleSheet.create({
   },
   button: {
     backgroundColor: '#37a0bd',
-    borderRadius: 100,
+    borderRadius: 10,
   },
   buttonContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    width: 320,
+    width: 10,
     height: 70,
   },
   buttonText: {
     color: 'white',
+    alignSelf: 'center',
     fontSize: 20,
     fontWeight: '500',
     alignSelf: 'center',
@@ -230,13 +200,14 @@ const style = StyleSheet.create({
     backgroundColor: "#fff"
   },
   balanceView: {
+    alignSelf: 'flex-start',
     flex: 1,
-    flexDirection: 'row-reverse',
+    flexDirection: 'column',
   },
   balanceButton: {
     backgroundColor: '#37a0bd',
-    borderRadius: 100,
-    marginRight: 40,
+    borderRadius: 10,
+    marginHorizontal: 50,
     marginTop: 10,
   },
   balanceButtonContent: {
@@ -252,6 +223,11 @@ const style = StyleSheet.create({
     fontWeight: '500',
     alignSelf: 'center',
   },
+  creditText:{
+    marginHorizontal: 50,
+    fontSize: 18,
+    fontWeight: 'bold'
+  },  
   greetView: {
     flex: .3,
     justifyContent: 'center',
