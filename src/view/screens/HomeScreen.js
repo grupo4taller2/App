@@ -10,6 +10,7 @@ import { UserNavConstants } from '../../config/userNavConstants';
 
 export default function HomeScreen({navigation}) {
   const context = useUserContext();
+  const userFirstName = context.userState.userInfo.first_name;
 
   return (
     <View style={style.mainView}>
@@ -23,7 +24,7 @@ export default function HomeScreen({navigation}) {
         </View>
       </View>
       <View style={style.greetView}>
-        <Text style={style.greeting}>Good morning, John</Text>
+        <Text style={style.greeting}>Good to see you, {userFirstName}</Text>
       </View>
       <View style={style.buttonsView}>
         <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.TripScreen)}>

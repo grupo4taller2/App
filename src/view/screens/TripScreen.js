@@ -4,32 +4,22 @@ import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent, Platform } from "react-native";
 import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
 import Geocoder from 'react-native-geocoding';
-import { Location } from 'expo';
 import { getCurrentLocation } from '../../controler/getCurrentLocation';
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import OngoingTripScreen from './OngoingTripScreen';
 import axios from 'axios';
-import { UserContext } from '../components/context';
+import { UserContext, useUserContext } from '../components/context';
+import * as Location from 'expo-location';
+import { getHeader } from "../../model/status";
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
 
 
-async function checkLocationValidity(location) {
-    let url = 'http://g4-fiuber.herokuapp.com/api/v1/locations/search/';
-    try {
-        let response = await axios.get(url, {params: {address: location}});
-        return response.data;
-    }
-    catch(error) {
-        console.warn(error);
-        return false;
-    }
-}
-
-
 export default function TripScreen({navigation}){
+    const context = useUserContext();
+    const token = getHeader(context);
     const [start, setStart] = useState(''); // Aca se puede poner la locacion default del usuario si se la accede desde el contexto y tambien ponerla en el defaultValue del TextInput
     const [destination, setDestination] = useState('');
     const [region, setRegion] = useState({
@@ -44,6 +34,7 @@ export default function TripScreen({navigation}){
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
     const [visiblePriceSB, setVisiblePriceSB] = useState(false);
+    const [visiblePermissionsSB, setVisiblePermissionsSB] = useState(false);
     const [confirmationDialog, setConfirmedDialog] = useState(false);
     const [startMarker, setStartMarker] = useState('');
     const [destinationMarker, setDestinationMarker] = useState('');
@@ -76,9 +67,25 @@ export default function TripScreen({navigation}){
 
     const onDismissPriceSnackBar = () => setVisiblePriceSB(false);
 
+    const onTogglePermissionsSnackBar = () => setVisiblePermissionsSB(!visiblePermissionsSB);
+
+    const onDismissPermissionsSnackBar = () => setVisiblePermissionsSB(false);
+
     const showConfirmationDialog = () => setConfirmedDialog(!confirmationDialog);
 
     const hideConfirmationDialog = () => setConfirmedDialog(false);
+
+    async function checkLocationValidity(location) {
+        let url = 'http://g4-fiuber.herokuapp.com/api/v1/locations/search/';
+        try {
+            let response = await axios.get(url, {headers: token.headers, params: {address: location}});
+            return response.data;
+        }
+        catch(error) {
+            console.warn(error.response);
+            return false;
+        }
+    }
 
     async function checkTripValidity(start_location, destination_location) {
         let validityStart = await checkLocationValidity(start_location);
@@ -101,8 +108,9 @@ export default function TripScreen({navigation}){
     async function updatePrice() {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips/price';
         try {
-            let newPrice = await axios.get(url, {params: {origin_address: start, destination_address: destination, trip_type: tripType}});
-            newPrice = newPrice.data.estimated_price.toFixed(3);
+            let newPrice = await axios.get(url, {headers: token.headers, params: {origin_address: start, destination_address: destination, trip_type: tripType}});
+            newPrice = Number(newPrice.data.estimated_price);
+            newPrice = newPrice.toFixed(3);
             newPrice = newPrice.toString() + " ETH";
             setTripCost(newPrice);
         }
@@ -114,11 +122,20 @@ export default function TripScreen({navigation}){
 
     async function startTrip(passenger) {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
-        let validStart = await axios.post(url, {rider_username: 'si', rider_origin_address: start, rider_destination_address: destination, trip_type: tripType});
+        let validStart = await axios.post(url, {rider_username: passenger, rider_origin_address: start, rider_destination_address: destination, trip_type: tripType}, token);
         if (validStart)
             return validStart;
         else
             return false;
+    }
+
+    async function getGPSPermissions() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            onTogglePermissionsSnackBar();
+            return;
+        }
+        showConfirmationDialog();
     }
 
     return (
@@ -177,10 +194,11 @@ export default function TripScreen({navigation}){
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     async () => {
-                                        let validStart = await startTrip(UserContext.displayName);
+                                        let validStart = await startTrip(context.userState.userInfo.username);
                                         if (validStart != false) {
+                                            let trip_id = validStart.data.trip_id;
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
-                                            navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration});
+                                            navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
                                         }
                                         else {onTogglePaymentSnackBar()}
                                     }}>
@@ -200,7 +218,7 @@ export default function TripScreen({navigation}){
                         Set Route
                     </Button>
                     <Button buttonColor='#000' mode='contained' style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
-                        icon="car" disabled={!validTrip} onPress={() => {showConfirmationDialog()}}>
+                        icon="car" disabled={!validTrip} onPress={() => {getGPSPermissions()}}>
                         Start Trip for {tripCost}
                     </Button>
                     <Snackbar
@@ -230,6 +248,13 @@ export default function TripScreen({navigation}){
                         duration='2500'
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing your payment, make sure your wallet address is valid and try again.</Text>
+                    </Snackbar>
+                    <Snackbar
+                        visible={visiblePermissionsSB}
+                        onDismiss={onDismissPermissionsSnackBar}
+                        duration='2500'
+                        style={styles.snackbar}>
+                        <Text style={{fontWeight: 'bold', color: '#fff'}}>GPS permissions were denied, make sure to enable them to proceed with your trip.</Text>
                     </Snackbar>
                 </View>
             </View>

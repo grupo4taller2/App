@@ -18,22 +18,21 @@ import { useUserContext } from '../components/context';
 import axios from 'axios';
 
 
-export default function OngoingTripScreen({route, navigation}) {
+export default function OngoingJobScreen({route, navigation}) {
     const context = useUserContext();
     const token = getHeader(context);
-    const {startMarker, destinationMarker, tripCost, distance, duration, trip_id} = route.params;
+    const {trip_info} = route.params;
     const [region, setRegion] = useState({
         latitude: 0.01,
         longitude: 0.01,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
     });
-    const [remainingDistance, setRemainingDistance] = useState(distance);
-    const [remainingDuration, setRemainingDuration] = useState(duration);
-    const [currentLocation, setCurrentLocation] = useState(startMarker);
-    const destination = destinationMarker;
+    const [remainingDistance, setRemainingDistance] = useState(trip_info.distance);
+    const [remainingDuration, setRemainingDuration] = useState(trip_info.estimated_duration);
+    const [currentLocation, setCurrentLocation] = useState({ latitude: trip_info.origin.latitude, longitude: trip_info.origin.longitude});
+    const destination = { latitude: trip_info.destination.latitude, longitude: trip_info.destination.longitude};
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
-    const [stateDelay, setStateDelay] = useState(100000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
     const [driver, setDriver] = useState('driver_name');  // should start as undefined as soon as im done testing
     const [driverCar, setDriverCar] = useState('Corolla');  // should start as undefined as soon as im done testing
@@ -43,7 +42,7 @@ export default function OngoingTripScreen({route, navigation}) {
     const notRunning = 999999999999999;
 
     const TripState = {
-        NoDriverAssigned: "looking_for_driver",
+        // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
         WaitingOnDriver: "accepted_by_driver",
         DriverArrived: "driver_arrived",
         TripOngoing: "start_confirmed_by_driver",
@@ -51,7 +50,7 @@ export default function OngoingTripScreen({route, navigation}) {
     }
     
 
-    const [tripState, setTripState] = useState(TripState.NoDriverAssigned);
+    const [tripState, setTripState] = useState(TripState.WaitingOnDriver);
 
     useEffect(() => {
       if (previousRouteValues.current.distance !== distance && previousRouteValues.current.duration !== duration)
@@ -69,23 +68,6 @@ export default function OngoingTripScreen({route, navigation}) {
             console.warn("Couldn't poll for gps location"); // may need to do a snackbar for this
         }
       }, tripState == TripState.TripOngoing ? gpsDelay : notRunning);
-
-    useInterval(async () => {
-      try {
-        let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
-        let response = await axios.get(url, {headers: token.headers});
-        console.log(response.data.trip_state);
-        let currentTripState = response.data.trip_state;
-        if (driver === undefined && tripState == TripState.WaitingOnDriver) {
-            setDriver(response.data.driver.driver_username);
-            setDriverCar(response.data.driver.car);
-        }
-        setTripState(currentTripState);
-      }
-      catch (error) {
-          console.warn(error);
-      }
-    }, isRunning ? stateDelay : notRunning);
     
 
     const onToggleSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);

@@ -8,5 +8,7 @@ export const UserNavConstants = {
     OngoingTripScreen: "Ongoing Trip",
     UserSearchScreen: "SearchUser",
     DriverInfo: "Driver info",
-    AvailableJobsScreen: "Available Jobs"
+    AvailableJobsScreen: "Available Jobs",
+    OngoingJobScreen: "Ongoing Job",
+    RatingScreen: "Rating Screen"
 }

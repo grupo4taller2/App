@@ -9,11 +9,16 @@ import { getCurrentLocation } from '../../controler/getCurrentLocation';
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
+import { useUserContext } from '../components/context';
+import { getHeader } from '../../model/status';
+import axios from 'axios';
 
 
 export default function AvailableJobsScreen({navigation}){
+    const context = useUserContext();
+    const token = getHeader(context);
     const [jobs, setJobs] = useState([]);
-    const [delay, setDelay] = useState(5000);   // gps location polling delay (in ms)
+    const [delay, setDelay] = useState(5000);   // job list polling delay (in ms)
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
 
     const onToggleGeneralSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
@@ -22,68 +27,81 @@ export default function AvailableJobsScreen({navigation}){
 
     
     useInterval(() => {
+        console.log(jobs);
         // hardcoded list for now
         let listOfJobs = [{
             trip_id: 4443,
-            start: 'Paseo Colon 850',
-            end: 'Av. Cabildo 4200',
+            origin: { 
+                address: 'Paseo Colon 850',
+            },
+            destination: {
+                address: 'Av. Cabildo 4200',
+            },
             rider_username: 'John Doe',
             trip_type: 'regular',
             rider_rating: '4.1',
-            distance: '31.42',
-            estimated_time: '34.7',
+            distance: '31.42 km',
+            estimated_time: '34.7 mins',
             timestamp: "2022-10-31T18:29:34.829Z",
             trip_state: "waiting_for_driver",
-            estimated_price: '6,43 ETH'
+            estimated_price: '6,43'
         },
         {
             trip_id: 4444,
-            start: 'Av. Libertador 7000',
-            end: 'Av. Cabildo 1400',
+            origin: { 
+                address: 'Av. Libertador 7000',
+            },
+            destination: {
+                address: 'Av. Cabildo 1400',
+            },
             rider_username: 'Mary Sue',
             trip_type: 'regular',
             rider_rating: '3.6',
-            distance: '17.63',
-            estimated_time: '24.3',
+            distance: '17.63 km',
+            estimated_time: '24.3 mins',
             timestamp: "2022-10-31T18:34:33.829Z",
             trip_state: "driver_waiting",
             trip_state: "waiting_for_driver",
-            estimated_price: '4,31 ETH'
+            estimated_price: '4,31'
         },
         {
             trip_id: 4445,
-            start: 'Av. Monroe 2000',
-            end: 'Paseo Colon 850',
+            origin: { 
+                address: 'Av. Monroe 2000',
+            },
+            destination: {
+                address: 'Paseo Colon 850',
+            },
             rider_username: 'Paul Smith',
             trip_type: 'regular',
             rider_rating: '1.8',
-            distance: '33.11',
-            estimated_time: '29.8',
+            distance: '33.11 km',
+            estimated_time: '29.8 mins',
             timestamp: "2022-10-31T18:11:53.829Z",
             trip_state: "waiting_for_driver",
-            estimated_price: '3,92 ETH'
+            estimated_price: '3,92'
         },];
         /*
-        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/available';
+        let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
+        let username = context.userState.userInfo.username;
+        let desired_state = "looking_for_driver";
 
-        let listOfJobs = await axios.get(url, null);
+        let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: 25}});
         */
         setJobs(listOfJobs);
       }, delay);
 
-    function isJobAvailable(id) {
-        /*
-        let url = 'https://g4-fiuber-service-trips.herokuapp.com/api/v1/trips/${id}';
+    // checks if a certain job (by id) is available and attempts to mark is as taken
+    async function isJobAvailable(id) {
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${id}`;
 
         try {
-            let trip_info = await axios.patch(url, {state: driver_accepted});
-            if (trip_info.trip_state == 'waiting_for_driver') { return true }        //     waiting_for_driver -> driver_accepted -> ongoing_trip -> finished_trip
-            return false
+            let trip_info = await axios.patch(url, {trip_state: 'accepted_by_driver'}, token);
+            if (trip_info.trip_state == 'looking_for_driver') { return trip_info }
         }
         catch(error) {
             return false
         }
-        */
         return false;
     }
 
@@ -91,21 +109,21 @@ export default function AvailableJobsScreen({navigation}){
     function renderJobList() {
         if (jobs.length) {
             return(
-                jobs.map(({ start, end, rider_username, rider_rating, distance, estimated_time, estimated_price, trip_id }) => (
+                jobs.map(({ origin, destination, rider_username, rider_rating, distance, estimated_time, estimated_price, trip_id }) => (
                     <List.Item
                         style={styles.jobItem}
                         titleStyle={styles.jobItemTitle}
                         descriptionStyle={styles.jobItemDescription}
-                        title={`From: ${start} to: ${end}`}
+                        title={`From: ${origin.address} to: ${destination.address}`}
                         titleNumberOfLines={3}
-                        description={`(${distance} km, ETA: ${estimated_time} min)\nPassenger: ${rider_username} (${rider_rating} ★)`}
+                        description={`(${distance}, ETA: ${estimated_time})\nPassenger: ${rider_username} (${rider_rating} ★)`}
                         descriptionNumberOfLines={3}
-                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{estimated_price}</Text>}
+                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{estimated_price} ETH</Text>}
                         onPress={() => {
-                            if (isJobAvailable(trip_id)) {
-                                // let marked = await markAsStarted(id);
-                                // context.user.state = 'travelling';
-                                // navigation.push(UserNavConstants.OngoingJobScreen)
+                            let job = isJobAvailable(trip_id)
+                            if (job !== false) {
+                                // context.userState.currentState = 'travelling';
+                                // navigation.navigate(UserNavConstants.OngoingJobScreen, {trip_info: job})
                             }
                             else {
                                 onToggleGeneralSnackBar()
