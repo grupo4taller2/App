@@ -111,7 +111,7 @@ const style = StyleSheet.create(
             flex: 0.5,
         },
         infoWrapper: {
-            flex: 0.85
+            flex: 0.75
         }
     }
 )

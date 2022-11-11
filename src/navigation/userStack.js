@@ -11,7 +11,7 @@ import UserSearchView from '../view/screens/UserSearchScreen';
 import RegisterAsDriver from '../view/composed/registerAsDriver';
 import OngoingTripScreen from '../view/screens/OngoingTripScreen';
 import AvailableJobsScreen from '../view/screens/AvailableJobsScreen';
-import OngoingJobScreen from '../view/screens/OngoingTripScreen';
+import OngoingJobScreen from '../view/screens/OngoingJobScreen';
 import RatingScreen from '../view/screens/RatingScreen';
 
 const Stack = createStackNavigator();

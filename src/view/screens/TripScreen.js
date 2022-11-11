@@ -1,15 +1,12 @@
 import { React, useEffect, useState, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent, Platform } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
-import Geocoder from 'react-native-geocoding';
-import { getCurrentLocation } from '../../controler/getCurrentLocation';
+import { Marker } from 'react-native-maps';
+import { StyleSheet, View, Platform } from "react-native";
+import { Text, TextInput, Button, Snackbar, Dialog, Paragraph } from "react-native-paper";
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
-import OngoingTripScreen from './OngoingTripScreen';
 import axios from 'axios';
-import { UserContext, useUserContext } from '../components/context';
+import { useUserContext } from '../components/context';
 import * as Location from 'expo-location';
 import { getHeader } from "../../model/status";
 
@@ -35,7 +32,7 @@ export default function TripScreen({navigation}){
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
     const [visiblePriceSB, setVisiblePriceSB] = useState(false);
     const [visiblePermissionsSB, setVisiblePermissionsSB] = useState(false);
-    const [confirmationDialog, setConfirmedDialog] = useState(false);
+    const [confirmationDialog, setConfirmationDialog] = useState(false);
     const [startMarker, setStartMarker] = useState('');
     const [destinationMarker, setDestinationMarker] = useState('');
     const [distance, setDistance] = useState(undefined);    // measured in km
@@ -71,9 +68,9 @@ export default function TripScreen({navigation}){
 
     const onDismissPermissionsSnackBar = () => setVisiblePermissionsSB(false);
 
-    const showConfirmationDialog = () => setConfirmedDialog(!confirmationDialog);
+    const showConfirmationDialog = () => setConfirmationDialog(!confirmationDialog);
 
-    const hideConfirmationDialog = () => setConfirmedDialog(false);
+    const hideConfirmationDialog = () => setConfirmationDialog(false);
 
     async function checkLocationValidity(location) {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/locations/search/';
@@ -130,8 +127,9 @@ export default function TripScreen({navigation}){
     }
 
     async function getGPSPermissions() {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
+        let permissions = await Location.requestForegroundPermissionsAsync();
+
+        if (!permissions.granted) {
             onTogglePermissionsSnackBar();
             return;
         }
@@ -198,7 +196,7 @@ export default function TripScreen({navigation}){
                                         if (validStart != false) {
                                             let trip_id = validStart.data.trip_id;
                                             // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
-                                            navigation.push(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
+                                            navigation.navigate(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
                                         }
                                         else {onTogglePaymentSnackBar()}
                                     }}>
@@ -210,9 +208,10 @@ export default function TripScreen({navigation}){
                         </Dialog.Actions>
                     </Dialog>
                 <View style={styles.infoView}>
-                    {/*[DEBUG] Display user's current region:*/}
+                    {/*[DEBUG] Display user's current region:
                     <Text style={styles.text}>Current latitude: {region.latitude}</Text>
                     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+                    */}
                     <Button buttonColor='#50C878' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
                         icon="navigation-variant"  onPress={() => {checkTripValidity(start, destination)}}>
                         Set Route
@@ -247,7 +246,7 @@ export default function TripScreen({navigation}){
                         onDismiss={onDismissPaymentSnackBar}
                         duration='2500'
                         style={styles.snackbar}>
-                        <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing your payment, make sure your wallet address is valid and try again.</Text>
+                        <Text style={{fontWeight: 'bold', color: '#fff'}}>It seems your wallet doesn't have enough ETH to make pay for this trip, make sure to charge some more money into it and try again.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePermissionsSB}
@@ -307,6 +306,7 @@ const styles = StyleSheet.create({
     },
     infoView: {
         flex: 1,
+        width: '90%',
         alignItems: 'center',
         position: 'absolute',
         marginBottom: 10

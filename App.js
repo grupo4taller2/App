@@ -31,7 +31,7 @@ export default function App() {
       userState,
       signIn: async (responseToken) => {
           const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
-          console.log(userInfo);
+          console.log(userInfo.driver_information);
           dispatch({token: responseToken._tokenResponse.idToken, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {

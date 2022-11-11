@@ -27,7 +27,7 @@ export default function UserPublicInfo(props){
 
 const style = StyleSheet.create({
     infoField: {
-        flex: 0.2,
+        flex: 0.3,
         flexDirection: 'row'
     },
     infoText: {

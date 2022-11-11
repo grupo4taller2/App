@@ -1,18 +1,8 @@
 import * as React from 'react';
-import { useEffect, useState, useRef } from 'react';
-import MapView from 'react-native-maps';
-import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent, Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
-import Geocoder from 'react-native-geocoding';
-import { getCurrentLocation } from '../../controler/getCurrentLocation';
-import MapViewDirections from 'react-native-maps-directions';
+import { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View } from "react-native";
+import { Text, Surface, TextInput, Button } from "react-native-paper";
 import { UserNavConstants } from '../../config/userNavConstants';
-import { useInterval } from '../../hooks/useInterval';
-import BottomDrawer from 'react-native-bottom-drawer-view';
-import * as Location from 'expo-location';
-import Animated from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
 import { getHeader } from '../../model/status'
 import { useUserContext } from '../components/context';
 import axios from 'axios';
@@ -25,10 +15,11 @@ export default function RatingScreen({route, navigation}) {
     const {user, userType, sender} = route.params;
     const [rating, setRating] = useState(-1);
     const [review, setReview] = useState("");
+    const isMounted = useRef(false);
+    const [snackbar, setSnackbar] = useState(undefined);
     
     function attemptReviewSubmission() {
         if (userType == 'driver') {
-          console.log({passenger_username: sender, qualy: rating, opinion: review, driver_username: user});
           attemptDriverReview();
         }
         if (userType == 'passenger') {
@@ -40,9 +31,11 @@ export default function RatingScreen({route, navigation}) {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/drivers/qualy/create';
         try {
             let validReview = await axios.post(url, {passenger_username: sender, qualy: rating, opinion: review, driver_username: user}, token);
+            setSnackbar('false');
         }
         catch (error) {
-            console.warn(error);    // Not showing error to client since it shouldn't be a dealbreaker for them if a review is successfully submitted or not
+            setSnackbar('rating');
+            console.warn(error);
         }
     }
 
@@ -50,11 +43,20 @@ export default function RatingScreen({route, navigation}) {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/passengers/qualy/create';
         try {
             let validReview = await axios.post(url, {passenger_username: user, qualy: rating, opinion: review, driver_username: sender}, token);
+            setSnackbar('false');
         }
         catch (error) {
-            console.warn(error);    // Not showing error to client since it shouldn't be a dealbreaker for them if a review is successfully submitted or not
+            setSnackbar('rating');
+            console.warn(error);
         }
     }
+
+    useEffect(() => {
+        if (isMounted.current) {
+            navigation.navigate(UserNavConstants.HomeScreen, {snackbar});
+        }
+        isMounted.current = true;
+    }, [snackbar])
 
     return(
         <View style={styles.mainView}>
@@ -84,8 +86,7 @@ export default function RatingScreen({route, navigation}) {
             </View>
             <View style={styles.buttonView}>
                 <Button style={{width:300}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' disabled={rating === -1} icon="home" mode="contained" onPress={() => {
-                    attemptReviewSubmission();
-                    navigation.navigate(UserNavConstants.HomeScreen)}}>
+                    attemptReviewSubmission();}}>
                     Submit review and go back to Home
                 </Button>
             </View>

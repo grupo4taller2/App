@@ -4,8 +4,6 @@ import MapView from 'react-native-maps';
 import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent } from "react-native";
 import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
-import Geocoder from 'react-native-geocoding';
-import { getCurrentLocation } from '../../controler/getCurrentLocation';
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
@@ -18,10 +16,36 @@ import { useUserContext } from '../components/context';
 import axios from 'axios';
 
 
+function inProximity(firstCoords, secondCoords, allowedError) {
+  let latitudeDelta;
+  let longitudeDelta;
+  if ((firstCoords.latitude > 0 && secondCoords.latitude < 0) || (firstCoords.latitude < 0 && secondCoords.latitude > 0)) {
+    latitudeDelta = firstCoords.latitude + secondCoords.latitude;
+  }
+  else {  // if both latitudes have the same sign
+    latitudeDelta = firstCoords.latitude - secondCoords.latitude;
+  }
+  if ((firstCoords.longitude > 0 && secondCoords.longitude < 0) || (firstCoords.longitude < 0 && secondCoords.longitude > 0)) {
+    longitudeDelta = firstCoords.longitude + secondCoords.longitude;
+  }
+  else {  // if both longitudes have the same sign
+    longitudeDelta = firstCoords.longitude - secondCoords.longitude;
+  
+  }
+  console.log(latitudeDelta);
+  console.log(longitudeDelta);
+  let latitudeResult = latitudeDelta <= allowedError;
+  let longitudeResult = longitudeDelta <= allowedError;
+  console.log(latitudeResult);
+  console.log(longitudeResult);
+  return (latitudeResult && longitudeResult)
+}
+
+
 export default function OngoingJobScreen({route, navigation}) {
     const context = useUserContext();
     const token = getHeader(context);
-    const {trip_info} = route.params;
+    const {trip_info, location} = route.params;
     const [region, setRegion] = useState({
         latitude: 0.01,
         longitude: 0.01,
@@ -30,16 +54,21 @@ export default function OngoingJobScreen({route, navigation}) {
     });
     const [remainingDistance, setRemainingDistance] = useState(trip_info.distance);
     const [remainingDuration, setRemainingDuration] = useState(trip_info.estimated_duration);
-    const [currentLocation, setCurrentLocation] = useState({ latitude: trip_info.origin.latitude, longitude: trip_info.origin.longitude});
-    const destination = { latitude: trip_info.destination.latitude, longitude: trip_info.destination.longitude};
+    const [currentLocation, setCurrentLocation] = useState(location);
+    const origin = trip_info.origin;
+    const destination = trip_info.destination;
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
-    const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
-    const [driver, setDriver] = useState('driver_name');  // should start as undefined as soon as im done testing
-    const [driverCar, setDriverCar] = useState('Corolla');  // should start as undefined as soon as im done testing
+    const passenger = trip_info.rider_username;
+    const driver = trip_info.driver.username;
+    const trip_id = trip_info.trip_id;
     const previousRouteValues = useRef({ remainingDistance, remainingDuration });
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
-    const price = tripCost;
+    const [visiblePassengerProximitySB, setVisiblePassengerProximitySB] = useState(false);
+    const [visibleDestinationProximitySB, setVisibleDestinationProximitySB] = useState(false);
+    const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
+    const pay = Number(trip_info.estimated_price).toFixed(3);
     const notRunning = 999999999999999;
+    const allowedProximityError = 0.0005;   // ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
@@ -53,9 +82,9 @@ export default function OngoingJobScreen({route, navigation}) {
     const [tripState, setTripState] = useState(TripState.WaitingOnDriver);
 
     useEffect(() => {
-      if (previousRouteValues.current.distance !== distance && previousRouteValues.current.duration !== duration)
+      if (previousRouteValues.current.remainingDistance !== remainingDistance && previousRouteValues.current.remainingremainingDurationDistance !== remainingDuration)
         {
-          previousRouteValues.current = { distance, duration };
+          previousRouteValues.current = { remainingDistance, remainingDuration };
         }
     });
 
@@ -67,37 +96,148 @@ export default function OngoingJobScreen({route, navigation}) {
         catch (error) {
             console.warn("Couldn't poll for gps location"); // may need to do a snackbar for this
         }
-      }, tripState == TripState.TripOngoing ? gpsDelay : notRunning);
+      }, tripState !== TripState.TripFinished ? gpsDelay : notRunning);
     
 
-    const onToggleSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
+    const onToggleGeneralSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
 
     const onDismissGeneralSnackBar = () => setVisibleGeneralSB(false);
 
+    const onTogglePassengerProximitySnackBar = () => setVisiblePassengerProximitySB(!visiblePassengerProximitySB);
+
+    const onDismissPassengerProximitySnackBar = () => setVisiblePassengerProximitySB(false);
+
+    const onToggleDestinationProximitySnackBar = () => setVisibleDestinationProximitySB(!visibleDestinationProximitySB);
+
+    const onDismissDestinationProximitySnackBar = () => setVisibleDestinationProximitySB(false);
+
+    const onToggleUnexpectedSnackBar = () => setVisibleUnexpectedSB(!visibleUnexpectedSB);
+
+    const onDismissUnexpectedSnackBar = () => setVisibleUnexpectedSB(false);
+
+
+    async function notifyArrival() {
+      let newState = TripState.DriverArrived;
+      console.log(tripState);
+      if (!inProximity(currentLocation, origin, allowedProximityError)) {onTogglePassengerProximitySnackBar()}
+      else {
+        try {
+          let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
+          console.log("ENTREEEEEEE");
+          //let trip_information = await axios.get(url, {headers: token.headers, id: trip_id});
+          //console.log({id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude, driver_current_longitude: currentLocation.longitude});
+          //console.log(token);
+          //console.log(trip_information.data);
+          let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
+          driver_current_longitude: currentLocation.longitude}, token);
+          console.log(trip_information.config.data);
+          if (JSON.parse(trip_information.config.data).trip_state == newState) { 
+            console.log('llego?!?!?!?!!?');
+            setTripState(newState);
+          }  // if statement may be unnecessary
+        }
+        catch(error) {
+          console.warn(error);
+          onToggleUnexpectedSnackBar();
+        }
+      }
+    }
+
+    async function startTrip() {
+      let newState = TripState.TripOngoing;
+      try {
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
+
+        let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
+        driver_current_longitude: currentLocation.longitude}, token);
+        if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
+      }
+      catch(error) {
+        console.warn(error);
+        onToggleUnexpectedSnackBar();
+      }
+    }
+
+    async function finishTrip() {
+      let newState = TripState.TripFinished;
+      if (!inProximity(currentLocation, destination, allowedProximityError)) {onToggleDestinationProximitySnackBar()}
+      else {
+        try {
+          let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
+          let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
+          driver_current_longitude: currentLocation.longitude}, token);
+          console.log(trip_information.config.data);
+          if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
+        }
+        catch(error) {
+          console.warn(error);
+          onToggleUnexpectedSnackBar();
+        }
+      }
+    }
+
+    function renderSnackbar() {
+      return(
+        <View style={styles.infoView}>
+            <Snackbar
+                visible={visibleGeneralSB}
+                onDismiss={onDismissGeneralSnackBar}
+                duration='2500'
+                style={styles.snackbar}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, {'\n'}we're sorry for the inconvenience.</Text>
+            </Snackbar>
+            <Snackbar
+                visible={visiblePassengerProximitySB}
+                onDismiss={onDismissPassengerProximitySnackBar}
+                duration='2500'
+                style={styles.snackbar}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the passanger, {'\n'}get closer to their map marker.</Text>
+            </Snackbar>
+            <Snackbar
+                visible={visibleDestinationProximitySB}
+                onDismiss={onDismissDestinationProximitySnackBar}
+                duration='2500'
+                style={styles.snackbar}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the destination, {'\n'}get closer to it's map marker.</Text>
+            </Snackbar>
+            <Snackbar
+                visible={visibleUnexpectedSB}
+                onDismiss={onDismissUnexpectedSnackBar}
+                duration='2500'
+                style={styles.snackbar}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>Unexpected error ocurred, please try again.</Text>
+            </Snackbar>
+        </View>
+      );
+    }
 
     function renderContent() {
       switch (tripState) {
-        case TripState.NoDriverAssigned:
-          return (
-            <View style={styles.bottomView}>
-              <Text style={styles.bottomHeader}>Waiting on a driver to take your trip</Text>
-              <Text>Make sure you don't move too far from your trip's starting area!</Text>
-            </View>)
         case TripState.WaitingOnDriver:
           return (
             <View style={styles.bottomView}>
-              <Text style={styles.bottomHeader}>A driver took your trip and is on the way</Text>
-              <Text>Make sure you don't move too far from your trip's starting area!</Text>
-              <Text>Your driver is {driver}!{'\n'}</Text>
-              <Text>Trip's total distance: {remainingDistance}km</Text>
-              <Text>Trip's estimated duration: {remainingDuration}mins</Text>
+              <Text style={styles.bottomHeader}>Your passenger is waiting on you!</Text>
+              <Text>Drive towards the starting marker (stickman) on your map.</Text>
+              <Text>Your passenger is '{passenger}'.</Text>
+              <Text>They're waiting at {origin.address}.{'\n'}</Text>
+              <Text>Trip's total distance: {remainingDistance} km</Text>
+              <Text>Trip's estimated duration: {remainingDuration} mins</Text>
+              <Text>Trip's pay: {pay} ETH{'\n'}</Text>
+              <View style={styles.buttonStateView}>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'account-alert'} onPress={async () => {await notifyArrival()}}>Notify arrival</Button>
+              </View>
+              {renderSnackbar()}
             </View>)
         case TripState.DriverArrived:
           return (
             <View style={styles.bottomView}>
-              <Text style={styles.bottomHeader}>Your driver has arrived{'\n'}</Text>
-              <Text>{driver} arrived at your starting location and is waiting on you.</Text>
-              <Text>Their car is a {driverCar}{/*driverCar.color driverCar.manufacturer driverCar.model with plate driverCar.plate*/}.</Text> 
+              <Text style={styles.bottomHeader}>Wait on {passenger} to get in</Text>
+              <Text>{'\n'}{passenger} has been notified about your arrival.</Text>
+              <Text>Once they're in your car and ready to go you can start the trip.</Text>
+              <View style={styles.buttonStateView}>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'car-traction-control'} onPress={() => {startTrip()}}>Start Trip</Button>
+              </View>
+              {renderSnackbar()}
             </View>)
         case TripState.TripOngoing: 
           return (
@@ -107,69 +247,89 @@ export default function OngoingJobScreen({route, navigation}) {
               <Text>Your driver is {driver}!</Text>
               <Text>Trip's remaining distance: {remainingDistance}km</Text>
               <Text>Trip's estimated remaining duration: {remainingDuration}mins</Text>
+              <View style={styles.buttonStateView}>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'car-traction-control'} onPress={() => {finishTrip()}}>Finish Trip</Button>
+              </View>
+              {renderSnackbar()}
             </View>)
         case TripState.TripFinished:
           return (
             <View style={styles.bottomView}>
-              <Text style={styles.bottomHeader}>Your trip's over!</Text>
+              <Text style={styles.bottomHeader}>Your job's over!</Text>
               <Text>We hope you had a great trip.{'\n'}</Text>
-              <Text>{tripCost} has been substracted from your wallet.{'\n'}</Text>
+              <Text>{pay} has been added to your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
-                <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.push(UserNavConstants.RatingScreen, {user: driver, userType: 'driver', sender: context.userState.userInfo.username})}}>Rate your driver</Button>
-                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.push(UserNavConstants.HomeScreen)}}>Back to Home</Button>
+                <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: passenger, userType: 'passenger', sender: context.userState.userInfo.username})}}>Rate your passenger</Button>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
               </View>
+              {renderSnackbar()}
             </View>)
       }
     };
+
+    function renderRoute() {
+      if (tripState == TripState.WaitingOnDriver) {
+        return(
+          <MapViewDirections
+              origin={currentLocation}
+              destination={origin}
+              apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+              strokeWidth={5}
+              strokeColor="red"
+              onReady={result => {
+                  setRemainingDistance((result.distance).toFixed(2));
+                  setRemainingDuration((result.duration).toFixed(1));
+              }}
+              onError={(errorMessage) => {
+                  console.warn('Error while creating route: ' + errorMessage);
+                  onToggleGeneralSnackBar();
+              }} />
+        )
+      }
+      if (tripState == TripState.TripOngoing) {
+        <MapViewDirections
+            origin={currentLocation}
+            destination={destination}
+            apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+            strokeWidth={5}
+            strokeColor="red"
+            onReady={result => {
+                setRemainingDistance((result.distance).toFixed(2));
+                setRemainingDuration((result.duration).toFixed(1));
+            }}
+            onError={(errorMessage) => {
+                console.warn('Error while creating route: ' + errorMessage);
+                onToggleGeneralSnackBar();
+            }} />
+      }
+    }
   
     const sheetRef = React.useRef(null);
 
     function debugState() {
-      if (tripState == TripState.NoDriverAssigned) {setTripState(TripState.WaitingOnDriver)}
       if (tripState == TripState.WaitingOnDriver) {setTripState(TripState.DriverArrived)}
       if (tripState == TripState.DriverArrived) {setTripState(TripState.TripOngoing)}
       if (tripState == TripState.TripOngoing) {setTripState(TripState.TripFinished)}
-      if (tripState == TripState.TripFinished) {setTripState(TripState.NoDriverAssigned)}
+      if (tripState == TripState.TripFinished) {setTripState(TripState.WaitingOnDriver)}
     }
   
     return (
       <>
         <MapView style={styles.map} 
         initialRegion={{
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
+        latitude: origin.latitude,
+        longitude: origin.longitude,
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
         }}
         showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             <Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>
-            <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
+            <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={currentLocation}/>
+            <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
-            <MapViewDirections
-                origin={currentLocation}
-                destination={destination}
-                apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
-                strokeWidth={5}
-                strokeColor="red"
-                onReady={result => {
-                    setRemainingDistance((result.distance).toFixed(2));
-                    setRemainingDuration((result.duration).toFixed(1));
-                }}
-                onError={(errorMessage) => {
-                    console.warn('Error while creating route: ' + errorMessage);
-                    onToggleGeneralSnackBar();
-                }} />
+            {renderRoute()}
         </MapView>
-        <View style={styles.infoView}>
-            <Snackbar
-                visible={visibleGeneralSB}
-                onDismiss={onDismissGeneralSnackBar}
-                duration='2500'
-                style={styles.snackbar}>
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, we're sorry for the inconvenience.</Text>
-            </Snackbar>
-        </View>
         <BottomSheet
           ref={sheetRef}
           snapPoints={[250, 75]}
@@ -196,7 +356,8 @@ const styles = StyleSheet.create({
       position: 'absolute',
   },
   snackbar: {
-      backgroundColor: '#D22B2B'
+      backgroundColor: '#D22B2B',
+      position: 'absolute'
   },
   bottomView: {
     backgroundColor: 'white',
@@ -208,7 +369,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginBottom: 30,
   },
-  buttonsChoiceView: {
+  buttonStateView: {
     alignItems: 'center',
     justifyContent: 'space-evenly'
   }

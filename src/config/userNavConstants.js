@@ -1,5 +1,3 @@
-import AvailableJobsScreen from "../view/screens/AvailableJobsScreen";
-
 export const UserNavConstants = {
     HomeScreen: "Home",
     ProfileScreen: "Profile",

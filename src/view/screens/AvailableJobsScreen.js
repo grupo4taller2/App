@@ -1,16 +1,11 @@
-import { React, useState, useEffect, useRef } from 'react';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import Marker, { Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent, ScrollView } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph, TouchableRipple } from "react-native-paper";
-import Geocoder from 'react-native-geocoding';
-import { Location } from 'expo';
-import { getCurrentLocation } from '../../controler/getCurrentLocation';
-import MapViewDirections from 'react-native-maps-directions';
+import { React, useState} from 'react';
+import { StyleSheet, View, ScrollView } from "react-native";
+import { Text, Appbar, List, Snackbar, Dialog, Paragraph, Button } from "react-native-paper";
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
 import { useUserContext } from '../components/context';
 import { getHeader } from '../../model/status';
+import * as Location from 'expo-location';
 import axios from 'axios';
 
 
@@ -18,93 +13,79 @@ export default function AvailableJobsScreen({navigation}){
     const context = useUserContext();
     const token = getHeader(context);
     const [jobs, setJobs] = useState([]);
-    const [delay, setDelay] = useState(5000);   // job list polling delay (in ms)
+    const [delay, setDelay] = useState(2500);   // job list polling delay (in ms)
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
+    const [visiblePermissionsSB, setVisiblePermissionsSB] = useState(false);
+    const [confirmationDialog, setConfirmationDialog] = useState(false);
+    const [selectedStart, setSelectedStart] = useState("");
+    const [selecteDestination, setSelectedDestination] = useState("");
+    const [selectedDistance, setSelectedDistance] = useState("");
+    const [selectedDuration, setSelectedDuration] = useState("");
+    const [selectedTripCost, setSelectedTripCost] = useState("");
+    const [selectedTripID, setSelectedTripID] = useState("");
+    const [isButtonPressed, setIsButtonPressed] = useState(false);
+    let jobsAmount = 15;    // amount of jobs to display
 
     const onToggleGeneralSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
 
     const onDismissGeneralSnackBar = () => setVisibleGeneralSB(false);
 
-    
-    useInterval(() => {
-        console.log(jobs);
-        // hardcoded list for now
-        let listOfJobs = [{
-            trip_id: 4443,
-            origin: { 
-                address: 'Paseo Colon 850',
-            },
-            destination: {
-                address: 'Av. Cabildo 4200',
-            },
-            rider_username: 'John Doe',
-            trip_type: 'regular',
-            rider_rating: '4.1',
-            distance: '31.42 km',
-            estimated_time: '34.7 mins',
-            timestamp: "2022-10-31T18:29:34.829Z",
-            trip_state: "waiting_for_driver",
-            estimated_price: '6,43'
-        },
-        {
-            trip_id: 4444,
-            origin: { 
-                address: 'Av. Libertador 7000',
-            },
-            destination: {
-                address: 'Av. Cabildo 1400',
-            },
-            rider_username: 'Mary Sue',
-            trip_type: 'regular',
-            rider_rating: '3.6',
-            distance: '17.63 km',
-            estimated_time: '24.3 mins',
-            timestamp: "2022-10-31T18:34:33.829Z",
-            trip_state: "driver_waiting",
-            trip_state: "waiting_for_driver",
-            estimated_price: '4,31'
-        },
-        {
-            trip_id: 4445,
-            origin: { 
-                address: 'Av. Monroe 2000',
-            },
-            destination: {
-                address: 'Paseo Colon 850',
-            },
-            rider_username: 'Paul Smith',
-            trip_type: 'regular',
-            rider_rating: '1.8',
-            distance: '33.11 km',
-            estimated_time: '29.8 mins',
-            timestamp: "2022-10-31T18:11:53.829Z",
-            trip_state: "waiting_for_driver",
-            estimated_price: '3,92'
-        },];
-        /*
+    const onTogglePermissionsSnackBar = () => setVisiblePermissionsSB(!visiblePermissionsSB);
+
+    const onDismissPermissionsSnackBar = () => setVisiblePermissionsSB(false);
+
+    const showConfirmationDialog = () => setConfirmationDialog(!confirmationDialog);
+
+    const hideConfirmationDialog = () => setConfirmationDialog(false);
+
+
+    useInterval(async () => {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
         let username = context.userState.userInfo.username;
         let desired_state = "looking_for_driver";
+        let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: jobsAmount}});
 
-        let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: 25}});
-        */
-        setJobs(listOfJobs);
+        setJobs(listOfJobs.data);
       }, delay);
 
-    // checks if a certain job (by id) is available and attempts to mark is as taken
-    async function isJobAvailable(id) {
-        let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${id}`;
+    // checks if a certain job (by trip_id) is available and attempts to mark is as taken
+    async function isJobAvailable(trip_id) {
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
+        let username = context.userState.userInfo.username;
 
         try {
-            let trip_info = await axios.patch(url, {trip_state: 'accepted_by_driver'}, token);
-            if (trip_info.trip_state == 'looking_for_driver') { return trip_info }
+            let trip_info = await axios.patch(url, {id: trip_id, trip_state: 'accepted_by_driver', driver_username: username, driver_current_latitude: 0,
+            driver_current_longitude: 0}, token);
+            if (JSON.parse(trip_info.config.data).trip_state == 'accepted_by_driver') { return trip_id }  // if statement may be unnecessary
         }
         catch(error) {
+            console.warn(error);
             return false
         }
         return false;
     }
 
+    async function getGPSPermissions() {
+        let permissions = await Location.requestForegroundPermissionsAsync();
+
+        if (!permissions.granted) {
+            onTogglePermissionsSnackBar();
+            return;
+        }
+        showConfirmationDialog();
+    }
+
+    async function getGPSLocation() {
+        try {
+          let currentLoc = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
+          console.log(currentLoc);
+          return({latitude: currentLoc.coords.latitude, longitude: currentLoc.coords.longitude});
+        }
+        catch (error) {
+            console.warn("Couldn't poll for gps location");
+        }
+        return({latitude: origin.latitude, longitude: origin.longitude});
+      }
       
     function renderJobList() {
         if (jobs.length) {
@@ -116,22 +97,29 @@ export default function AvailableJobsScreen({navigation}){
                         descriptionStyle={styles.jobItemDescription}
                         title={`From: ${origin.address} to: ${destination.address}`}
                         titleNumberOfLines={3}
-                        description={`(${distance}, ETA: ${estimated_time})\nPassenger: ${rider_username} (${rider_rating} ★)`}
+                        description={`(${distance}, ETA: ${estimated_time})\nPassenger: ${rider_username} (5 ★)`}    // (${rider_rating} ★)`}
                         descriptionNumberOfLines={3}
-                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{estimated_price} ETH</Text>}
+                        right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{Number(estimated_price).toFixed(3)} ETH</Text>}
                         onPress={() => {
-                            let job = isJobAvailable(trip_id)
-                            if (job !== false) {
-                                // context.userState.currentState = 'travelling';
-                                // navigation.navigate(UserNavConstants.OngoingJobScreen, {trip_info: job})
-                            }
-                            else {
-                                onToggleGeneralSnackBar()
-                            }
+                            setSelectedStart(origin.address);
+                            setSelectedDestination(destination.address);
+                            setSelectedDuration(estimated_time);
+                            setSelectedDistance(distance);
+                            setSelectedTripCost(Number(estimated_price).toFixed(3));
+                            setSelectedTripID(trip_id);
+                            getGPSPermissions();
                         }}
                     />
             )))
-    }}
+        }
+        else {
+            return(
+                <View style={{marginTop: '10%', alignItems: 'center'}}>
+                    <Text  style={{textAlignVertical: "center",textAlign: "center",}}>No jobs are available at the moment, you'll see them pop up here as soon as there's any</Text>
+                </View>
+            )
+        }
+    }
 
 
     return(
@@ -149,20 +137,57 @@ export default function AvailableJobsScreen({navigation}){
                     </Text>
                 </View>
             </View>
-
             <ScrollView style={styles.jobsView}>
                 {renderJobList()}
             </ScrollView>
+            <Dialog style={styles.dialogBox} visible={confirmationDialog} onDismiss={hideConfirmationDialog}>
+                <Dialog.Title>Job Start Confirmation</Dialog.Title>
+                <Dialog.Content>
+                    <Paragraph>Are you sure you want to take this job from {selectedStart} to {selecteDestination} ({selectedDistance}, ETA: {selectedDuration}) for {selectedTripCost} ETH</Paragraph>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <View style={styles.confirmationButtonsView}>
+                        <Button loading={isButtonPressed} buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
+                        onPress={
+                            async () => {
+                                setIsButtonPressed(true);
+                                let job_id = await isJobAvailable(selectedTripID);
+                                if (job_id !== false) {
+                                    // context.userState.currentState = 'travelling';
+                                    let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${job_id}`;
+                                    let trip_info = await axios.get(url, {headers: token.headers, params: {id: job_id}});
+                                    let gpsLoc = await getGPSLocation();
+                                    navigation.navigate(UserNavConstants.OngoingJobScreen, {trip_info: trip_info.data, location: gpsLoc});
+                                }
+                                else {
+                                    onToggleGeneralSnackBar();
+                                }
+                            }}>
+                                Yes, let's start my job
+                            </Button>
+                        <Button buttonColor='#cc3d55' mode='outlined' style={styles.denyButton} contentStyle={styles.denyButtonContent} labelStyle={styles.denyButtonLabel}
+                        onPress={hideConfirmationDialog}>No, take me back</Button>
+                    </View>
+                </Dialog.Actions>
+            </Dialog>
             <Snackbar
                 visible={visibleGeneralSB}
                 onDismiss={onDismissGeneralSnackBar}
-                duration='2500'
+                duration='2000'
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error while trying to assign you to that job, wait and try later.</Text>
+            </Snackbar>
+            <Snackbar
+                visible={visiblePermissionsSB}
+                onDismiss={onDismissPermissionsSnackBar}
+                duration='2500'
+                style={styles.snackbar}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>GPS permissions were denied, make sure to enable them to proceed with this job.</Text>
             </Snackbar>
         </View>
     )
 }
+
 
 const styles = StyleSheet.create({
     mainView: {
@@ -211,4 +236,35 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: '#D22B2B'
     },
+    dialogBox: {
+        
+    },
+    confirmButton: {
+        borderColor: 'black'
+    },
+    confirmButtonContent: {
+
+    },
+    confirmButtonLabel: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    denyButton: {
+        borderColor: 'black',
+        marginTop: 5
+    },
+    denyButtonContent: {
+
+    },
+    denyButtonLabel: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    confirmationButtonsView: {
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
+    }
 })

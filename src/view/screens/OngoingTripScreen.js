@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
-import Geocoder from 'react-native-geocoding';
-import { getCurrentLocation } from '../../controler/getCurrentLocation';
+import { Marker } from 'react-native-maps';
+import { StyleSheet, View } from "react-native";
+import { Text, Button, Snackbar } from "react-native-paper";
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
-import BottomDrawer from 'react-native-bottom-drawer-view';
 import * as Location from 'expo-location';
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -88,9 +85,23 @@ export default function OngoingTripScreen({route, navigation}) {
     }, isRunning ? stateDelay : notRunning);
     
 
-    const onToggleSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
+    const onToggleGeneralSnackBar = () => setVisibleGeneralSB(!visibleGeneralSB);
 
     const onDismissGeneralSnackBar = () => setVisibleGeneralSB(false);
+
+    function renderSnackbar() {
+      return(
+        <View style={styles.infoView}>
+          <Snackbar
+              visible={visibleGeneralSB}
+              onDismiss={onDismissGeneralSnackBar}
+              duration='2500'
+              style={styles.snackbar}>
+              <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, {'\n'}we're sorry for the inconvenience.</Text>
+          </Snackbar>
+        </View>
+      );
+    }
 
 
     function renderContent() {
@@ -100,15 +111,17 @@ export default function OngoingTripScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Waiting on a driver to take your trip</Text>
               <Text>Make sure you don't move too far from your trip's starting area!</Text>
+              {renderSnackbar()}
             </View>)
         case TripState.WaitingOnDriver:
           return (
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>A driver took your trip and is on the way</Text>
               <Text>Make sure you don't move too far from your trip's starting area!</Text>
-              <Text>Your driver is {driver}!{'\n'}</Text>
+              <Text>Your driver is {driver}.{'\n'}</Text>
               <Text>Trip's total distance: {remainingDistance}km</Text>
               <Text>Trip's estimated duration: {remainingDuration}mins</Text>
+              {renderSnackbar()}
             </View>)
         case TripState.DriverArrived:
           return (
@@ -116,15 +129,17 @@ export default function OngoingTripScreen({route, navigation}) {
               <Text style={styles.bottomHeader}>Your driver has arrived{'\n'}</Text>
               <Text>{driver} arrived at your starting location and is waiting on you.</Text>
               <Text>Their car is a {driverCar}{/*driverCar.color driverCar.manufacturer driverCar.model with plate driverCar.plate*/}.</Text> 
+              {renderSnackbar()}
             </View>)
         case TripState.TripOngoing: 
           return (
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Trip is on the way!</Text>
               <Text>Relax and enjoy your trip.{'\n'}</Text>
-              <Text>Your driver is {driver}!</Text>
+              <Text>Your driver is {driver}.</Text>
               <Text>Trip's remaining distance: {remainingDistance}km</Text>
               <Text>Trip's estimated remaining duration: {remainingDuration}mins</Text>
+              {renderSnackbar()}
             </View>)
         case TripState.TripFinished:
           return (
@@ -133,9 +148,10 @@ export default function OngoingTripScreen({route, navigation}) {
               <Text>We hope you had a great trip.{'\n'}</Text>
               <Text>{tripCost} has been substracted from your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
-                <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.push(UserNavConstants.RatingScreen, {user: driver, userType: 'driver', sender: context.userState.userInfo.username})}}>Rate your driver</Button>
-                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.push(UserNavConstants.HomeScreen)}}>Back to Home</Button>
+                <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: driver, userType: 'driver', sender: context.userState.userInfo.username})}}>Rate your driver</Button>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
               </View>
+              {renderSnackbar()}
             </View>)
       }
     };
@@ -179,21 +195,13 @@ export default function OngoingTripScreen({route, navigation}) {
                     onToggleGeneralSnackBar();
                 }} />
         </MapView>
-        <View style={styles.infoView}>
-            <Snackbar
-                visible={visibleGeneralSB}
-                onDismiss={onDismissGeneralSnackBar}
-                duration='2500'
-                style={styles.snackbar}>
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, we're sorry for the inconvenience.</Text>
-            </Snackbar>
-        </View>
         <BottomSheet
           ref={sheetRef}
           snapPoints={[250, 75]}
           borderRadius={30}
           renderContent={renderContent}
         />
+
       </>
     );
 }
@@ -209,12 +217,12 @@ const styles = StyleSheet.create({
   },
   infoView: {
       flex: 1,
-      justifyContent: 'center',
-      alignContent: 'center',
+      alignItems: 'center',
       position: 'absolute',
   },
   snackbar: {
-      backgroundColor: '#D22B2B'
+      backgroundColor: '#D22B2B',
+      position: 'absolute'
   },
   bottomView: {
     backgroundColor: 'white',
