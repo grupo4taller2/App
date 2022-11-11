@@ -32,12 +32,8 @@ function inProximity(firstCoords, secondCoords, allowedError) {
     longitudeDelta = firstCoords.longitude - secondCoords.longitude;
   
   }
-  console.log(latitudeDelta);
-  console.log(longitudeDelta);
   let latitudeResult = latitudeDelta <= allowedError;
   let longitudeResult = longitudeDelta <= allowedError;
-  console.log(latitudeResult);
-  console.log(longitudeResult);
   return (latitudeResult && longitudeResult)
 }
 
@@ -68,14 +64,14 @@ export default function OngoingJobScreen({route, navigation}) {
     const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.0005;   // ~= 55.5 m
+    const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
         WaitingOnDriver: "accepted_by_driver",
         DriverArrived: "driver_arrived",
         TripOngoing: "start_confirmed_by_driver",
-        TripFinished: "finished"
+        TripFinished: "finished_confirmed_by_driver"
     }
     
 
@@ -118,23 +114,14 @@ export default function OngoingJobScreen({route, navigation}) {
 
     async function notifyArrival() {
       let newState = TripState.DriverArrived;
-      console.log(tripState);
       if (!inProximity(currentLocation, origin, allowedProximityError)) {onTogglePassengerProximitySnackBar()}
       else {
         try {
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
-          console.log("ENTREEEEEEE");
-          //let trip_information = await axios.get(url, {headers: token.headers, id: trip_id});
-          //console.log({id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude, driver_current_longitude: currentLocation.longitude});
-          //console.log(token);
-          //console.log(trip_information.data);
+
           let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
           driver_current_longitude: currentLocation.longitude}, token);
-          console.log(trip_information.config.data);
-          if (JSON.parse(trip_information.config.data).trip_state == newState) { 
-            console.log('llego?!?!?!?!!?');
-            setTripState(newState);
-          }  // if statement may be unnecessary
+          if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
         }
         catch(error) {
           console.warn(error);
@@ -166,7 +153,6 @@ export default function OngoingJobScreen({route, navigation}) {
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
           let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
           driver_current_longitude: currentLocation.longitude}, token);
-          console.log(trip_information.config.data);
           if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
         }
         catch(error) {
@@ -191,7 +177,7 @@ export default function OngoingJobScreen({route, navigation}) {
                 onDismiss={onDismissPassengerProximitySnackBar}
                 duration='2500'
                 style={styles.snackbar}>
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the passanger, {'\n'}get closer to their map marker.</Text>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the passenger, {'\n'}get closer to their map marker.</Text>
             </Snackbar>
             <Snackbar
                 visible={visibleDestinationProximitySB}
@@ -233,7 +219,7 @@ export default function OngoingJobScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Wait on {passenger} to get in</Text>
               <Text>{'\n'}{passenger} has been notified about your arrival.</Text>
-              <Text>Once they're in your car and ready to go you can start the trip.</Text>
+              <Text>Once they're in your car and ready to go you can start the trip.{'\n'}</Text>
               <View style={styles.buttonStateView}>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'car-traction-control'} onPress={() => {startTrip()}}>Start Trip</Button>
               </View>
@@ -243,12 +229,13 @@ export default function OngoingJobScreen({route, navigation}) {
           return (
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Trip is on the way!</Text>
-              <Text>Relax and enjoy your trip.{'\n'}</Text>
-              <Text>Your driver is {driver}!</Text>
+              <Text>We hope you enjoy your trip.{'\n'}</Text>
+              <Text>Your passenger is {passenger}!</Text>
               <Text>Trip's remaining distance: {remainingDistance}km</Text>
               <Text>Trip's estimated remaining duration: {remainingDuration}mins</Text>
+              <Text>Trip's pay: {pay} ETH{'\n'}</Text>
               <View style={styles.buttonStateView}>
-                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'car-traction-control'} onPress={() => {finishTrip()}}>Finish Trip</Button>
+                <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'flag-checkered'} onPress={() => {finishTrip()}}>Finish Trip</Button>
               </View>
               {renderSnackbar()}
             </View>)
@@ -257,7 +244,7 @@ export default function OngoingJobScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Your job's over!</Text>
               <Text>We hope you had a great trip.{'\n'}</Text>
-              <Text>{pay} has been added to your wallet.{'\n'}</Text>
+              <Text>{pay} ETH has been added to your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
                 <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: passenger, userType: 'passenger', sender: context.userState.userInfo.username})}}>Rate your passenger</Button>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
@@ -287,6 +274,7 @@ export default function OngoingJobScreen({route, navigation}) {
         )
       }
       if (tripState == TripState.TripOngoing) {
+        return(
         <MapViewDirections
             origin={currentLocation}
             destination={destination}
@@ -301,6 +289,7 @@ export default function OngoingJobScreen({route, navigation}) {
                 console.warn('Error while creating route: ' + errorMessage);
                 onToggleGeneralSnackBar();
             }} />
+        )
       }
     }
   
@@ -326,7 +315,7 @@ export default function OngoingJobScreen({route, navigation}) {
         onRegionChangeComplete={(region) => setRegion(region)}>
             <Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>
             <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={currentLocation}/>
-            <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>
+            {((tripState == TripState.WaitingOnDriver) || (tripState == TripState.DriverArrived)) && <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
             {renderRoute()}
         </MapView>
@@ -370,6 +359,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   buttonStateView: {
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
+  },
+  buttonsChoiceView: {
     alignItems: 'center',
     justifyContent: 'space-evenly'
   }

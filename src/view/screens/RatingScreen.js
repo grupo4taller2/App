@@ -39,7 +39,7 @@ export default function RatingScreen({route, navigation}) {
         }
     }
 
-    async function attemptDriverReview() {
+    async function attemptPassengerReview() {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/passengers/qualy/create';
         try {
             let validReview = await axios.post(url, {passenger_username: user, qualy: rating, opinion: review, driver_username: sender}, token);

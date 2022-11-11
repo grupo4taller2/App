@@ -44,7 +44,7 @@ export default function OngoingTripScreen({route, navigation}) {
         WaitingOnDriver: "accepted_by_driver",
         DriverArrived: "driver_arrived",
         TripOngoing: "start_confirmed_by_driver",
-        TripFinished: "finished"
+        TripFinished: "finished_confirmed_by_driver"
     }
     
 
