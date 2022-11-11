@@ -136,7 +136,7 @@ export async function googleGetUser(userCredential){
 }
 
 async function postNewUser(info, user){
-    console.log(info);
+    
     const uri = ROUTE + (info.isDriver ? DRIVERREG : PASSENGERREG);
     
     const result = await axios.post(uri, info.info, getToken(user.credential.user.stsTokenManager.accessToken));
@@ -170,9 +170,11 @@ async function tryGenerate(email, number, user){
    info.phone_number = user.user.phoneNumber ? user.user.phoneNumber : "";
    info.wallet = "";
    info.preferred_location = "No address";
+
    try{
-    await postNewUser({info: info, isDriver: false});
-   }catch{
+    const credential = {credential: user};
+    await postNewUser({info: info, isDriver: false}, credential);
+   }catch (error) {
     number = number ? number + 1 : 0;
    }
     

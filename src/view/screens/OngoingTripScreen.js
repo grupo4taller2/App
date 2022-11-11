@@ -30,7 +30,7 @@ export default function OngoingTripScreen({route, navigation}) {
     const [currentLocation, setCurrentLocation] = useState(startMarker);
     const destination = destinationMarker;
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
-    const [stateDelay, setStateDelay] = useState(100000);   // trip state polling delay (in ms)
+    const [stateDelay, setStateDelay] = useState(5000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
     const [driver, setDriver] = useState(undefined);
     const [driverCar, setDriverCar] = useState(undefined);

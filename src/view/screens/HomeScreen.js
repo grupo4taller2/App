@@ -34,8 +34,10 @@ export default function HomeScreen({route, navigation}) {
       <View style={styles.header}>
         <Image style={styles.logo} source={require('../../../resources/images/logo.png')}/>
         <View style={styles.balanceView}>
-          <Button style={styles.balanceButton} contentStyle={styles.contentStyle} labelStyle={styles.balanceButtonText} >
-            4.32 ETH
+          <Text style={styles.creditText}>Credit left: </Text>
+          <Button style={styles.balanceButton} contentStyle={styles.contentStyle} labelStyle={styles.balanceButtonText} 
+            onPress={() => {navigation.push(UserNavConstants.WalletView)}}>
+            45.78 ETH
           </Button>
         </View>
       </View>
@@ -148,11 +150,13 @@ const styles = StyleSheet.create(
   },
   balanceView: {
     flex: 1,
-    flexDirection: 'row-reverse',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    alignContent: 'flex-end'
   },
   balanceButton: {
-    backgroundColor: '#37a0bd',
-    borderRadius: 100,
+    backgroundColor: '#3e9c35',
+    borderRadius: 10,
     marginRight: 40,
     marginTop: 10,
   },
@@ -169,6 +173,11 @@ const styles = StyleSheet.create(
     fontWeight: '500',
     alignSelf: 'center',
   },
+  creditText:{
+    marginHorizontal: 50,
+    fontSize: 18,
+    fontWeight: 'bold'
+  },  
   greetView: {
     flex: .2,
     justifyContent: 'center',
@@ -213,58 +222,14 @@ const styles = StyleSheet.create(
     position: 'absolute',
     right: 0
   },
-  Mainview: {
-      flex: 1,
-      backgroundColor: "#f0efc0"
-      
-  },
   snackbar: {
     backgroundColor: '#D22B2B'
-  },
-  ProfileView: {
-      flex: 0.1,
-      
-      justifyContent: "center",
-      flexDirection: "row",
-      
-      paddingTop: Constants.statusBarHeight,
-      margin: 0
-  },
-  PrivateView: {
-      flex: 0.3
-  },
-  OptionsView: {
-      flex: 1/2,
-      flexDirection: "row",
-      alignItems: "flex-start",
-      justifyContent: "flex-start"
   },
   creditView: {
       flex: 1/3,
       position: 'absolute',
       bottom: 0,
       alignSelf: 'center'
-  },
-  privateOptions: {
-      flex: 0.6,
-      alignItems: "center",
-      justifyContent: "center"
-  },
-  NameReviewView: {
-      flex: 0.7,
-  },
-  ProfilePict: {
-      flex: 0.3,
-      justifyContent: 'center',
-      alignItems: 'center'
-  },
-  nameText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      alignSelf: 'center'
-  },
-  stars: {
-      
   },
   OptionSurface: {
       padding: 35,
@@ -273,29 +238,8 @@ const styles = StyleSheet.create(
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: "#fff"
-    },
-  CreditSurface: {
-      maxWidth: "80%",
-      padding: 8,
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignSelf: "center",
-      backgroundColor: "#fff"
-  },
-  optionStyle: {
-      flex: 0.1,
-      minWidth: 350,
-      margin: 5,
-      backgroundColor: "#fff"
-  },
-
-  optionArrow: {
-      backgroundColor: '#fff',
-      position: 'absolute',
-      right: 0
   },
   optionItem: {
       
   },
 })
-

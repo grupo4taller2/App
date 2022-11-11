@@ -1,0 +1,78 @@
+
+
+
+import React from "react";
+import { StyleSheet, Touchable, TouchableNativeFeedback } from "react-native";
+import { Button, Dialog, Paragraph, Surface, Text } from "react-native-paper";
+import * as Clipboard from 'expo-clipboard';
+import ErrorSnackBar from "./ErrorSnackBar";
+import { useUserContext } from "./context";
+
+
+export default function UserWallet(props){
+    
+    const {userState} = useUserContext();
+
+    const address = getWalletAddress(userState.userInfo);
+    
+    const [copied, setCopied] = React.useState(false);
+
+    const onDismissSnackBar = () => {
+        setCopied(!copied);
+    }
+
+    const setStringAsync = async () => {
+        await Clipboard.setStringAsync(address);
+        setCopied(true);
+    }
+
+    return (
+    <>
+    <Dialog visible={props.visible}>
+        <Dialog.Title>Wallet address</Dialog.Title>
+        <Dialog.Content>
+            <Paragraph>Deposit USDC on this wallet to get more credit</Paragraph>
+            <Surface style={style.surface}>
+                    <Text style={style.WalletText} selectable={true}>{address}</Text>
+            </Surface>
+        </Dialog.Content>
+        <Button style={style.ClipboardButton} icon="clipboard" onPress={setStringAsync}></Button>
+        <Dialog.Actions>
+            
+            <Button  onPress={props.toggle}>Close</Button>
+        </Dialog.Actions>
+    </Dialog>
+    <ErrorSnackBar error={copied} onDismissSnackBar={onDismissSnackBar} text="Wallet address copied to clipboard!" success={true} />
+    </>)
+}
+
+
+function getWalletAddress(userInfo){
+    return (
+        userInfo.driver_information ? userInfo.driver_information.wallet : userInfo.rider_information.wallet
+    )
+}
+
+const style = StyleSheet.create(
+    {
+        surface: {
+            borderRadius: 10,
+            height: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row'
+        },
+        WalletText: {
+            position: "absolute",
+            left: 0,
+            marginHorizontal: 10
+        },
+
+        ClipboardButton: {
+            position: "absolute",
+            left: 0,
+            bottom: 25,
+            marginHorizontal: 10, 
+        }
+    }
+)

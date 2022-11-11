@@ -115,7 +115,7 @@ export default function AvailableJobsScreen({navigation}){
         else {
             return(
                 <View style={{marginTop: '10%', alignItems: 'center'}}>
-                    <Text  style={{textAlignVertical: "center",textAlign: "center",}}>No jobs are available at the moment, you'll see them pop up here as soon as there's any</Text>
+                    <Text  style={{textAlignVertical: "center",textAlign: "center",}}>We're looking for jobs that are available at the moment, you'll see them pop up here as soon as we find any</Text>
                 </View>
             )
         }
@@ -143,7 +143,7 @@ export default function AvailableJobsScreen({navigation}){
             <Dialog style={styles.dialogBox} visible={confirmationDialog} onDismiss={hideConfirmationDialog}>
                 <Dialog.Title>Job Start Confirmation</Dialog.Title>
                 <Dialog.Content>
-                    <Paragraph>Are you sure you want to take this job from {selectedStart} to {selecteDestination} ({selectedDistance}, ETA: {selectedDuration}) for {selectedTripCost} ETH</Paragraph>
+                    <Paragraph>Are you sure you want to take this job from {selectedStart} to {selecteDestination} ({selectedDistance}, ETA:{selectedDuration}) for {selectedTripCost} ETH</Paragraph>
                 </Dialog.Content>
                 <Dialog.Actions>
                     <View style={styles.confirmationButtonsView}>

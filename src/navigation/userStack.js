@@ -26,10 +26,11 @@ export default function UserStack() {
         <Stack.Screen name={UserNavConstants.TripScreen} component={TripScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.OngoingTripScreen} component={OngoingTripScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.UserSearchScreen} component={UserSearchView} options={{headerShown: false}} />
-        <Stack.Screen name={UserNavConstants.DriverInfo} component={RegisterAsDriver} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.DriverReg} component={RegisterAsDriver} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.AvailableJobsScreen} component={AvailableJobsScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.OngoingJobScreen} component={OngoingJobScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.RatingScreen} component={RatingScreen} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.DriverInfo} component={RegisterAsDriver} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );
