@@ -32,8 +32,8 @@ export default function OngoingTripScreen({route, navigation}) {
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
     const [stateDelay, setStateDelay] = useState(100000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
-    const [driver, setDriver] = useState('driver_name');  // should start as undefined as soon as im done testing
-    const [driverCar, setDriverCar] = useState('Corolla');  // should start as undefined as soon as im done testing
+    const [driver, setDriver] = useState(undefined);
+    const [driverCar, setDriverCar] = useState(undefined);
     const previousRouteValues = useRef({ remainingDistance, remainingDuration });
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const price = tripCost;
@@ -74,7 +74,7 @@ export default function OngoingTripScreen({route, navigation}) {
         console.log(response.data.trip_state);
         let currentTripState = response.data.trip_state;
         if (driver === undefined && tripState == TripState.WaitingOnDriver) {
-            setDriver(response.data.driver.driver_username);
+            setDriver(response.data.driver.username);
             setDriverCar(response.data.driver.car);
         }
         setTripState(currentTripState);
@@ -128,7 +128,7 @@ export default function OngoingTripScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Your driver has arrived{'\n'}</Text>
               <Text>{driver} arrived at your starting location and is waiting on you.</Text>
-              <Text>Their car is a {driverCar}{/*driverCar.color driverCar.manufacturer driverCar.model with plate driverCar.plate*/}.</Text> 
+              <Text>Their car is a {driverCar.color} {driverCar.manufacturer} {driverCar.model} with plate {driverCar.plate}.</Text> 
               {renderSnackbar()}
             </View>)
         case TripState.TripOngoing: 

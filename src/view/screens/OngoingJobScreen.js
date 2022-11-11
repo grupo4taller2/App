@@ -64,7 +64,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
+    const allowedProximityError = 0.0005;   // 0.0005 ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
@@ -153,6 +153,7 @@ export default function OngoingJobScreen({route, navigation}) {
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
           let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
           driver_current_longitude: currentLocation.longitude}, token);
+          // sendPaymentToBack();   // add payment of funds here once it's implemented in backend
           if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
         }
         catch(error) {

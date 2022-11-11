@@ -136,6 +136,12 @@ export default function TripScreen({navigation}){
         showConfirmationDialog();
     }
 
+    async function enoughWalletBalance(tripCost) {  // need backend functionality to do this check
+        // let hasEnough = await BACKEND_hasEnoughBalance(context.userState.userInfo.rider_information.wallet);
+        // return hasEnough
+        return true;
+    }
+
     return (
         <View style={styles.mainView}>
             <View style={styles.mapView}>
@@ -192,11 +198,14 @@ export default function TripScreen({navigation}){
                                 <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     async () => {
-                                        let validStart = await startTrip(context.userState.userInfo.username);
-                                        if (validStart != false) {
-                                            let trip_id = validStart.data.trip_id;
-                                            // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
-                                            navigation.navigate(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
+                                        let enoughBalance = await enoughWalletBalance(tripCost);
+                                        if (enoughBalance) {
+                                            let validStart = await startTrip(context.userState.userInfo.username);
+                                            if (validStart != false) {
+                                                let trip_id = validStart.data.trip_id;
+                                                // context.user.state = travelling  // hay que hacer esto para que luego el stack, si el estado del user es travelling una vez se logee lo mande a esta pagina directo y una vez que termina el viaje debe cambiarse a {state = idle}
+                                                navigation.navigate(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
+                                            }
                                         }
                                         else {onTogglePaymentSnackBar()}
                                     }}>
