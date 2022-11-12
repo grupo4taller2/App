@@ -26,10 +26,10 @@ export default function ProfileOptionsView({navigation}){
     console.log(userState);
     return (
         <View style={style.privateOptions}>
-                <ProfileOption icon="account-search" text="search users" callback={() => {navigation.push(UserNavConstants.UserSearchScreen)}}/>
-                <ProfileOption icon="wallet" text="wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
-                <ProfileOption icon="logout" text="Log out" callback={callBack}/>
-                {driverCallback ? <ProfileOption icon="card-account-details" text="see driver info" callback={driverCallback}/> : null}
+                <ProfileOption icon="account-search" text="Search Users" callback={() => {navigation.push(UserNavConstants.UserSearchScreen)}}/>
+                <ProfileOption icon="wallet" text="Wallet" callback={() => navigation.push(UserNavConstants.WalletView)}/>
+                <ProfileOption icon="logout" text="Log Out" callback={callBack}/>
+                {driverCallback ? <ProfileOption icon="card-account-details" text="See Driver info" callback={driverCallback}/> : null}
             </View>
     )
 }
@@ -38,9 +38,9 @@ export default function ProfileOptionsView({navigation}){
 const style = StyleSheet.create(
     {
         privateOptions: {
-            flex: 0.4,
+            flex: 0.45,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: 'space-evenly'
         },
         optionStyle: {
             flex: 0.2,
@@ -55,6 +55,6 @@ const style = StyleSheet.create(
         },
         optionItem: {
             
-        }
+        },
     }
 )

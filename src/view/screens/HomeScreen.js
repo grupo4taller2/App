@@ -1,63 +1,79 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { SafeAreaView, Image, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 import StatusButton from '../components/loginButton';
-import { Avatar, Button, Drawer, List, Menu, Surface, Text } from "react-native-paper";
+import { Avatar, Button, Drawer, List, Menu, Surface, Text, Snackbar} from "react-native-paper";
 import { useUserContext } from '../components/context';
 import { createStatusChanger, signOut } from '../../model/status';
 import Constants from 'expo-constants';
 import { UserNavConstants } from '../../config/userNavConstants';
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({route, navigation}) {
   const context = useUserContext();
+  const userFirstName = context.userState.userInfo.first_name;
+  const isDriver = context.userState.userInfo.driver_information? Object.keys(context.userState.userInfo.driver_information).length : 0;
+  const [visibleRatingSB, setVisibleRatingSB] = useState(false);
+
+  const onToggleRatingSnackBar = () => setVisibleRatingSB(!visibleRatingSB);
+
+  const onDismissRatingSnackBar = () => setVisibleRatingSB(false);
+
+  useEffect(() => { // checks for any snackbar that may need rendering on initial render
+    if (route.params) {
+      const {snackbar} = route.params;
+      switch (snackbar) {
+        case 'rating': { onToggleRatingSnackBar(); }
+      }
+  }}, [route])
+
 
   return (
-    <View style={style.mainView}>
+    <View style={styles.mainView}>
       <StatusBar style="auto" />
-      <View style={style.header}>
-        <Image style={style.logo} source={require('../../../resources/images/logo.png')}/>
-        <View style={style.balanceView}>
-          <Text style={style.creditText}>Credit left: </Text>
-          <Button style={style.balanceButton} contentStyle={style.contentStyle} labelStyle={style.balanceButtonText} 
+      <View style={styles.header}>
+        <Image style={styles.logo} source={require('../../../resources/images/logo.png')}/>
+        <View style={styles.balanceView}>
+          <Text style={styles.creditText}>Credit left: </Text>
+          <Button style={styles.balanceButton} contentStyle={styles.contentStyle} labelStyle={styles.balanceButtonText} 
             onPress={() => {navigation.push(UserNavConstants.WalletView)}}>
-            45.78 USD
+            45.78 ETH
           </Button>
         </View>
       </View>
-      <View style={style.greetView}>
-        <Text style={style.greeting}>Good morning, John</Text>
+      <View style={styles.greetView}>
+        <Text style={styles.greeting}>Good to see you, {userFirstName}</Text>
       </View>
-      <View style={style.buttonsView}>
+      <View style={styles.buttonsView}>
         <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.TripScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="car" />
-                <Text>Ride</Text>
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={50} icon="car" />
+                <Text style={styles.buttonText}>Ride</Text>
             </Surface>
           </TouchableNativeFeedback>
-          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.ProfileScreen)}>
+          <TouchableNativeFeedback disabled={!isDriver} onPress={() => navigation.push(UserNavConstants.AvailableJobsScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="account" />
-                <Text>Profile</Text>
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={50} icon="car-traction-control" />
+                <Text style={styles.buttonText}>Drive</Text>
+                <Text style={styles.driversOnly}>(Drivers only)</Text>
             </Surface>
           </TouchableNativeFeedback>
         </View>
-        <View style={style.buttonsView}>
-          <TouchableNativeFeedback>
+        <View style={styles.buttonsView}>
+          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.ProfileScreen)}>
             <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="chat" />
-                <Text>Messages</Text>
-            </Surface>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback onPress={() => navigation.push(UserNavConstants.AvailableJobsScreen)}>
-            <Surface style={styles.OptionSurface} elevation={5}>
-                <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="car-traction-control" />
-                <Text>Drive</Text>
-                <Text style={style.driversOnly}>(Drivers only)</Text>
+                <Avatar.Icon style={{backgroundColor: "#fff"}} size={50} icon="account" />
+                <Text style={styles.buttonText}>Profile</Text>
             </Surface>
           </TouchableNativeFeedback>
       </View>
-      
-    
+      <Snackbar
+          visible={visibleRatingSB}
+          onDismiss={onDismissRatingSnackBar}
+          duration='2500'
+          style={styles.snackbar}>
+          <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error submitting your review, we're sorry for the inconvenience.</Text>
+      </Snackbar>
     </View>
     )
 }
@@ -93,94 +109,27 @@ Go again component:
         </Surface>
         </TouchableNativeFeedback>
       </View>
+*/
 
- <View style={styles.Mainview}>
-    <SafeAreaView style={styles.ProfileView}>
-        <View style={styles.NameReviewView}>
-        <Text style={styles.nameText}>Francisco Javier Pereira</Text>
-        <Drawer.Item style={styles.stars} label="4.8" icon="star" />
-        </View>
-        <View style={styles.ProfilePict}>
-            <Avatar.Image style={{backgroundColor: "#f0efc0"}} size={60} source={require('../../../assets/icon.png')}/>
-        </View>
-    </SafeAreaView>
-    <View style={styles.PrivateView}>
-        <View style={styles.OptionsView}>
-            <TouchableNativeFeedback>
-        <Surface style={styles.OptionSurface} elevation={5}>
-            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="import" />
-            <Text>Deposit</Text>
-        </Surface>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback>
-        <Surface style={styles.OptionSurface} elevation={5}>
-            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="export" />
-            <Text>Withdraw</Text>
-        </Surface>
-        </TouchableNativeFeedback>
-        </View>
-        <View style={styles.creditView}>
-            <Surface style={styles.CreditSurface} elevation={5}>
-            <View style={{minWidth: 250, flexDirection: 'row', justifyContent: 'center'}}>
-                <Text style={{fontSize: 20}}>Total balance</Text>
-                <TouchableNativeFeedback>
-                <Avatar.Icon style={{backgroundColor: "#fff", marginLeft: 20}}  size={35} icon="eye"/>
-                </TouchableNativeFeedback>
-            </View>
-            <Text style={[styles.nameText, {margin: 10}]}>45.78 USD</Text>
-            </Surface>
-        </View>
-    </View>
-    <View style={styles.privateOptions}>
-        <TouchableNativeFeedback>
-        <Surface style={styles.optionStyle} elevation={4}>
-            <Menu.Item leadingIcon="account" title="My account" style={styles.optionItem}></Menu.Item>
-            <Avatar.Icon style={styles.optionArrow} icon="chevron-right"/>
-        </Surface>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback>
-        <Surface style={styles.optionStyle} elevation={4}>
-            <Menu.Item leadingIcon="wallet" title="Wallet" style={styles.optionItem}></Menu.Item>
-            <Avatar.Icon style={style.optionArrow} icon="chevron-right"/>               
-        </Surface>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback>
-        <Surface style={styles.optionStyle} elevation={4}>
-            <Menu.Item leadingIcon="help" title="Help" style={styles.optionItem}></Menu.Item>
-            <Avatar.Icon style={styles.optionArrow} icon="chevron-right"/>
-        </Surface>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback>
-        <Surface style={styles.optionStyle} elevation={4}>
-            <Menu.Item leadingIcon="card-account-details" title="Become a driver" style={styles.optionItem}></Menu.Item>
-            <Avatar.Icon style={styles.optionArrow} icon="chevron-right"/>
-        </Surface>
-        </TouchableNativeFeedback>
-    </View>
-  </View>
-   */
-
-const style = StyleSheet.create({
+const styles = StyleSheet.create(
+{
   mainView: {
     flex: 1,
     backgroundColor: '#fff',
   },
   button: {
     backgroundColor: '#37a0bd',
-    borderRadius: 10,
+    borderRadius: 100,
   },
   buttonContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 10,
+    flexDirection: 'row',
+    width: 320,
     height: 70,
   },
   buttonText: {
-    color: 'white',
-    alignSelf: 'center',
-    fontSize: 20,
-    fontWeight: '500',
-    alignSelf: 'center',
+    fontSize: 20,    
   },
   inputBox: {
     maxHeight: 60,
@@ -188,7 +137,7 @@ const style = StyleSheet.create({
     paddingLeft: 8,
   },  
   header: {
-    flex: .5,
+    flex: .3,
     flexDirection: 'row',
     marginLeft: 40,
     marginTop: 40,
@@ -200,14 +149,15 @@ const style = StyleSheet.create({
     backgroundColor: "#fff"
   },
   balanceView: {
-    alignSelf: 'flex-start',
     flex: 1,
     flexDirection: 'column',
+    alignItems: 'flex-end',
+    alignContent: 'flex-end'
   },
   balanceButton: {
-    backgroundColor: '#37a0bd',
+    backgroundColor: '#3e9c35',
     borderRadius: 10,
-    marginHorizontal: 50,
+    marginRight: 40,
     marginTop: 10,
   },
   balanceButtonContent: {
@@ -229,7 +179,7 @@ const style = StyleSheet.create({
     fontWeight: 'bold'
   },  
   greetView: {
-    flex: .3,
+    flex: .2,
     justifyContent: 'center',
   },
   greeting: {
@@ -239,9 +189,10 @@ const style = StyleSheet.create({
     fontWeight: '600',
   },
   buttonsView: {
-    flex: 1,
+    flex: .7,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    alignItems: 'center'
   },
   driversOnly: {
     fontSize: 10
@@ -270,92 +221,25 @@ const style = StyleSheet.create({
     backgroundColor: '#fff',
     position: 'absolute',
     right: 0
-},
+  },
+  snackbar: {
+    backgroundColor: '#D22B2B'
+  },
+  creditView: {
+      flex: 1/3,
+      position: 'absolute',
+      bottom: 0,
+      alignSelf: 'center'
+  },
+  OptionSurface: {
+      padding: 35,
+      margin: 6,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: "#fff"
+  },
+  optionItem: {
+      
+  },
 })
-
-const styles = StyleSheet.create(
-{
-    Mainview: {
-        flex: 1,
-        backgroundColor: "#f0efc0"
-        
-    },
-    ProfileView: {
-        flex: 0.1,
-        
-        justifyContent: "center",
-        flexDirection: "row",
-        
-        paddingTop: Constants.statusBarHeight,
-        margin: 0
-    },
-    PrivateView: {
-        flex: 0.3
-    },
-    OptionsView: {
-        flex: 1/2,
-        flexDirection: "row",
-        alignItems: "flex-start",
-        justifyContent: "flex-start"
-    },
-    creditView: {
-        flex: 1/3,
-        position: 'absolute',
-        bottom: 0,
-        alignSelf: 'center'
-    },
-    privateOptions: {
-        flex: 0.6,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    NameReviewView: {
-        flex: 0.7,
-    },
-    ProfilePict: {
-        flex: 0.3,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    nameText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        alignSelf: 'center'
-    },
-    stars: {
-        
-    },
-    OptionSurface: {
-        padding: 35,
-        minHeight: 100,
-        margin: 6,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#fff"
-      },
-    CreditSurface: {
-        maxWidth: "80%",
-        padding: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: "center",
-        backgroundColor: "#fff"
-    },
-    optionStyle: {
-        flex: 0.1,
-        minWidth: 350,
-        margin: 5,
-        backgroundColor: "#fff"
-    },
-
-    optionArrow: {
-        backgroundColor: '#fff',
-        position: 'absolute',
-        right: 0
-    },
-    optionItem: {
-        
-    },
-})
-

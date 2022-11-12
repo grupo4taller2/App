@@ -11,6 +11,8 @@ import UserSearchView from '../view/screens/UserSearchScreen';
 import RegisterAsDriver from '../view/composed/registerAsDriver';
 import OngoingTripScreen from '../view/screens/OngoingTripScreen';
 import AvailableJobsScreen from '../view/screens/AvailableJobsScreen';
+import OngoingJobScreen from '../view/screens/OngoingJobScreen';
+import RatingScreen from '../view/screens/RatingScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,8 @@ export default function UserStack() {
         <Stack.Screen name={UserNavConstants.UserSearchScreen} component={UserSearchView} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.DriverReg} component={RegisterAsDriver} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.AvailableJobsScreen} component={AvailableJobsScreen} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.OngoingJobScreen} component={OngoingJobScreen} options={{headerShown: false}} />
+        <Stack.Screen name={UserNavConstants.RatingScreen} component={RatingScreen} options={{headerShown: false}} />
         <Stack.Screen name={UserNavConstants.DriverInfo} component={RegisterAsDriver} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
