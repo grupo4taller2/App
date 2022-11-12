@@ -12,7 +12,7 @@ import { UserNavConstants } from '../../config/userNavConstants';
 export default function HomeScreen({route, navigation}) {
   const context = useUserContext();
   const userFirstName = context.userState.userInfo.first_name;
-  const isDriver = Object.keys(context.userState.userInfo.driver_information).length;
+  const isDriver = context.userState.userInfo.driver_information? Object.keys(context.userState.userInfo.driver_information).length : 0;
   const [visibleRatingSB, setVisibleRatingSB] = useState(false);
 
   const onToggleRatingSnackBar = () => setVisibleRatingSB(!visibleRatingSB);
