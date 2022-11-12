@@ -192,7 +192,7 @@ async function tryGenerate(email, number, user){
     
 }
 
-function getHeader(context){
+export function getHeader(context){
     return context.userState.user ? getToken(context.userState.user.stsTokenManager.accessToken) : null;
 }
 

@@ -15,21 +15,19 @@ export default function UserPrivateInfo(props){
     return (
         <>
         <View style={style.infoField}>
+                        <TextInput style={[style.infoText, {flex: 1}]} editable={props.edit} label="Default Address"
+                                    value={address} onChangeText={addressCallback}/>
                         <TextInput style={style.infoText}  editable={false} label="E-mail" 
                                     value={email} onChangeText={emailCallback}/>
                         <TextInput style={style.infoText} editable={props.edit} label="Phone number"
                                     value={phone} onChangeText={phoneCallback}/>
-                    </View>
-                    <View style={style.infoField}>
-                        <TextInput style={[style.infoText, {flex: 1}]} editable={props.edit} label="Default Address"
-                                    value={address} onChangeText={addressCallback}/>
                     </View>
                     </>)
 }
 
 const style = StyleSheet.create({
     infoField: {
-        flex: 0.4,
+        flex: 1,
         flexDirection: 'column-reverse'
     },
     infoText: {
@@ -38,5 +36,6 @@ const style = StyleSheet.create({
         marginBottom: 5,
         fontWeight: "bold",
         backgroundColor: "#fff"
+        
     }
 })

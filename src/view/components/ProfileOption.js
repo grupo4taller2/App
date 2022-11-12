@@ -14,19 +14,17 @@ export function ProfileOption(props){
 
 const style = StyleSheet.create({
     optionStyle: {
-        flex: 0.25,
-        minWidth: 350,
-        margin: 5,
+        minWidth: '85%',        
         backgroundColor: "#fff"
     },
     optionArrow: {
         backgroundColor: '#fff',
         position: 'absolute',
         right: 0,
-        maxWidth: 50,
-        maxHeight: 50
+        maxWidth: 45,
+        maxHeight: 45
     },
     optionItem: {
         
-    }
+    },
 })
