@@ -34,6 +34,8 @@ export default function ProfileInfoView(){
     const userState = context.userState;
     const riderInfo = getUserInfo(userState.userInfo);
     
+    const username = userState.userInfo.username;
+    
     const [edit, setEdit] = React.useState(false);
 
     const [first_name, setFirstName] = React.useState(userState.userInfo.first_name);
@@ -66,11 +68,12 @@ export default function ProfileInfoView(){
                     preferred_location_name: address
                 }
                 try{
-                    if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
-                    else await updateInfo(newInfo, email, context)
+                    
+                    if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, username, context);
+                    else await updateInfo(newInfo, username, context)
                     setEditResult(true);
-               }catch{
-
+               }catch (error){
+                    console.log(error);
                     setEditResult(false);
                 }
                 setEditCompleted(true);

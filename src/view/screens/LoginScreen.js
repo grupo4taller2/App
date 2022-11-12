@@ -24,9 +24,9 @@ export default function LoginScreen({ navigation }) {
 
         <View style={style.bottomTextView}>
             <Text style={style.bottomTextOr}> or</Text>
-            <GoogleLogin />
+            
         </View>
-
+        <GoogleLogin />
       </View>
     );
   }
