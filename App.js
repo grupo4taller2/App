@@ -1,13 +1,13 @@
+
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
 import { getMyInfo, getUser } from './src/model/status';
-import RootNavigation from './src/navigation';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
-import RegisterInfoScreen from './src/view/screens/RegisterInfoScreen';
-import TripScreen from './src/view/screens/TripScreen';
+
+
 
 
 const initialState = () => {
@@ -25,13 +25,11 @@ export default function App() {
 
   const [userState, dispatch] = useReducer(reducer, reducer());
 
-
   const authState = React.useMemo(() => {
     return ({
       userState,
       signIn: async (responseToken) => {
           const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
-          console.log(userInfo);
           dispatch({token: responseToken._tokenResponse.idToken, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {

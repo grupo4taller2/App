@@ -1,14 +1,15 @@
-import { getAuth } from "firebase/auth";
-import { useUserContext } from "../view/components/context";
 import {ROUTE, DRIVERREG, PASSENGERREG, USERS, STATUS} from '@env'
 import axios from "axios";
 import { USERCHECK } from "./textInput";
+import * as Firestore from "firebase/firestore"
+import { db, loginCollection } from '../config/firebase';
 
 export async function signIn(connection, info, failCall, context){
     
     const credentials = await connection.tryLogin(info.email, info.password);
+
     if (credentials.result){
-        
+        Firestore.addDoc(loginCollection, {"method": "email", "Time": Date.now()});
         context.signIn(credentials.credential)
     }else{
         
@@ -76,19 +77,22 @@ export function createStatusChangerWithAsyncChecks(call, connection, info, failC
     return wrapper
 }
 
-export async function updateInfo(newInfo, email, context){   
-    const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
-    const headers = getHeader(context);
-    const response = await axios.patch(uri, newInfo, headers);
 
-    context.update();
+export async function updateInfo(newInfo, email, context){
+        
+        const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
+        const headers = getHeader(context);
+        const response = await axios.patch(uri, newInfo, headers);
+        
+        context.update();
 }
 
 export async function updateDriverInfo(newInfo, email, context){
     const uri = ROUTE + DRIVERREG + "/" + email + "/" + STATUS;
+    
     const headers = getHeader(context);
     const response = await axios.patch(uri, newInfo, headers);
-
+    
     context.update()
 }
 
@@ -116,14 +120,17 @@ export async function getMyInfo(userOrEmail, userState){
     const header = getToken(userState.user.stsTokenManager.accessToken);
 
     try{
-        console.log(header);
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
-        if(result) return result.data;
+        if(result) {
+            return result.data;
+        }
     }catch{
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
-        if(result) return result.data;
+        if(result) {
+            return result.data;
+        }
     }
 
 }
