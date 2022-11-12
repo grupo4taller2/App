@@ -1,8 +1,6 @@
 import {ROUTE, DRIVERREG, PASSENGERREG, USERS, STATUS} from '@env'
 import axios from "axios";
-import { USERCHECK } from "./textInput";
-import * as Firestore from "firebase/firestore"
-import { db, loginCollection } from '../config/firebase';
+import { logLogin, logSignup } from './login';
 
 
 
@@ -12,7 +10,7 @@ export async function signIn(connection, info, failCall, context){
     const credentials = await connection.tryLogin(info.email, info.password);
 
     if (credentials.result){
-        Firestore.addDoc(loginCollection, {"method": "email", "Time": Date.now()});
+        logLogin("Email");
         context.signIn(credentials.credential)
     }else{
         
@@ -30,6 +28,7 @@ export async function register(connection, info, failCall, context){
 
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
+        logSignup("Email");
         context.register(credentials.credential, result.data);
     }else{
         failCall();
@@ -142,7 +141,7 @@ export async function googleGetUser(userCredential){
     const email = userCredential.user.email;
     let endResult = null;
     await generateUser(email, userCredential);
-    Firestore.addDoc(loginCollection, {"method": "federated", "Time": Date.now()});
+    logLogin("Federated");
 }
 
 async function postNewUser(info, user){
@@ -157,13 +156,16 @@ async function postNewUser(info, user){
 async function generateUser(email, info){
     let userInfo = null;
     let number = null;
+    let new_user = false;
     while (!userInfo){
         try{
             userInfo = await getUser(email);
         }catch{
+            new_user = true;
             await tryGenerate(email, number, info);
         }
     }
+    if (new_user)  logSignup("Federated");
     info.userInfo = userInfo;
 }
 

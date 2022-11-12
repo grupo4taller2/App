@@ -37,7 +37,7 @@ const app = initializeApp(firebaseConfig);
 
 export const db = Firestore.initializeFirestore(app, {useFetchStreams: false, experimentalForceLongPolling: true});
 
-export const loginCollection = Firestore.collection(db, "/logins");
+
 
 export default app;
 
