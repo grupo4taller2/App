@@ -4,6 +4,9 @@ import { USERCHECK } from "./textInput";
 import * as Firestore from "firebase/firestore"
 import { db, loginCollection } from '../config/firebase';
 
+
+
+
 export async function signIn(connection, info, failCall, context){
     
     const credentials = await connection.tryLogin(info.email, info.password);
@@ -139,7 +142,7 @@ export async function googleGetUser(userCredential){
     const email = userCredential.user.email;
     let endResult = null;
     await generateUser(email, userCredential);
-
+    Firestore.addDoc(loginCollection, {"method": "federated", "Time": Date.now()});
 }
 
 async function postNewUser(info, user){

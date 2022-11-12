@@ -11,6 +11,8 @@ import * as Firestore from "firebase/firestore"
 
 // Your web app's Firebase configuration
 
+console.log(APIKEY, AUTHDOMAIN, PROJECTID, BUCKET, MESSSENDER, APPID);
+
 const firebaseConfig = {
 
   apiKey: APIKEY,
