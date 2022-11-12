@@ -20,12 +20,30 @@ const loginCollection = Firestore.collection(db, "/logins");
 
 const signUpCollection = Firestore.collection(db, "/signup");
 
+const activeCollection = Firestore.collection(db, '/active');
+
 export async function logLogin(loginType){
     pipe(loginCollection, loginType);
 }
 
 export function logSignup(signupType){
     pipe(signUpCollection, signupType);
+}
+
+export function logUser(userType){
+    active(userType);
+}
+
+export async function active(userType){
+    const path = getDocument();
+
+    const doc =  await getActiveDoc(path);
+    const data = await doc.data();
+
+    data[userType] += 1;
+
+    Firestore.setDoc(doc.ref, data);
+
 }
 
 export async function pipe(collection, type){
@@ -51,6 +69,19 @@ async function getDoc(store, path){
     }
 }
 
+async function getActiveDoc(path){
+    let doc = null;
+    try{
+        doc = await retrieveDocOrCreateActive(Firestore.doc(activeCollection, path));
+    
+        return doc;
+        
+    }catch (error){
+        console.log(error);
+    }
+}
+
+
 async function retrieveDocOrCreate(document, path){
     const reference = await document;
     
@@ -63,6 +94,24 @@ async function retrieveDocOrCreate(document, path){
     await Firestore.setDoc(reference, {
         "Federated": 0,
         "Email": 0,
+    })
+    
+
+    return await Firestore.getDoc(reference);
+}
+
+async function retrieveDocOrCreateActive(document, path){
+    const reference = await document;
+    
+    let doc = await Firestore.getDoc(reference);
+
+    if(doc.exists()){
+        return doc;
+    }
+    
+    await Firestore.setDoc(reference, {
+        "Driver": 0,
+        "Rider": 0,
     })
     
 

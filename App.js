@@ -2,6 +2,7 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
+import { logSignup, logUser } from './src/model/login';
 import { getMyInfo, getUser } from './src/model/status';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
@@ -30,6 +31,8 @@ export default function App() {
       userState,
       signIn: async (responseToken) => {
           const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
+          const type = userInfo.driver_information ? "Driver" : "Rider";
+          logUser(type);
           dispatch({token: responseToken._tokenResponse.idToken, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {
