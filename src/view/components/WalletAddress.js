@@ -38,7 +38,6 @@ export default function UserWallet(props){
         </Dialog.Content>
         <Button style={style.ClipboardButton} icon="clipboard" onPress={setStringAsync}></Button>
         <Dialog.Actions>
-            
             <Button  onPress={props.toggle}>Close</Button>
         </Dialog.Actions>
     </Dialog>
