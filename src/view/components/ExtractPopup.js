@@ -11,9 +11,6 @@ import { Input } from "react-native-elements";
 
 export default function MoneyExtraction(props){
     
-    const {userState} = useUserContext();
-
-    const address = getWalletAddress(userState.userInfo);
     
     const [copied, setCopied] = React.useState(false);
 
@@ -29,10 +26,11 @@ export default function MoneyExtraction(props){
     const changeAmount = (newAmount) => {
         
         setAmount(parseFloat(newAmount));
-        if (newAmount > 100){
+        if (newAmount > props.maxValue){
             setErrorMessage("Not enought funds");
             setError(true)
         }else{
+            setAmount(newAmount);
             setError(false);
             setErrorMessage('')
         }
