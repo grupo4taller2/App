@@ -8,12 +8,16 @@ import { useUserContext } from '../components/context';
 import { createStatusChanger, signOut } from '../../model/status';
 import Constants from 'expo-constants';
 import { UserNavConstants } from '../../config/userNavConstants';
+import { getWallet } from '../../model/wallet';
 
 export default function HomeScreen({route, navigation}) {
   const context = useUserContext();
   const userFirstName = context.userState.userInfo.first_name;
   const isDriver = context.userState.userInfo.driver_information ? true : false;
   const [visibleRatingSB, setVisibleRatingSB] = useState(false);
+
+  const [loadingBalance, setLoadingBalance] = React.useState(false);
+  const [balance, setBalance] = React.useState('');
 
   const onToggleRatingSnackBar = () => setVisibleRatingSB(!visibleRatingSB);
 
@@ -28,6 +32,21 @@ export default function HomeScreen({route, navigation}) {
   }}, [route])
 
 
+  useEffect(() => {
+    const func = async () => {
+      setLoadingBalance(true);
+      setBalance('')
+        try{    
+            const walletInfo = await getWallet(isDriver, context);
+            setBalance(walletInfo.balance + " ETH"); 
+        }catch (error){
+          
+            setBalance("Error")
+        }
+    setLoadingBalance(false);}
+    func()
+  }, [])
+
   return (
     <View style={styles.mainView}>
       <StatusBar style="auto" />
@@ -36,8 +55,8 @@ export default function HomeScreen({route, navigation}) {
         <View style={styles.balanceView}>
           <Text style={styles.creditText}>Credit left: </Text>
           <Button style={styles.balanceButton} contentStyle={styles.contentStyle} labelStyle={styles.balanceButtonText} 
-            onPress={() => {navigation.push(UserNavConstants.WalletView)}}>
-            45.78 ETH
+            onPress={() => {navigation.push(UserNavConstants.WalletView)}} loading={loadingBalance}>
+            {balance}
           </Button>
         </View>
       </View>

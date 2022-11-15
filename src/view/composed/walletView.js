@@ -33,10 +33,11 @@ export default function WalletView({navigation}){
             const walletInfo = await getWallet(isDriver(userState.userInfo), context);
             
             setAddress(walletInfo.walletAddres);
-            setBalance(walletInfo.balance);
+            setBalance(walletInfo.balance + " ETH");
+            
         }catch (error){
-            //Open snackbar for error loading wallet
-            console.log(error)
+            setAddress("Error retrieving address");
+            setBalance("Could not retrieve your balance");
         }
         setLoading(false);
     }
@@ -81,7 +82,7 @@ export default function WalletView({navigation}){
                         <Avatar.Icon style={{backgroundColor: "#fff", marginLeft: 20}}  size={35} icon="eye"/>
                         </TouchableNativeFeedback>
                     </View>
-                    <Text style={[style.nameText, {margin: 10}]}>{loading ? "Loading..." : balance + ' ETH'}</Text>
+                    <Text style={[style.nameText, {margin: 10}]}>{loading ? "Loading..." : balance}</Text>
                     </Surface>
                 </View>
             </View>
