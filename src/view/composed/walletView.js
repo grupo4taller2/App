@@ -5,13 +5,21 @@ import React from "react";
 import UserWallet from "../components/WalletAddress";
 import MoneyExtraction from "../components/ExtractPopup";
 import { useUserContext } from "../components/context";
+import { getWallet } from "../../model/wallet";
 
 export default function WalletView({navigation}){
 
-    const {userState} = useUserContext();
+    const context = useUserContext();
+
+    const {userState} = context;
 
     const [visibleAddress, setVisibleAddress] = React.useState(false);
     const [visibleExtraction, setVisibleExtraction] = React.useState(false);
+
+    const [loading, setLoading] = React.useState(false);
+
+    const [balance, setBalance] = React.useState('');
+    const [address, setAddress] = React.useState('');
 
     const toggleAddress = () => {setVisibleAddress(!visibleAddress)}
 
@@ -19,10 +27,26 @@ export default function WalletView({navigation}){
 
     const showScreen = !visibleAddress && !visibleExtraction;
 
+    const loadWalletInfo = async () => {
+        setLoading(true);
+        try{    
+            const walletInfo = await getWallet(isDriver(userState.userInfo), context);
+            
+            setAddress(walletInfo.walletAddres);
+            setBalance(walletInfo.balance);
+        }catch (error){
+            //Open snackbar for error loading wallet
+            console.log(error)
+        }
+        setLoading(false);
+    }
+
+    React.useEffect(() => {loadWalletInfo()}, []);
+
     return (
         <>
-        <UserWallet visible={visibleAddress} toggle={toggleAddress} />
-        <MoneyExtraction visible={visibleExtraction} toggle={toggleExtraction} />
+        <UserWallet visible={visibleAddress} toggle={toggleAddress} wallet={address}/>
+        <MoneyExtraction visible={visibleExtraction} toggle={toggleExtraction} maxValue={balance}/>
         {showScreen && <>
         <SafeAreaView style={[style.PrivateView, {flex: 0.1}]}>
             <TouchableNativeFeedback onPress={() => navigation.pop()}>
@@ -57,7 +81,7 @@ export default function WalletView({navigation}){
                         <Avatar.Icon style={{backgroundColor: "#fff", marginLeft: 20}}  size={35} icon="eye"/>
                         </TouchableNativeFeedback>
                     </View>
-                    <Text style={[style.nameText, {margin: 10}]}>45.78 USD</Text>
+                    <Text style={[style.nameText, {margin: 10}]}>{loading ? "Loading..." : balance + ' ETH'}</Text>
                     </Surface>
                 </View>
             </View>
