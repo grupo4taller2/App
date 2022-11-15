@@ -37,11 +37,7 @@ export default class RegisterInfo extends Component {
             mode: "outlined",
             style: style.inputBox
         });
-        this.state.wallet = new InfoInput(null, {
-            label: "Ethereum Wallet Adress",
-            mode: "outlined",
-            style: style.inputBox
-        });
+        
         this.state.phone = new InfoInput(null, {
             label: "Phone Number",
             mode: "outlined",
@@ -75,7 +71,6 @@ export default class RegisterInfo extends Component {
         this.state.username.fail();
         this.state.password.fail()
         this.state.email.fail();
-        this.state.wallet.fail();
         this.state.phone.fail();
         this.setState(this.state);
     }
@@ -151,13 +146,13 @@ export default class RegisterInfo extends Component {
         return this.state.stage === 0 ? (
             <React.Fragment>
                 <ScrollView>
-                <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} walletText={this.state.wallet} phoneText={this.state.phone} location={this.state.location}/>
+                <RegisterInput userText={this.state.username} passwordText={this.state.password} emailText={this.state.email} phoneText={this.state.phone} location={this.state.location}/>
                 </ScrollView>
                 <StatusButton text={"Sign up"} style={style} call={callBack} load={this.load} loading={this.state.loading}/>
                 <ErrorSnackBar onDismissSnackBar={this.handleErrorDismiss} error={this.state.error !== null} text={this.state.error} />
             </React.Fragment>) :
             <UserTypeCheck username={this.state.username} email={this.state.email}
-                            phone={this.state.phone} wallet={this.state.wallet} password={this.state.password} location={this.state.location}/>
+                            phone={this.state.phone} password={this.state.password} location={this.state.location}/>
     }
 
     stageChangeForward = () => {
