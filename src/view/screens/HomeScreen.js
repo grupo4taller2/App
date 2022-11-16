@@ -31,20 +31,20 @@ export default function HomeScreen({route, navigation}) {
       }
   }}, [route])
 
+  const getBalance = async () => {
+    setLoadingBalance(true);
+    setBalance('')
+      try{    
+          const walletInfo = await getWallet(isDriver, context);
+          setBalance(walletInfo.balance + " ETH"); 
+      }catch (error){
+          setBalance("Error")
+      }
+  setLoadingBalance(false);
+};
 
   useEffect(() => {
-    const func = async () => {
-      setLoadingBalance(true);
-      setBalance('')
-        try{    
-            const walletInfo = await getWallet(isDriver, context);
-            setBalance(walletInfo.balance + " ETH"); 
-        }catch (error){
-          
-            setBalance("Error")
-        }
-    setLoadingBalance(false);}
-    func()
+    getBalance()
   }, [])
 
   return (
@@ -55,7 +55,7 @@ export default function HomeScreen({route, navigation}) {
         <View style={styles.balanceView}>
           <Text style={styles.creditText}>Credit left: </Text>
           <Button style={styles.balanceButton} contentStyle={styles.contentStyle} labelStyle={styles.balanceButtonText} 
-            onPress={() => {navigation.push(UserNavConstants.WalletView)}} loading={loadingBalance}>
+            onPress={() => {navigation.push(UserNavConstants.WalletView)}} onLongPress={getBalance} loading={loadingBalance}>
             {balance}
           </Button>
         </View>

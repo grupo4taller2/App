@@ -9,6 +9,8 @@ import TextFieldFunction from "../composed/textfieldFunction";
 import { Input } from "react-native-elements";
 
 
+const WALLETCHECK = /0x[a-zA-Z0-9]{40}/
+
 export default function MoneyExtraction(props){
     
     
@@ -37,6 +39,26 @@ export default function MoneyExtraction(props){
             setErrorMessage('')
         }
     }
+
+    const extractMoney = async () => {
+        const matched = sendAddress.match(WALLETCHECK);
+        if (matched && sendAddress === matched[0]){
+            
+            try{
+                console.log(sendAddress);
+                await props.extractionCheckout(amount, sendAddress);
+                console.log("Transaccion ok");
+                return;
+            }catch{
+                console.log("Pifio la extraction");
+                //Abrir el snackbar de error (failed transaction)
+                return;
+            }
+        }
+
+        //Abrir el snackbar de error (wallet incorrecta)
+        console.log("Pifio la wallet");
+    };
 
     const onDismissSnackBar = () => {
         setCopied(!copied);
@@ -71,6 +93,7 @@ export default function MoneyExtraction(props){
             : 
             <>
             <Paragraph>How much money would you like to extract?</Paragraph>
+            <Paragraph>You have: {props.maxValue.toFixed(5)} left for extraction</Paragraph>
             <View style={style.rowView}>
                 <Input style={style.InputAmount} errorStyle={error ? {color: 'red'} : null} errorMessage={error ? errorMessage : null} 
                 keyboardType="numeric" onChangeText={changeAmount} value={amount}/>
@@ -80,7 +103,7 @@ export default function MoneyExtraction(props){
             }
         </Dialog.Content>
         <Dialog.Actions>
-            {checkout ? <Button onPress={props.toggle}>Confirm extraction</Button> : <Button onPress={proceedWithExtraction}>Confirm amount</Button>}
+            {checkout ? <Button onPress={extractMoney}>Confirm extraction</Button> : <Button onPress={proceedWithExtraction}>Confirm amount</Button>}
             <Button  onPress={checkout ? () => {cancel(); props.toggle()} : props.toggle}>{checkout ? "Cancel" : "Close"}</Button>
         </Dialog.Actions>
     </Dialog>
@@ -88,12 +111,6 @@ export default function MoneyExtraction(props){
     </>)
 }
 
-
-function getWalletAddress(userInfo){
-    return (
-        userInfo.driver_information ? userInfo.driver_information.wallet : userInfo.rider_information.wallet
-    )
-}
 
 const style = StyleSheet.create(
     {

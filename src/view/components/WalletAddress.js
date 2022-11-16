@@ -12,13 +12,14 @@ import { useUserContext } from "./context";
 export default function UserWallet(props){
        
     const [copied, setCopied] = React.useState(false);
+    
 
     const onDismissSnackBar = () => {
         setCopied(!copied);
     }
 
     const setStringAsync = async () => {
-        await Clipboard.setStringAsync(address);
+        await Clipboard.setStringAsync(props.wallet);
         setCopied(true);
     }
     
