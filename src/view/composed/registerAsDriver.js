@@ -68,7 +68,7 @@ export default function RegisterAsDriver({navigation}){
         info.car_year_of_production = parseInt(carYearText);
         info.car_color = carColorText;
         info.car_plate = carPlateText;
-        console.log(info);
+        
         return info;
     };
 
@@ -82,7 +82,7 @@ export default function RegisterAsDriver({navigation}){
             const newInfo = bundleInfo();
             await updateDriverInfo(newInfo, userState.userInfo.email, context)
         }catch (error){
-            console.log("ERRRRRRROOOOOOORRRRR");
+            console.log(error)
         }
 
         setLoading(false);
