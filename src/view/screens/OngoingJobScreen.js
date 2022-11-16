@@ -207,8 +207,8 @@ export default function OngoingJobScreen({route, navigation}) {
               <Text>Drive towards the starting marker (stickman) on your map.</Text>
               <Text>Your passenger is '{passenger}'.</Text>
               <Text>They're waiting at {origin.address}.{'\n'}</Text>
-              <Text>Trip's total distance: {remainingDistance} km</Text>
-              <Text>Trip's estimated duration: {remainingDuration} mins</Text>
+              <Text>Distance to passenger: {remainingDistance} km</Text>
+              <Text>ETA to passenger:: {remainingDuration} mins</Text>
               <Text>Trip's pay: {pay} ETH{'\n'}</Text>
               <View style={styles.buttonStateView}>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'account-alert'} onPress={async () => {await notifyArrival()}}>Notify arrival</Button>

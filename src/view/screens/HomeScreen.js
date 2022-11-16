@@ -13,7 +13,9 @@ import { getWallet } from '../../model/wallet';
 export default function HomeScreen({route, navigation}) {
   const context = useUserContext();
   const userFirstName = context.userState.userInfo.first_name;
+
   const isDriver = context.userState.userInfo.driver_information ? true : false;
+
   const [visibleRatingSB, setVisibleRatingSB] = useState(false);
 
   const [loadingBalance, setLoadingBalance] = React.useState(false);
