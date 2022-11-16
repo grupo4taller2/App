@@ -63,14 +63,12 @@ export default function RegisterAsDriver({navigation}){
         info.first_name = userState.userInfo.first_name;
         info.last_name = userState.userInfo.last_name;
         info.phone_number = userState.userInfo.driver_information.phone_number;
-        info.wallet = userState.userInfo.driver_information.wallet;
-        info.preferred_location_name = userState.userInfo.preferred_location_name;
         info.car_manufacturer = carMakeText;
         info.car_model = carModelText;
         info.car_year_of_production = parseInt(carYearText);
         info.car_color = carColorText;
         info.car_plate = carPlateText;
-
+        console.log(info);
         return info;
     };
 

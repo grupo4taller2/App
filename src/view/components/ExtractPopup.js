@@ -9,19 +9,20 @@ import TextFieldFunction from "../composed/textfieldFunction";
 import { Input } from "react-native-elements";
 
 
+const WALLETCHECK = /0x[a-zA-Z0-9]{40}/
+
 export default function MoneyExtraction(props){
     
-    const {userState} = useUserContext();
-
-    const address = getWalletAddress(userState.userInfo);
     
     const [copied, setCopied] = React.useState(false);
 
     const [error, setError] = React.useState(false);
 
     const [errorMessage, setErrorMessage] = React.useState('');
+    const [checkout, setCheckout] = React.useState(false);
 
     const [amount, setAmount] = React.useState(0);
+    const [sendAddress, setSendAddress] = React.useState('');
 
     const [withdrawMessage, setWithdrawMessage] = React.useState('');
     const [withdrawStatus, setWithdrawStatus] = React.useState(false);
@@ -29,17 +30,50 @@ export default function MoneyExtraction(props){
     const changeAmount = (newAmount) => {
         
         setAmount(parseFloat(newAmount));
-        if (newAmount > 100){
+        if (newAmount > props.maxValue){
             setErrorMessage("Not enought funds");
             setError(true)
         }else{
+            setAmount(newAmount);
             setError(false);
             setErrorMessage('')
         }
     }
 
+    const extractMoney = async () => {
+        const matched = sendAddress.match(WALLETCHECK);
+        if (matched && sendAddress === matched[0]){
+            
+            try{
+                console.log(sendAddress);
+                await props.extractionCheckout(amount, sendAddress);
+                console.log("Transaccion ok");
+                return;
+            }catch{
+                console.log("Pifio la extraction");
+                //Abrir el snackbar de error (failed transaction)
+                return;
+            }
+        }
+
+        //Abrir el snackbar de error (wallet incorrecta)
+        console.log("Pifio la wallet");
+    };
+
     const onDismissSnackBar = () => {
         setCopied(!copied);
+    }
+
+    const proceedWithExtraction = () => {
+        if (!error){
+            setCheckout(true);
+        }else{
+            setWithdrawMessage("Not enough funds for extraction");
+        }
+    }
+
+    const cancel = () => {
+        setCheckout(false);
     }
 
     return (
@@ -47,27 +81,36 @@ export default function MoneyExtraction(props){
     <Dialog visible={props.visible}>
         <Dialog.Title>Money extraction</Dialog.Title>
         <Dialog.Content>
+            { checkout ? 
+            <>
+                <Paragraph>Please confirm your address</Paragraph>
+                <Paragraph>{amount} ETH will be withdrawed from your account</Paragraph>
+                <View style={style.rowView}>
+                    <Input style={style.InputAmount} errorStyle={error ? {color: 'red'} : null} errorMessage={error ? errorMessage : null} 
+                     onChangeText={setSendAddress} value={sendAddress}/>
+                </View>
+            </> 
+            : 
+            <>
             <Paragraph>How much money would you like to extract?</Paragraph>
+            <Paragraph>You have: {props.maxValue.toFixed(5)} left for extraction</Paragraph>
             <View style={style.rowView}>
                 <Input style={style.InputAmount} errorStyle={error ? {color: 'red'} : null} errorMessage={error ? errorMessage : null} 
-                keyboardType="numeric" onChangeText={changeAmount}/>
+                keyboardType="numeric" onChangeText={changeAmount} value={amount}/>
                 <Text style={style.WalletText}>USD</Text>
             </View>
+            </>
+            }
         </Dialog.Content>
         <Dialog.Actions>
-            <Button  onPress={props.toggle}>Close</Button>
+            {checkout ? <Button onPress={extractMoney}>Confirm extraction</Button> : <Button onPress={proceedWithExtraction}>Confirm amount</Button>}
+            <Button  onPress={checkout ? () => {cancel(); props.toggle()} : props.toggle}>{checkout ? "Cancel" : "Close"}</Button>
         </Dialog.Actions>
     </Dialog>
     <ErrorSnackBar error={copied} onDismissSnackBar={onDismissSnackBar} text={withdrawMessage} success={withdrawStatus} />
     </>)
 }
 
-
-function getWalletAddress(userInfo){
-    return (
-        userInfo.driver_information ? userInfo.driver_information.wallet : userInfo.rider_information.wallet
-    )
-}
 
 const style = StyleSheet.create(
     {

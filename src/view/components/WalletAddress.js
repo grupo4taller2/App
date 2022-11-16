@@ -10,22 +10,19 @@ import { useUserContext } from "./context";
 
 
 export default function UserWallet(props){
-    
-    const {userState} = useUserContext();
-
-    const address = getWalletAddress(userState.userInfo);
-    
+       
     const [copied, setCopied] = React.useState(false);
+    
 
     const onDismissSnackBar = () => {
         setCopied(!copied);
     }
 
     const setStringAsync = async () => {
-        await Clipboard.setStringAsync(address);
+        await Clipboard.setStringAsync(props.wallet);
         setCopied(true);
     }
-
+    
     return (
     <>
     <Dialog visible={props.visible}>
@@ -33,7 +30,7 @@ export default function UserWallet(props){
         <Dialog.Content>
             <Paragraph>Deposit USDC on this wallet to get more credit</Paragraph>
             <Surface style={style.surface}>
-                    <Text style={style.WalletText} selectable={true}>{address}</Text>
+                    <Text style={style.WalletText} selectable={true}>{props.wallet}</Text>
             </Surface>
         </Dialog.Content>
         <Button style={style.ClipboardButton} icon="clipboard" onPress={setStringAsync}></Button>
@@ -64,6 +61,7 @@ const style = StyleSheet.create(
         WalletText: {
             position: "absolute",
             left: 0,
+            fontSize: 11,
             marginHorizontal: 10
         },
 
