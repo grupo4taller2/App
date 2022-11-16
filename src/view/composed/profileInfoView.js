@@ -68,7 +68,7 @@ export default function ProfileInfoView(){
                     preferred_location_name: address
                 }
                 try{
-                    console.log(email);
+                    
                     if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
                     else await updateInfo(newInfo, email, context);
                     
