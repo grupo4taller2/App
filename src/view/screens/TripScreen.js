@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useUserContext } from '../components/context';
 import * as Location from 'expo-location';
 import { getHeader } from "../../model/status";
+import { max } from 'react-native-reanimated';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
@@ -119,11 +120,14 @@ export default function TripScreen({navigation}){
 
     async function startTrip(passenger) {
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
-        let validStart = await axios.post(url, {rider_username: passenger, rider_origin_address: start, rider_destination_address: destination, trip_type: tripType}, token);
-        if (validStart)
+        try {
+            let validStart = await axios.post(url, {rider_username: passenger, rider_origin_address: start, rider_destination_address: destination, trip_type: tripType}, token);
             return validStart;
-        else
+        }
+        catch (error) {
+            console.warn(error);
             return false;
+        }
     }
 
     async function getGPSPermissions() {
@@ -136,10 +140,23 @@ export default function TripScreen({navigation}){
         showConfirmationDialog();
     }
 
-    async function enoughWalletBalance(tripCost) {  // need backend functionality to do this check
-        // let hasEnough = await BACKEND_hasEnoughBalance(context.userState.userInfo.rider_information.wallet);
-        // return hasEnough
-        return true;
+    async function enoughWalletBalance(tripCost) {
+        let username = context.userState.userInfo.username;
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/payments/${username}/wallet`;
+        let max_transaction_cost = 0.0002;
+
+        try {
+            let hasEnough = await axios.get(url, {headers: token.headers});
+            let tripValue = tripCost.substring(0, tripCost.indexOf(' '));
+            console.log(Number(tripValue) + max_transaction_cost)
+            hasEnough = hasEnough.data.balance >= (Number(tripValue) + max_transaction_cost);
+            if (hasEnough == true) { return hasEnough }
+        }
+        catch (error) {
+            console.warn(error);
+        }
+        onTogglePaymentSnackBar();
+        return false;
     }
 
     return (
@@ -226,7 +243,7 @@ export default function TripScreen({navigation}){
                         Set Route
                     </Button>
                     <Button buttonColor='#000' mode='contained' style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
-                        icon="car" disabled={!validTrip} onPress={() => {getGPSPermissions()}}>
+                        icon="car" disabled={!validTrip} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
                         Start Trip for {tripCost}
                     </Button>
                     <Snackbar

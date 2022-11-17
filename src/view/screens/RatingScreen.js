@@ -28,9 +28,9 @@ export default function RatingScreen({route, navigation}) {
     }
   
     async function attemptDriverReview() {
-        let url = 'http://g4-fiuber.herokuapp.com/api/v1/drivers/qualy/create';
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/drivers/qualy/create`;
         try {
-            let validReview = await axios.post(url, {passenger_username: sender, qualy: rating, opinion: review, driver_username: user}, token);
+            let validReview = await axios.post(url, {rider_username: sender, qualy: rating, opinion: review, driver_username: user}, token);
             setSnackbar('false');
         }
         catch (error) {
@@ -40,9 +40,9 @@ export default function RatingScreen({route, navigation}) {
     }
 
     async function attemptPassengerReview() {
-        let url = 'http://g4-fiuber.herokuapp.com/api/v1/passengers/qualy/create';
+        let url = `http://g4-fiuber.herokuapp.com/api/v1/riders/qualy/create`;
         try {
-            let validReview = await axios.post(url, {passenger_username: user, qualy: rating, opinion: review, driver_username: sender}, token);
+            let validReview = await axios.post(url, {rider_username: user, qualy: rating, opinion: review, driver_username: sender}, token);
             setSnackbar('false');
         }
         catch (error) {

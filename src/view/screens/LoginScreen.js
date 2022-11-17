@@ -44,7 +44,7 @@ const style = StyleSheet.create({
     alignItems: 'flex-end',
   },
   bottomTextView: {
-    flex: 0.3,
+    flex: 0.2,
     flexDirection: "row",
     alignItems: 'flex-end',
   },
@@ -52,7 +52,7 @@ const style = StyleSheet.create({
     paddingBottom: 5,
   },
   bottomTextOr: {
-    paddingBottom: 25,
+    paddingBottom: 10,
   },
   higlightTextReg: {
     fontSize: 15,

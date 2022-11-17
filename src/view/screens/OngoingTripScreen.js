@@ -30,10 +30,14 @@ export default function OngoingTripScreen({route, navigation}) {
     const [currentLocation, setCurrentLocation] = useState(startMarker);
     const destination = destinationMarker;
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
-    const [stateDelay, setStateDelay] = useState(5000);   // trip state polling delay (in ms)
+    const [stateDelay, setStateDelay] = useState(1000000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
-    const [driver, setDriver] = useState(undefined);
-    const [driverCar, setDriverCar] = useState(undefined);
+    //const [driver, setDriver] = useState(undefined);
+    //const [driverCar, setDriverCar] = useState(undefined);
+    /* 
+    [DEBUG]*/
+    const [driver, setDriver] = useState("alejoo_driver");
+    const [driverCar, setDriverCar] = useState({color: 'black', manufacturer: 'Toyota', model: 'Corolla', plate: "XYZ 248"});
     const previousRouteValues = useRef({ remainingDistance, remainingDuration });
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const price = tripCost;
@@ -146,7 +150,7 @@ export default function OngoingTripScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Your trip's over!</Text>
               <Text>We hope you had a great trip.{'\n'}</Text>
-              <Text>{tripCost} has been substracted from your wallet.{'\n'}</Text>
+              <Text>{tripCost} plus a small transaction fee has been substracted from your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
                 <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: driver, userType: 'driver', sender: context.userState.userInfo.username})}}>Rate your driver</Button>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
