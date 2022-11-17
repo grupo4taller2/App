@@ -125,7 +125,9 @@ export async function getMyInfo(userOrEmail, userState){
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
         if(result) {
-            return result.data;
+            const data = await result.data;
+            
+            return data;
         }
     }catch{
         const uri = ROUTE + USERS + '/' + userOrEmail;
