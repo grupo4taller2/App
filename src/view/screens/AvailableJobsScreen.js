@@ -43,9 +43,14 @@ export default function AvailableJobsScreen({navigation}){
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
         let username = context.userState.userInfo.username;
         let desired_state = "looking_for_driver";
-        let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: jobsAmount}});
 
-        setJobs(listOfJobs.data);
+        try {
+            let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: jobsAmount}});
+            setJobs(listOfJobs.data);
+        }
+        catch (error) {
+            console.warn(error);
+        }
       }, delay);
 
     // checks if a certain job (by trip_id) is available and attempts to mark is as taken
@@ -85,7 +90,12 @@ export default function AvailableJobsScreen({navigation}){
             console.warn("Couldn't poll for gps location");
         }
         return({latitude: origin.latitude, longitude: origin.longitude});
-      }
+    }
+    
+    function convertRating(rating) {
+        if (rating == -1) { return 'No reviews'; }  // -1 in backend simbolizes no reviews have been made
+        return (rating + " ★");
+    }
       
     function renderJobList() {
         if (jobs.length) {
@@ -97,7 +107,7 @@ export default function AvailableJobsScreen({navigation}){
                         descriptionStyle={styles.jobItemDescription}
                         title={`From: ${origin.address} to: ${destination.address}`}
                         titleNumberOfLines={3}
-                        description={`(${distance}, ETA: ${estimated_time})\nPassenger: ${rider_username} (5 ★)`}    // (${rider_rating} ★)`}
+                        description={`(${distance}, ETA: ${estimated_time})\nPassenger: ${rider_username} (${convertRating(rider_rating)})`}
                         descriptionNumberOfLines={3}
                         right={props => <Text style={{alignSelf: 'center', fontWeight: 'bold'}}>{Number(estimated_price).toFixed(3)} ETH</Text>}
                         onPress={() => {

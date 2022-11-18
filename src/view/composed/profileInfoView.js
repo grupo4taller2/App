@@ -32,7 +32,7 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
-    
+
     const riderInfo = getUserInfo(userState.userInfo);
     
     const username = userState.userInfo.username;
@@ -71,6 +71,7 @@ export default function ProfileInfoView(){
                 try{
                     
                     if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
+
                     else await updateInfo(newInfo, email, context);
                     
                     setEditResult(true);

@@ -65,21 +65,21 @@ export default function WalletView({navigation}){
                 
                 <View style={style.OptionsView}>
                     <TouchableNativeFeedback onPress={toggleAddress}>
-                <Surface style={style.OptionSurface} elevation={5}>
-                    <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="import" />
-                    <Text>Deposit</Text>
-                </Surface>
-                </TouchableNativeFeedback>
-                {
-                    isDriver(userState.userInfo) &&
+                        <Surface style={style.OptionSurface} elevation={5}>
+                            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="import" />
+                            <Text>Deposit</Text>
+                        </Surface>
+                    </TouchableNativeFeedback>
+                    {
+                        isDriver(userState.userInfo) &&
 
-                <TouchableNativeFeedback onPress={toggleExtraction}>
-                <Surface style={style.OptionSurface} elevation={5}>
-                    <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="export" />
-                    <Text>Withdraw</Text>
-                </Surface>
-                </TouchableNativeFeedback>
-                }
+                    <TouchableNativeFeedback onPress={toggleExtraction}>
+                        <Surface style={style.OptionSurface} elevation={5}>
+                            <Avatar.Icon style={{backgroundColor: "#fff"}} size={40} icon="export" />
+                            <Text>Withdraw</Text>
+                        </Surface>
+                    </TouchableNativeFeedback>
+                    }
                 </View>
                 <View style={style.creditView}>
                     <Surface style={style.CreditSurface} elevation={5}>
@@ -125,41 +125,37 @@ const style = StyleSheet.create(
         PrivateView: {
             flex: 0.9,
             backgroundColor: "#fff",
-            
         },
         OptionsView: {
-            flex: 1/5,
+            flex: 1/2,
             flexDirection: "row",
-            alignItems: "flex-start",
-            justifyContent: "center"
+            alignItems: "center",
+            justifyContent: 'space-evenly',
+            backgroundColor: '#fff',
         },
         OptionSurface: {
             padding: 8,
-            flex: 1/2,
-            minHeight: 100,
-            margin: 12,
+            maxWidth: '40%',
+            maxWidth: '100%',
+            minWidth: '30%',
+            minHeight: '50%',
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: "#fff"
           },
         CreditSurface: {
-            
-            maxWidth: "80%",
-            padding: 8,
-            margin: 8,
+            padding: 20,
+            margin: 10,
             alignItems: 'center',
             justifyContent: 'center',
-            alignSelf: "center",
             backgroundColor: "#fff"
         },
         creditView: {
-            flex: 1/2,
-            
-            alignSelf: 'center'
+            flex: 3/4,
+            alignItems: 'center'
         },
         nameText: {
             fontSize: 20,
-            alignSelf: 'center'
         },
         backArrow: {
             backgroundColor: "#fff",

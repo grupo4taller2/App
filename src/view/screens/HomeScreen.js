@@ -38,7 +38,8 @@ export default function HomeScreen({route, navigation}) {
     setBalance('')
       try{    
           const walletInfo = await getWallet(isDriver, context);
-          setBalance(walletInfo.balance + " ETH"); 
+          let balance = walletInfo.balance.toFixed(5);
+          setBalance(balance + " ETH"); 
       }catch (error){
           setBalance("Error")
       }

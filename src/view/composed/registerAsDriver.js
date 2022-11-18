@@ -17,6 +17,7 @@ export default function RegisterAsDriver({navigation}){
     const [editCompleted, setEditCompleted] = React.useState(false);
     const [editResult, setEditResult] = React.useState(false);
     
+
     const [carMakeText, setCarMake] = React.useState(props.manufacturer);
     const [carMakeError, setCarMakeError] = React.useState(false);
     const carMake = {value: carMakeText, error: carMakeError};
@@ -125,7 +126,7 @@ export default function RegisterAsDriver({navigation}){
                             text={editing ? "Save information" : "Edit car information"}/>
         <ErrorSnackBar error={editCompleted} text={editResult ? "Car info updated" : "Some error ocurred"}  
                             onDismissSnackBar={() => {setEditCompleted(false)}} success={editResult}/>
-        
+
         </View>
         </>
     )

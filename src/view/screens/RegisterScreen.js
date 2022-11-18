@@ -34,7 +34,7 @@ const style = StyleSheet.create({
     backgroundColor: "#fff",
   },
   headerView: {
-    flex: 1.5,
+    flex: 1.55,
     flexDirection: 'row',
     backgroundColor: "#fff"
   },

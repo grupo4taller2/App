@@ -28,7 +28,7 @@ export default function MoneyExtraction(props){
     const [withdrawStatus, setWithdrawStatus] = React.useState(false);
 
     const changeAmount = (newAmount) => {
-        
+        newAmount = newAmount.replace(/,/g, '.')
         setAmount(parseFloat(newAmount));
         if (newAmount > props.maxValue){
             setErrorMessage("Not enought funds");
@@ -46,10 +46,12 @@ export default function MoneyExtraction(props){
             
             try{
                 console.log(sendAddress);
+                console.log(amount);
                 await props.extractionCheckout(amount, sendAddress);
                 console.log("Transaccion ok");
                 return;
-            }catch{
+            }catch (error) {
+                console.warn(error);
                 console.log("Pifio la extraction");
                 //Abrir el snackbar de error (failed transaction)
                 return;
@@ -97,7 +99,7 @@ export default function MoneyExtraction(props){
             <View style={style.rowView}>
                 <Input style={style.InputAmount} errorStyle={error ? {color: 'red'} : null} errorMessage={error ? errorMessage : null} 
                 keyboardType="numeric" onChangeText={changeAmount} value={amount}/>
-                <Text style={style.WalletText}>USD</Text>
+                <Text style={style.WalletText}>ETH</Text>
             </View>
             </>
             }
