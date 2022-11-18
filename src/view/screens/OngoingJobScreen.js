@@ -150,9 +150,11 @@ export default function OngoingJobScreen({route, navigation}) {
       if (!inProximity(currentLocation, destination, allowedProximityError)) {onToggleDestinationProximitySnackBar()}
       else {
         try {
-          let payment_url = `http://g4-fiuber.herokuapp.com/api/v1/payments/create/payment/new`;
-
-          let trip_payment = await axios.post(payment_url, {tripID: trip_id, amount: pay}, token);
+          let payment_url = `http://g4-fiuber.herokuapp.com/api/v1/payments/create/payment`;
+          let string_pay = String(pay);
+          console.log(string_pay);
+          console.log({tripID: trip_id, amount: string_pay, driver_username: driver, rider_username: passenger});
+          let trip_payment = await axios.post(payment_url, {tripID: trip_id, amount: string_pay, driver_username: driver, rider_username: passenger}, token);
 
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
           let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,

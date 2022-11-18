@@ -13,7 +13,6 @@ export default function Profile({navigation}){
     const {update} = useUserContext();
 
     React.useEffect(() => {
-        console.log("Called this one");
         update()
     }, [])
 
