@@ -42,10 +42,11 @@ export default function App() {
         const signed_auth = await signOut(auth);
         dispatch({user: false})
       },
-      register: (credentials, back_response) => {
+      register: async (credentials, back_response) => {
           const token = credentials._tokenResponse;
           const user = credentials.user;
-          const userInfo = back_response;
+          
+          const userInfo = await getMyInfo(back_response.username, credentials);
           
           dispatch({
             token: token,

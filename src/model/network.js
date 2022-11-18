@@ -49,7 +49,7 @@ export default class Network{
             return {credential: credencial, result: true};
         } catch (error) {
             let error_message = "";
-            console.log(error.toString());
+            
             switch (error.toString()){
                 case "FirebaseError: Firebase: Error (auth/invalid-email).":
                 case "FirebaseError: Firebase: Error (auth/user-not-found).":

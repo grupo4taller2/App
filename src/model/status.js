@@ -86,7 +86,7 @@ export async function updateInfo(newInfo, email, context){
         const headers = getHeader(context);
         const response = await axios.patch(uri, newInfo, headers);
         
-        context.update();
+        await context.update();
 }
 
 export async function updateDriverInfo(newInfo, email, context){
@@ -95,7 +95,7 @@ export async function updateDriverInfo(newInfo, email, context){
     const headers = getHeader(context);
     const response = await axios.patch(uri, newInfo, headers);
     
-    context.update()
+    await context.update()
 }
 
 export async function checkUserFree(user){
@@ -125,7 +125,9 @@ export async function getMyInfo(userOrEmail, userState){
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
         if(result) {
-            return result.data;
+            const data = await result.data;
+
+            return data;
         }
     }catch{
         const uri = ROUTE + USERS + '/' + userOrEmail;
