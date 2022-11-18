@@ -39,7 +39,7 @@ const style = StyleSheet.create({
   instructionText: {
     color: 'black',
     fontWeight: '500',
-    fontSize: 26,
+    fontSize: 24,
     paddingTop: 60,
   },
 })

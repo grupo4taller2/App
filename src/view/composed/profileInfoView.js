@@ -32,7 +32,11 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 9cc6277bba82277ab781fefa19f429b61294ea91
     const riderInfo = getUserInfo(userState.userInfo);
     
     const username = userState.userInfo.username;
@@ -71,8 +75,13 @@ export default function ProfileInfoView(){
                 try{
                     
                     if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
+<<<<<<< HEAD
                     else await updateInfo(newInfo, email, context);
                     
+=======
+                    else await updateInfo(newInfo, email, context)
+
+>>>>>>> 9cc6277bba82277ab781fefa19f429b61294ea91
                     setEditResult(true);
                }catch (error){
                     console.log(error);

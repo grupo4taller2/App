@@ -150,10 +150,14 @@ export default function OngoingJobScreen({route, navigation}) {
       if (!inProximity(currentLocation, destination, allowedProximityError)) {onToggleDestinationProximitySnackBar()}
       else {
         try {
+          let payment_url = `http://g4-fiuber.herokuapp.com/api/v1/payments/create/payment/new`;
+
+          let trip_payment = await axios.post(payment_url, {tripID: trip_id, amount: pay}, token);
+
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
           let trip_information = await axios.patch(url, {id: trip_id, trip_state: newState, driver_username: driver, driver_current_latitude: currentLocation.latitude,
           driver_current_longitude: currentLocation.longitude}, token);
-          // sendPaymentToBack();   // add payment of funds here once it's implemented in backend
+
           if (JSON.parse(trip_information.config.data).trip_state == newState) { setTripState(newState) }  // if statement may be unnecessary
         }
         catch(error) {
@@ -245,7 +249,7 @@ export default function OngoingJobScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Your job's over!</Text>
               <Text>We hope you had a great trip.{'\n'}</Text>
-              <Text>{pay} ETH has been added to your wallet.{'\n'}</Text>
+              <Text>{pay} ETH (minus a small transaction fee) has been added to your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
                 <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: passenger, userType: 'passenger', sender: context.userState.userInfo.username})}}>Rate your passenger</Button>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
@@ -314,7 +318,7 @@ export default function OngoingJobScreen({route, navigation}) {
         }}
         showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
-            <Button style={{width:150}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>
+            {/*<Button style={{width:150}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
             <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={currentLocation}/>
             {((tripState == TripState.WaitingOnDriver) || (tripState == TripState.DriverArrived)) && <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
@@ -347,7 +351,8 @@ const styles = StyleSheet.create({
   },
   snackbar: {
       backgroundColor: '#D22B2B',
-      position: 'absolute'
+      position: 'absolute',
+      left: 30,
   },
   bottomView: {
     backgroundColor: 'white',
