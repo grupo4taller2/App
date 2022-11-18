@@ -23,10 +23,9 @@ export default function LoginScreen({ navigation }) {
         </View>
 
         <View style={style.bottomTextView}>
-            <Text style={style.bottomTextOr}> or</Text>
-            <GoogleLogin />
+            <Text style={style.bottomTextOr}>or</Text>
         </View>
-
+        <GoogleLogin />
       </View>
     );
   }
@@ -44,7 +43,7 @@ const style = StyleSheet.create({
     alignItems: 'flex-end',
   },
   bottomTextView: {
-    flex: 0.3,
+    flex: 0.15,
     flexDirection: "row",
     alignItems: 'flex-end',
   },
@@ -52,7 +51,7 @@ const style = StyleSheet.create({
     paddingBottom: 5,
   },
   bottomTextOr: {
-    paddingBottom: 25,
+    paddingBottom: 10,
   },
   higlightTextReg: {
     fontSize: 15,

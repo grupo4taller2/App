@@ -45,7 +45,7 @@ export default function UserSearch(props){
         }
         setSearch(search);
     }
-    console.log(searchInfo);
+    
     return (
     <>
             <TextFieldFunction text={search} setText={setSearch} info={searchInfo}/>

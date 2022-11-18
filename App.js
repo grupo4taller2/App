@@ -1,13 +1,14 @@
+
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer } from 'react';
 import './src/config/firebase';
+import { logSignup, logUser } from './src/model/login';
 import { getMyInfo, getUser } from './src/model/status';
-import RootNavigation from './src/navigation';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
-import RegisterInfoScreen from './src/view/screens/RegisterInfoScreen';
-import TripScreen from './src/view/screens/TripScreen';
+
+
 
 
 const initialState = () => {
@@ -25,13 +26,17 @@ export default function App() {
 
   const [userState, dispatch] = useReducer(reducer, reducer());
 
-
   const authState = React.useMemo(() => {
     return ({
       userState,
       signIn: async (responseToken) => {
-          const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
-          console.log(userInfo);
+          let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
+          userInfo = await getMyInfo(userInfo.username, responseToken);
+          
+
+          const type = userInfo.driver_information ? "Driver" : "Rider";
+          logUser(type);
+
           dispatch({token: responseToken._tokenResponse.idToken, user: responseToken.user, userInfo: userInfo})
       },
       signOut: async () => {
@@ -39,10 +44,11 @@ export default function App() {
         const signed_auth = await signOut(auth);
         dispatch({user: false})
       },
-      register: (credentials, back_response) => {
+      register: async (credentials, back_response) => {
           const token = credentials._tokenResponse;
           const user = credentials.user;
-          const userInfo = back_response;
+          
+          const userInfo = await getMyInfo(back_response.username, credentials);
           
           dispatch({
             token: token,
@@ -51,7 +57,7 @@ export default function App() {
           })
       },
       update: async () => {
-        const newInfo = await getMyInfo(userState.userInfo.email, userState);
+        const newInfo = await getMyInfo(userState.userInfo.username, userState);
         dispatch({token: userState.token , user: userState.user, userInfo: newInfo})
       },
     })

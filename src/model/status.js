@@ -1,14 +1,16 @@
-import { getAuth } from "firebase/auth";
-import { useUserContext } from "../view/components/context";
 import {ROUTE, DRIVERREG, PASSENGERREG, USERS, STATUS} from '@env'
 import axios from "axios";
-import { USERCHECK } from "./textInput";
+import { logLogin, logSignup } from './login';
+
+
+
 
 export async function signIn(connection, info, failCall, context){
     
     const credentials = await connection.tryLogin(info.email, info.password);
+
     if (credentials.result){
-        
+        logLogin("Email");
         context.signIn(credentials.credential)
     }else{
         
@@ -26,6 +28,7 @@ export async function register(connection, info, failCall, context){
 
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
+        logSignup("Email");
         context.register(credentials.credential, result.data);
     }else{
         failCall();
@@ -76,20 +79,24 @@ export function createStatusChangerWithAsyncChecks(call, connection, info, failC
     return wrapper
 }
 
-export async function updateInfo(newInfo, email, context){   
-    const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
-    const headers = getHeader(context);
-    const response = await axios.patch(uri, newInfo, headers);
 
-    context.update();
+export async function updateInfo(newInfo, email, context){
+        
+        const uri = ROUTE + PASSENGERREG + "/" + email + "/" + STATUS;
+        const headers = getHeader(context);
+        const response = await axios.patch(uri, newInfo, headers);
+        
+        await context.update();
 }
 
 export async function updateDriverInfo(newInfo, email, context){
     const uri = ROUTE + DRIVERREG + "/" + email + "/" + STATUS;
+    
     const headers = getHeader(context);
     const response = await axios.patch(uri, newInfo, headers);
 
-    context.update()
+    await context.update();
+
 }
 
 export async function checkUserFree(user){
@@ -116,14 +123,19 @@ export async function getMyInfo(userOrEmail, userState){
     const header = getToken(userState.user.stsTokenManager.accessToken);
 
     try{
-        console.log(header);
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
-        if(result) return result.data;
+        if(result) {
+            const data = await result.data;
+
+            return data;
+        }
     }catch{
         const uri = ROUTE + USERS + '/' + userOrEmail;
         const result = await axios.get(uri, header);
-        if(result) return result.data;
+        if(result) {
+            return result.data;
+        }
     }
 
 }
@@ -132,11 +144,11 @@ export async function googleGetUser(userCredential){
     const email = userCredential.user.email;
     let endResult = null;
     await generateUser(email, userCredential);
-
+    logLogin("Federated");
 }
 
 async function postNewUser(info, user){
-    console.log(info);
+    
     const uri = ROUTE + (info.isDriver ? DRIVERREG : PASSENGERREG);
     
     const result = await axios.post(uri, info.info, getToken(user.credential.user.stsTokenManager.accessToken));
@@ -147,13 +159,16 @@ async function postNewUser(info, user){
 async function generateUser(email, info){
     let userInfo = null;
     let number = null;
+    let new_user = false;
     while (!userInfo){
         try{
             userInfo = await getUser(email);
         }catch{
+            new_user = true;
             await tryGenerate(email, number, info);
         }
     }
+    if (new_user)  logSignup("Federated");
     info.userInfo = userInfo;
 }
 
@@ -170,15 +185,17 @@ async function tryGenerate(email, number, user){
    info.phone_number = user.user.phoneNumber ? user.user.phoneNumber : "";
    info.wallet = "";
    info.preferred_location = "No address";
+
    try{
-    await postNewUser({info: info, isDriver: false});
-   }catch{
+    const credential = {credential: user};
+    await postNewUser({info: info, isDriver: false}, credential);
+   }catch (error) {
     number = number ? number + 1 : 0;
    }
     
 }
 
-function getHeader(context){
+export function getHeader(context){
     return context.userState.user ? getToken(context.userState.user.stsTokenManager.accessToken) : null;
 }
 

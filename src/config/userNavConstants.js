@@ -1,5 +1,3 @@
-import AvailableJobsScreen from "../view/screens/AvailableJobsScreen";
-
 export const UserNavConstants = {
     HomeScreen: "Home",
     ProfileScreen: "Profile",
@@ -8,5 +6,8 @@ export const UserNavConstants = {
     OngoingTripScreen: "Ongoing Trip",
     UserSearchScreen: "SearchUser",
     DriverInfo: "Driver info",
-    AvailableJobsScreen: "Available Jobs"
+    DriverReg: "Driver register",
+    AvailableJobsScreen: "Available Jobs",
+    OngoingJobScreen: "Ongoing Job",
+    RatingScreen: "Rating Screen"
 }

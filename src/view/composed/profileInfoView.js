@@ -32,7 +32,10 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
+
     const riderInfo = getUserInfo(userState.userInfo);
+    
+    const username = userState.userInfo.username;
     
     const [edit, setEdit] = React.useState(false);
 
@@ -66,11 +69,14 @@ export default function ProfileInfoView(){
                     preferred_location_name: address
                 }
                 try{
+                    
                     if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
-                    else await updateInfo(newInfo, email, context)
-                    setEditResult(true);
-               }catch{
 
+                    else await updateInfo(newInfo, email, context);
+                    
+                    setEditResult(true);
+               }catch (error){
+                    console.log(error);
                     setEditResult(false);
                 }
                 setEditCompleted(true);
@@ -111,17 +117,18 @@ const style = StyleSheet.create(
             flex: 0.5,
         },
         infoWrapper: {
-            flex: 0.85
+            flex: 0.75
         }
     }
 )
 
 function getUserInfo(info){
-    if (info.rider_information){
-        return info.rider_information;
-    }
+    console.log(info);
     if(info.driver_information){
         return info.driver_information;
+    }
+    if (info.rider_information){
+        return info.rider_information;
     }
 
     return info;

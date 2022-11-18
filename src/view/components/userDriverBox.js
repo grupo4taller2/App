@@ -45,7 +45,6 @@ export default function UserDriverBox(props) {
         info.first_name = props.firstName.value;
         info.last_name = props.lastName.value;
         info.phone_number = props.all.phone.getText();
-        info.wallet = props.all.wallet.getText();
         info.preferred_location_name = props.all.location.getText();
 
         if (driver){
@@ -59,6 +58,10 @@ export default function UserDriverBox(props) {
         
         return {info: info, isDriver: driver};
     };
+
+    const checkNotEmpty = (value) => {
+        return value !== '';
+    }
 
     const bundleChecks = () => {
         
@@ -107,8 +110,7 @@ export default function UserDriverBox(props) {
             bundleChecks())
             try{
                 await callBack(context)
-            }catch{
-                console.log("Called me"); 
+            }catch (error){ 
                 setLoading(false)
             }
 
