@@ -7,11 +7,15 @@ import StatusButton from "../components/loginButton";
 import RegisterCarInput from "./registerCarInput";
 import Constants from 'expo-constants';
 import { Avatar } from "react-native-paper";
+import ErrorSnackBar from "../components/ErrorSnackBar";
 
 export default function RegisterAsDriver({navigation}){
     const context = useUserContext();
     const {userState,asDriver} = context;
     const props = userState.userInfo.driver_information.car;
+
+    const [editCompleted, setEditCompleted] = React.useState(false);
+    const [editResult, setEditResult] = React.useState(false);
     
     const [carMakeText, setCarMake] = React.useState(props.manufacturer);
     const [carMakeError, setCarMakeError] = React.useState(false);
@@ -68,7 +72,7 @@ export default function RegisterAsDriver({navigation}){
         info.car_year_of_production = parseInt(carYearText);
         info.car_color = carColorText;
         info.car_plate = carPlateText;
-        console.log(info);
+        
         return info;
     };
 
@@ -80,11 +84,13 @@ export default function RegisterAsDriver({navigation}){
 
         try{
             const newInfo = bundleInfo();
-            await updateDriverInfo(newInfo, userState.userInfo.email, context)
+            await updateDriverInfo(newInfo, userState.userInfo.email, context);
+            setEditResult(true);
         }catch (error){
-            console.log("ERRRRRRROOOOOOORRRRR");
+            console.log(error);
+            setEditResult(false);
         }
-
+        setEditCompleted(true);
         setLoading(false);
     };
     
@@ -117,6 +123,9 @@ export default function RegisterAsDriver({navigation}){
         <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
                             disabled={false} call={edit} load={() => {}} loading={loading}
                             text={editing ? "Save information" : "Edit car information"}/>
+        <ErrorSnackBar error={editCompleted} text={editResult ? "Car info updated" : "Some error ocurred"}  
+                            onDismissSnackBar={() => {setEditCompleted(false)}} success={editResult}/>
+        
         </View>
         </>
     )

@@ -32,6 +32,7 @@ export default function ProfileInfoView(){
 
     const context = useUserContext();
     const userState = context.userState;
+    
     const riderInfo = getUserInfo(userState.userInfo);
     
     const username = userState.userInfo.username;
@@ -69,8 +70,9 @@ export default function ProfileInfoView(){
                 }
                 try{
                     
-                    if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, username, context);
-                    else await updateInfo(newInfo, username, context)
+                    if (userState.userInfo.driver_information) await updateDriverInfo(newInfo, email, context);
+                    else await updateInfo(newInfo, email, context);
+                    
                     setEditResult(true);
                }catch (error){
                     console.log(error);
@@ -120,11 +122,12 @@ const style = StyleSheet.create(
 )
 
 function getUserInfo(info){
-    if (info.rider_information){
-        return info.rider_information;
-    }
+    console.log(info);
     if(info.driver_information){
         return info.driver_information;
+    }
+    if (info.rider_information){
+        return info.rider_information;
     }
 
     return info;
