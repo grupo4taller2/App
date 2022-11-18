@@ -30,7 +30,9 @@ export default function App() {
     return ({
       userState,
       signIn: async (responseToken) => {
-          const userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
+          let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
+          userInfo = await getMyInfo(userInfo.username, responseToken);
+          
 
           const type = userInfo.driver_information ? "Driver" : "Rider";
           logUser(type);
@@ -55,7 +57,7 @@ export default function App() {
           })
       },
       update: async () => {
-        const newInfo = await getMyInfo(userState.userInfo.email, userState);
+        const newInfo = await getMyInfo(userState.userInfo.username, userState);
         dispatch({token: userState.token , user: userState.user, userInfo: newInfo})
       },
     })
