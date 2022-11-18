@@ -32,12 +32,13 @@ export default function OngoingTripScreen({route, navigation}) {
     const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
     const [stateDelay, setStateDelay] = useState(1000000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
-    //const [driver, setDriver] = useState(undefined);
-    //const [driverCar, setDriverCar] = useState(undefined);
+    const [driver, setDriver] = useState(undefined);
+    const [driverCar, setDriverCar] = useState(undefined);
     /* 
-    [DEBUG]*/
+    [DEBUG]
     const [driver, setDriver] = useState("alejoo_driver");
     const [driverCar, setDriverCar] = useState({color: 'black', manufacturer: 'Toyota', model: 'Corolla', plate: "XYZ 248"});
+    */
     const previousRouteValues = useRef({ remainingDistance, remainingDuration });
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const price = tripCost;
@@ -181,7 +182,7 @@ export default function OngoingTripScreen({route, navigation}) {
         }}
         showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
-            <Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>
+            {/*<Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
             <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
             <MapViewDirections
@@ -222,11 +223,13 @@ const styles = StyleSheet.create({
   infoView: {
       flex: 1,
       alignItems: 'center',
+      justifyContent: 'center',
       position: 'absolute',
   },
   snackbar: {
       backgroundColor: '#D22B2B',
-      position: 'absolute'
+      position: 'absolute',
+      left: 30,
   },
   bottomView: {
     backgroundColor: 'white',

@@ -28,6 +28,8 @@ export default function TripScreen({navigation}){
     });
     const [validTrip, setValidTrip] = useState(undefined);
     const [tripCost, setTripCost] = useState("0 ETH");
+    const [clickedRoute, setClickedRoute] = useState(false);
+    const [clickedTrip, setClickedTrip] = useState(false);
     const [visibleSB, setVisibleSB] = useState(false);
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
@@ -86,6 +88,7 @@ export default function TripScreen({navigation}){
     }
 
     async function checkTripValidity(start_location, destination_location) {
+        setClickedRoute(true);
         let validityStart = await checkLocationValidity(start_location);
         let validityDest = await checkLocationValidity(destination_location);
         
@@ -101,6 +104,7 @@ export default function TripScreen({navigation}){
             setValidTrip(false);
             onToggleSnackBar();
         }
+        setClickedRoute(false);
     }
 
     async function updatePrice() {
@@ -141,6 +145,7 @@ export default function TripScreen({navigation}){
     }
 
     async function enoughWalletBalance(tripCost) {
+        setClickedTrip(true);
         let username = context.userState.userInfo.username;
         let url = `http://g4-fiuber.herokuapp.com/api/v1/payments/${username}/wallet`;
         let max_transaction_cost = 0.0002;
@@ -148,12 +153,14 @@ export default function TripScreen({navigation}){
         try {
             let hasEnough = await axios.get(url, {headers: token.headers});
             let tripValue = tripCost.substring(0, tripCost.indexOf(' '));
-            console.log(Number(tripValue) + max_transaction_cost)
+            
             hasEnough = hasEnough.data.balance >= (Number(tripValue) + max_transaction_cost);
+            setClickedTrip(false);
             if (hasEnough == true) { return hasEnough }
         }
         catch (error) {
             console.warn(error);
+            setClickedTrip(false);
         }
         onTogglePaymentSnackBar();
         return false;
@@ -238,11 +245,11 @@ export default function TripScreen({navigation}){
                     <Text style={styles.text}>Current latitude: {region.latitude}</Text>
                     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
                     */}
-                    <Button buttonColor='#50C878' mode='contained' style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
+                    <Button buttonColor='#50C878' mode='contained' loading={clickedRoute} style={styles.checkLocationButton} labelStyle={styles.checkLocationButtonLabel} contentStyle={styles.checkLocationButtonContent}
                         icon="navigation-variant"  onPress={() => {checkTripValidity(start, destination)}}>
                         Set Route
                     </Button>
-                    <Button buttonColor='#000' mode='contained' style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
+                    <Button buttonColor='#000' mode='contained' loading={clickedTrip} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
                         icon="car" disabled={!validTrip} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
                         Start Trip for {tripCost}
                     </Button>

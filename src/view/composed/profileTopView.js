@@ -6,12 +6,15 @@ import { useUserContext } from '../components/context'
 export default function ProfileTopView(props){
     const context = useUserContext();
     const userState = props.isSearch ? props.result : context.userState;
-    const isDriver = console.log(context.userState.userInfo) ? true : false;
+    console.log(context.userState.userInfo);
+    const isDriver = context.userState.userInfo.driver_information? true : false;
     const rating = calculateRating();
     const photo = userState.user.photoURL ? {uri: userState.user.photoURL} : require("../../../assets/no_pic.jpg");
     
     function calculateRating() {
         let rider_rating = context.userState.userInfo.rider_information.avg_rating;
+        console.log(rider_rating);
+        console.log(rider_rating != -1);
         if (isDriver) { 
             let driver_rating = context.userState.userInfo.driver_information.avg_rating;
             if (driver_rating != -1 && rider_rating != -1) {

@@ -93,7 +93,7 @@ export default function AvailableJobsScreen({navigation}){
     }
     
     function convertRating(rating) {
-        if (rating == -1) { return 'No reviwes'; }  // -1 in backend simbolizes no reviews have been made
+        if (rating == -1) { return 'No reviews'; }  // -1 in backend simbolizes no reviews have been made
         return (rating + " ★");
     }
       

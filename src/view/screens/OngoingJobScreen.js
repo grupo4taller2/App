@@ -64,7 +64,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
+    const allowedProximityError = 0.0005;   // 0.0005 ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
@@ -318,7 +318,7 @@ export default function OngoingJobScreen({route, navigation}) {
         }}
         showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
-            <Button style={{width:150}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>
+            {/*<Button style={{width:150}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
             <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={currentLocation}/>
             {((tripState == TripState.WaitingOnDriver) || (tripState == TripState.DriverArrived)) && <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
@@ -351,7 +351,8 @@ const styles = StyleSheet.create({
   },
   snackbar: {
       backgroundColor: '#D22B2B',
-      position: 'absolute'
+      position: 'absolute',
+      left: 30,
   },
   bottomView: {
     backgroundColor: 'white',
