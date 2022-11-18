@@ -5,8 +5,19 @@ import ProfileTopView from "../composed/profileTopView";
 import WalletView from "../composed/walletView";
 import ProfileOptionsView from "../composed/ProfileOptionsView";
 import ProfileInfoView from "../composed/profileInfoView";
+import { useUserContext } from "../components/context";
+import React from "react";
 
 export default function Profile({navigation}){
+
+    const {update} = useUserContext();
+
+    React.useEffect(() => {
+        console.log("Called this one");
+        update()
+    }, [])
+
+
     return (
         <View style={style.Mainview}>
             <SafeAreaView style={style.backView}>
