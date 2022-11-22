@@ -29,7 +29,7 @@ export default function TripScreen({navigation}){
     const [validTrip, setValidTrip] = useState(undefined);
     const [tripCost, setTripCost] = useState("0 ETH");
     const [clickedRoute, setClickedRoute] = useState(false);
-    const [clickedTrip, setClickedTrip] = useState(false);
+    const [fetchingPrice, setFetchingPrice] = useState(false);
     const [visibleSB, setVisibleSB] = useState(false);
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
@@ -93,7 +93,6 @@ export default function TripScreen({navigation}){
         let validityDest = await checkLocationValidity(destination_location);
         
         if (validityStart != false && validityDest != false) {
-            console.log("Valid trip from: " + start_location + " to " + destination_location + ".");
             let newStart = {latitude: validityStart.latitude, longitude: validityStart.longitude};
             let newDest = {latitude: validityDest.latitude, longitude: validityDest.longitude};
             setStartMarker(newStart);
@@ -108,6 +107,7 @@ export default function TripScreen({navigation}){
     }
 
     async function updatePrice() {
+        setFetchingPrice(true);
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips/price';
         try {
             let newPrice = await axios.get(url, {headers: token.headers, params: {origin_address: start, destination_address: destination, trip_type: tripType}});
@@ -115,10 +115,12 @@ export default function TripScreen({navigation}){
             newPrice = newPrice.toFixed(3);
             newPrice = newPrice.toString() + " ETH";
             setTripCost(newPrice);
+            setFetchingPrice(false);
         }
         catch(error) {
             console.warn(error);
             onTogglePriceSnackBar();
+            setFetchingPrice(false);
         }
     }
 
@@ -145,7 +147,6 @@ export default function TripScreen({navigation}){
     }
 
     async function enoughWalletBalance(tripCost) {
-        setClickedTrip(true);
         let username = context.userState.userInfo.username;
         let url = `http://g4-fiuber.herokuapp.com/api/v1/payments/${username}/wallet`;
         let max_transaction_cost = 0.0002;
@@ -155,12 +156,10 @@ export default function TripScreen({navigation}){
             let tripValue = tripCost.substring(0, tripCost.indexOf(' '));
             
             hasEnough = hasEnough.data.balance >= (Number(tripValue) + max_transaction_cost);
-            setClickedTrip(false);
             if (hasEnough == true) { return hasEnough }
         }
         catch (error) {
             console.warn(error);
-            setClickedTrip(false);
         }
         onTogglePaymentSnackBar();
         return false;
@@ -249,7 +248,7 @@ export default function TripScreen({navigation}){
                         icon="navigation-variant"  onPress={() => {checkTripValidity(start, destination)}}>
                         Set Route
                     </Button>
-                    <Button buttonColor='#000' mode='contained' loading={clickedTrip} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
+                    <Button buttonColor='#000' mode='contained' loading={fetchingPrice} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
                         icon="car" disabled={!validTrip} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
                         Start Trip for {tripCost}
                     </Button>

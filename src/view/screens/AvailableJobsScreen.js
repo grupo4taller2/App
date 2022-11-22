@@ -83,7 +83,6 @@ export default function AvailableJobsScreen({navigation}){
     async function getGPSLocation() {
         try {
           let currentLoc = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
-          console.log(currentLoc);
           return({latitude: currentLoc.coords.latitude, longitude: currentLoc.coords.longitude});
         }
         catch (error) {

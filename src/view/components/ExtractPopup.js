@@ -14,7 +14,7 @@ const WALLETCHECK = /0x[a-zA-Z0-9]{40}/
 export default function MoneyExtraction(props){
     
     
-    const [copied, setCopied] = React.useState(false);
+    const [transactionResponse, setResponse] = React.useState(false);
 
     const [error, setError] = React.useState(false);
 
@@ -26,6 +26,8 @@ export default function MoneyExtraction(props){
 
     const [withdrawMessage, setWithdrawMessage] = React.useState('');
     const [withdrawStatus, setWithdrawStatus] = React.useState(false);
+
+    const [loading, setLoading] = React.useState(false);
 
     const changeAmount = (newAmount) => {
         newAmount = newAmount.replace(/,/g, '.')
@@ -43,27 +45,37 @@ export default function MoneyExtraction(props){
     const extractMoney = async () => {
         const matched = sendAddress.match(WALLETCHECK);
         if (matched && sendAddress === matched[0]){
-            
+            setLoading(true);
             try{
                 console.log(sendAddress);
                 console.log(amount);
                 await props.extractionCheckout(amount, sendAddress);
-                console.log("Transaccion ok");
+                //Abrir snackbar como success
+                setWithdrawStatus(true);
+                setWithdrawMessage("Your withdraw is on the way");
+                setResponse(true);
+                setLoading(false);
                 return;
             }catch (error) {
-                console.warn(error);
-                console.log("Pifio la extraction");
                 //Abrir el snackbar de error (failed transaction)
+                setWithdrawStatus(false);
+                setWithdrawMessage("Transaction failed");
+                setResponse(true);
+                setLoading(false);
                 return;
             }
         }
 
         //Abrir el snackbar de error (wallet incorrecta)
-        console.log("Pifio la wallet");
+        setWithdrawStatus(false);
+        setWithdrawMessage("Invalid wallet");
+        setResponse(true);
+        setLoading(false);
+        
     };
 
     const onDismissSnackBar = () => {
-        setCopied(!copied);
+        setResponse(!transactionResponse);
     }
 
     const proceedWithExtraction = () => {
@@ -105,11 +117,15 @@ export default function MoneyExtraction(props){
             }
         </Dialog.Content>
         <Dialog.Actions>
-            {checkout ? <Button onPress={extractMoney}>Confirm extraction</Button> : <Button onPress={proceedWithExtraction}>Confirm amount</Button>}
+            {!loading ? <>{checkout ?
+            <Button onPress={extractMoney}>Confirm extraction</Button> : <Button onPress={proceedWithExtraction}>Confirm amount</Button>}
             <Button  onPress={checkout ? () => {cancel(); props.toggle()} : props.toggle}>{checkout ? "Cancel" : "Close"}</Button>
+            </>
+            :
+            <Text>Processing your transaction</Text>}
         </Dialog.Actions>
     </Dialog>
-    <ErrorSnackBar error={copied} onDismissSnackBar={onDismissSnackBar} text={withdrawMessage} success={withdrawStatus} />
+    <ErrorSnackBar error={transactionResponse} onDismissSnackBar={onDismissSnackBar} text={withdrawMessage} success={withdrawStatus} />
     </>)
 }
 
