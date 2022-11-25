@@ -92,7 +92,7 @@ export default function HomeScreen({route, navigation}) {
       <Snackbar
           visible={visibleRatingSB}
           onDismiss={onDismissRatingSnackBar}
-          duration='2500'
+          duration={2500}
           style={styles.snackbar}>
           <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error submitting your review, we're sorry for the inconvenience.</Text>
       </Snackbar>
