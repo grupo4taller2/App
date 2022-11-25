@@ -38,7 +38,8 @@
         }
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "FIFI.UBA"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.t2.Fifi"
     },
     "web": {
       "favicon": "./assets/favicon.png"
