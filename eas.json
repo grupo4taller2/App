@@ -15,6 +15,14 @@
     "production": {}
   },
   "submit": {
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
     "production": {}
   }
 }
