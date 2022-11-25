@@ -76,7 +76,7 @@ export default function OngoingTripScreen({route, navigation}) {
       try {
         let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
         let response = await axios.get(url, {headers: token.headers});
-        console.log(response.data.trip_state);
+        
         let currentTripState = response.data.trip_state;
         if (driver === undefined && tripState == TripState.WaitingOnDriver) {
             setDriver(response.data.driver.username);
@@ -100,7 +100,7 @@ export default function OngoingTripScreen({route, navigation}) {
           <Snackbar
               visible={visibleGeneralSB}
               onDismiss={onDismissGeneralSnackBar}
-              duration='2500'
+              duration={2500}
               style={styles.snackbar}>
               <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, {'\n'}we're sorry for the inconvenience.</Text>
           </Snackbar>
@@ -180,7 +180,7 @@ export default function OngoingTripScreen({route, navigation}) {
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
         }}
-        showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
+        showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             {/*<Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
             <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>

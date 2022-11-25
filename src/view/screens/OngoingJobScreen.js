@@ -49,7 +49,7 @@ export default function OngoingJobScreen({route, navigation}) {
         longitudeDelta: 0.01,
     });
     const [remainingDistance, setRemainingDistance] = useState(trip_info.distance);
-    const [remainingDuration, setRemainingDuration] = useState(trip_info.estimated_duration);
+    const [remainingDuration, setRemainingDuration] = useState(trip_info.estimated_time);
     const [currentLocation, setCurrentLocation] = useState(location);
     const origin = trip_info.origin;
     const destination = trip_info.destination;
@@ -63,8 +63,9 @@ export default function OngoingJobScreen({route, navigation}) {
     const [visibleDestinationProximitySB, setVisibleDestinationProximitySB] = useState(false);
     const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
     const pay = Number(trip_info.estimated_price).toFixed(3);
+    const appFee = pay * 0.2;
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.0005;   // 0.0005 ~= 55.5 m
+    const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
@@ -87,6 +88,7 @@ export default function OngoingJobScreen({route, navigation}) {
     useInterval(async () => {
         try {
             let currentLoc = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
+            console.log(currentLoc.coords);
             setCurrentLocation({latitude: currentLoc.coords.latitude, longitude: currentLoc.coords.longitude});
         }
         catch (error) {
@@ -151,9 +153,8 @@ export default function OngoingJobScreen({route, navigation}) {
       else {
         try {
           let payment_url = `http://g4-fiuber.herokuapp.com/api/v1/payments/create/payment`;
-          let string_pay = String(pay);
-          console.log(string_pay);
-          console.log({tripID: trip_id, amount: string_pay, driver_username: driver, rider_username: passenger});
+          console.log('reaches')
+          let string_pay = pay.toString();
           let trip_payment = await axios.post(payment_url, {tripID: trip_id, amount: string_pay, driver_username: driver, rider_username: passenger}, token);
 
           let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
@@ -175,28 +176,28 @@ export default function OngoingJobScreen({route, navigation}) {
             <Snackbar
                 visible={visibleGeneralSB}
                 onDismiss={onDismissGeneralSnackBar}
-                duration='2500'
+                duration={2500}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, {'\n'}we're sorry for the inconvenience.</Text>
             </Snackbar>
             <Snackbar
                 visible={visiblePassengerProximitySB}
                 onDismiss={onDismissPassengerProximitySnackBar}
-                duration='2500'
+                duration={2500}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the passenger, {'\n'}get closer to their map marker.</Text>
             </Snackbar>
             <Snackbar
                 visible={visibleDestinationProximitySB}
                 onDismiss={onDismissDestinationProximitySnackBar}
-                duration='2500'
+                duration={2500}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>You're not close enough to the destination, {'\n'}get closer to it's map marker.</Text>
             </Snackbar>
             <Snackbar
                 visible={visibleUnexpectedSB}
                 onDismiss={onDismissUnexpectedSnackBar}
-                duration='2500'
+                duration={2500}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>Unexpected error ocurred, please try again.</Text>
             </Snackbar>
@@ -213,8 +214,8 @@ export default function OngoingJobScreen({route, navigation}) {
               <Text>Drive towards the starting marker (stickman) on your map.</Text>
               <Text>Your passenger is '{passenger}'.</Text>
               <Text>They're waiting at {origin.address}.{'\n'}</Text>
-              <Text>Distance to passenger: {remainingDistance} km</Text>
-              <Text>ETA to passenger:: {remainingDuration} mins</Text>
+              <Text>Distance to passenger: {remainingDistance}</Text>
+              <Text>ETA to passenger: {remainingDuration}</Text>
               <Text>Trip's pay: {pay} ETH{'\n'}</Text>
               <View style={styles.buttonStateView}>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'account-alert'} onPress={async () => {await notifyArrival()}}>Notify arrival</Button>
@@ -251,7 +252,7 @@ export default function OngoingJobScreen({route, navigation}) {
             <View style={styles.bottomView}>
               <Text style={styles.bottomHeader}>Your job's over!</Text>
               <Text>We hope you had a great trip.{'\n'}</Text>
-              <Text>{pay} ETH (minus a small transaction fee) has been added to your wallet.{'\n'}</Text>
+              <Text>{pay} ETH (minus a {appFee} ETH fee) has been added to your wallet.{'\n'}</Text>
               <View style={styles.buttonsChoiceView}>
                 <Button style={{width:220, marginBottom: 13}} labelStyle={{fontWeight: 'bold'}} buttonColor='#FFB22E' mode='contained' icon={'account-star'} onPress={() => {navigation.navigate(UserNavConstants.RatingScreen, {user: passenger, userType: 'passenger', sender: context.userState.userInfo.username})}}>Rate your passenger</Button>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'home'} onPress={() => {navigation.navigate(UserNavConstants.HomeScreen)}}>Back to Home</Button>
@@ -265,8 +266,8 @@ export default function OngoingJobScreen({route, navigation}) {
       if (tripState == TripState.WaitingOnDriver) {
         return(
           <MapViewDirections
-              origin={currentLocation}
-              destination={origin}
+              origin={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+              destination={{ latitude: origin.latitude, longitude: origin.longitude }}
               apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
               strokeWidth={5}
               strokeColor="red"
@@ -283,8 +284,8 @@ export default function OngoingJobScreen({route, navigation}) {
       if (tripState == TripState.TripOngoing) {
         return(
         <MapViewDirections
-            origin={currentLocation}
-            destination={destination}
+            origin={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
+            destination={{ latitude: destination.latitude, longitude: destination.longitude }}
             apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
             strokeWidth={5}
             strokeColor="red"
@@ -318,12 +319,12 @@ export default function OngoingJobScreen({route, navigation}) {
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
         }}
-        showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
+        showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             {/*<Button style={{width:150}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
-            <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={currentLocation}/>
+            <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}/>
             {((tripState == TripState.WaitingOnDriver) || (tripState == TripState.DriverArrived)) && <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={origin}/>}
-            <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
+            <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={{ latitude: destination.latitude, longitude: destination.longitude }}/>
             {renderRoute()}
         </MapView>
         <BottomSheet

@@ -10,6 +10,7 @@ import { useUserContext } from '../components/context';
 import * as Location from 'expo-location';
 import { getHeader } from "../../model/status";
 import { max } from 'react-native-reanimated';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
@@ -29,7 +30,7 @@ export default function TripScreen({navigation}){
     const [validTrip, setValidTrip] = useState(undefined);
     const [tripCost, setTripCost] = useState("0 ETH");
     const [clickedRoute, setClickedRoute] = useState(false);
-    const [clickedTrip, setClickedTrip] = useState(false);
+    const [fetchingPrice, setFetchingPrice] = useState(false);
     const [visibleSB, setVisibleSB] = useState(false);
     const [visibleGeneralSB, setVisibleGeneralSB] = useState(false);
     const [visiblePaymentSB, setVisiblePaymentSB] = useState(false);
@@ -93,7 +94,6 @@ export default function TripScreen({navigation}){
         let validityDest = await checkLocationValidity(destination_location);
         
         if (validityStart != false && validityDest != false) {
-            console.log("Valid trip from: " + start_location + " to " + destination_location + ".");
             let newStart = {latitude: validityStart.latitude, longitude: validityStart.longitude};
             let newDest = {latitude: validityDest.latitude, longitude: validityDest.longitude};
             setStartMarker(newStart);
@@ -108,6 +108,7 @@ export default function TripScreen({navigation}){
     }
 
     async function updatePrice() {
+        setFetchingPrice(true);
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips/price';
         try {
             let newPrice = await axios.get(url, {headers: token.headers, params: {origin_address: start, destination_address: destination, trip_type: tripType}});
@@ -115,10 +116,12 @@ export default function TripScreen({navigation}){
             newPrice = newPrice.toFixed(3);
             newPrice = newPrice.toString() + " ETH";
             setTripCost(newPrice);
+            setFetchingPrice(false);
         }
         catch(error) {
             console.warn(error);
             onTogglePriceSnackBar();
+            setFetchingPrice(false);
         }
     }
 
@@ -145,7 +148,6 @@ export default function TripScreen({navigation}){
     }
 
     async function enoughWalletBalance(tripCost) {
-        setClickedTrip(true);
         let username = context.userState.userInfo.username;
         let url = `http://g4-fiuber.herokuapp.com/api/v1/payments/${username}/wallet`;
         let max_transaction_cost = 0.0002;
@@ -155,12 +157,10 @@ export default function TripScreen({navigation}){
             let tripValue = tripCost.substring(0, tripCost.indexOf(' '));
             
             hasEnough = hasEnough.data.balance >= (Number(tripValue) + max_transaction_cost);
-            setClickedTrip(false);
             if (hasEnough == true) { return hasEnough }
         }
         catch (error) {
             console.warn(error);
-            setClickedTrip(false);
         }
         onTogglePaymentSnackBar();
         return false;
@@ -176,19 +176,14 @@ export default function TripScreen({navigation}){
                 latitudeDelta: 0.3,
                 longitudeDelta: 0.3,
                 }}
-                showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
-                onRegionChangeComplete={(region) => setRegion(region)}>
-                    {validTrip == true && Platform.OS == 'ios' &&
+                showsCompass={true} showsBuildings={true} showsIndoors={true}
+                onRegionChangeComplete={(region) => setRegion(region)}
+                >
+                    {validTrip == true && 
                         <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
                     }
-                    {validTrip == true && Platform.OS == 'ios' &&
+                    {validTrip == true && 
                         <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
-                    }
-                    {validTrip == true && Platform.OS == 'android' &&
-                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
-                    }
-                    {validTrip == true && Platform.OS == 'android' &&
-                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
                     }
                     {validTrip == true &&
                     <MapViewDirections
@@ -249,42 +244,42 @@ export default function TripScreen({navigation}){
                         icon="navigation-variant"  onPress={() => {checkTripValidity(start, destination)}}>
                         Set Route
                     </Button>
-                    <Button buttonColor='#000' mode='contained' loading={clickedTrip} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
+                    <Button buttonColor='#000' mode='contained' loading={fetchingPrice} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
                         icon="car" disabled={!validTrip} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
                         Start Trip for {tripCost}
                     </Button>
                     <Snackbar
                         visible={visibleSB}
                         onDismiss={onDismissSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>Invalid route. Check start and destination!</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePriceSB}
                         onDismiss={onDismissPriceSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the price of your trip, try again later.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visibleGeneralSB}
                         onDismiss={onDismissGeneralSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, try again later.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePaymentSB}
                         onDismiss={onDismissPaymentSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>It seems your wallet doesn't have enough ETH to make pay for this trip, make sure to charge some more money into it and try again.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePermissionsSB}
                         onDismiss={onDismissPermissionsSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>GPS permissions were denied, make sure to enable them to proceed with your trip.</Text>
                     </Snackbar>
@@ -313,7 +308,7 @@ const styles = StyleSheet.create({
         height: "50%",
     },
     mapView: {
-        flex: 8.5,
+        flex: 9.5,
         alignItems: 'center',
         flexDirection: "column-reverse",
     },
@@ -354,7 +349,7 @@ const styles = StyleSheet.create({
     },
     backButton: {     
         marginLeft: 15,
-        marginBottom: 550,                             
+        marginBottom: '140%',                             
     },
     backButtonContent: {
     },

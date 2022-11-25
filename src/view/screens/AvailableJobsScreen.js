@@ -43,7 +43,7 @@ export default function AvailableJobsScreen({navigation}){
         let url = 'http://g4-fiuber.herokuapp.com/api/v1/trips';
         let username = context.userState.userInfo.username;
         let desired_state = "looking_for_driver";
-
+        
         try {
             let listOfJobs = await axios.get(url, {headers: token.headers, params: {driver_username: username, trip_state: desired_state, offset: 0, limit: jobsAmount}});
             setJobs(listOfJobs.data);
@@ -83,7 +83,6 @@ export default function AvailableJobsScreen({navigation}){
     async function getGPSLocation() {
         try {
           let currentLoc = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
-          console.log(currentLoc);
           return({latitude: currentLoc.coords.latitude, longitude: currentLoc.coords.longitude});
         }
         catch (error) {
@@ -167,9 +166,11 @@ export default function AvailableJobsScreen({navigation}){
                                     let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${job_id}`;
                                     let trip_info = await axios.get(url, {headers: token.headers, params: {id: job_id}});
                                     let gpsLoc = await getGPSLocation();
+                                    setIsButtonPressed(false);
                                     navigation.navigate(UserNavConstants.OngoingJobScreen, {trip_info: trip_info.data, location: gpsLoc});
                                 }
                                 else {
+                                    setIsButtonPressed(false);
                                     onToggleGeneralSnackBar();
                                 }
                             }}>
@@ -183,14 +184,14 @@ export default function AvailableJobsScreen({navigation}){
             <Snackbar
                 visible={visibleGeneralSB}
                 onDismiss={onDismissGeneralSnackBar}
-                duration='2000'
+                duration={2000}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error while trying to assign you to that job, wait and try later.</Text>
             </Snackbar>
             <Snackbar
                 visible={visiblePermissionsSB}
                 onDismiss={onDismissPermissionsSnackBar}
-                duration='2500'
+                duration={2500}
                 style={styles.snackbar}>
                 <Text style={{fontWeight: 'bold', color: '#fff'}}>GPS permissions were denied, make sure to enable them to proceed with this job.</Text>
             </Snackbar>
