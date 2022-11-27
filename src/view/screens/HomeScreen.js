@@ -9,6 +9,7 @@ import { createStatusChanger, signOut } from '../../model/status';
 import Constants from 'expo-constants';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { getWallet } from '../../model/wallet';
+import axios from 'axios';
 
 export default function HomeScreen({route, navigation}) {
   const context = useUserContext();
@@ -47,7 +48,7 @@ export default function HomeScreen({route, navigation}) {
 };
 
   useEffect(() => {
-    getBalance()
+    getBalance(); // get current balance
   }, [])
 
   return (
