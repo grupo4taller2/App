@@ -1,14 +1,14 @@
 
 import { getAuth, signOut } from 'firebase/auth';
-import React, { useReducer } from 'react';
+import React, { useReducer, useState, useRef, useEffect } from 'react';
 import './src/config/firebase';
 import { logSignup, logUser } from './src/model/login';
 import { getMyInfo, getUser } from './src/model/status';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
-
-
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
 
 const initialState = () => {
@@ -21,10 +21,73 @@ const reducer = (state=initialState(), action = {}) => {
   return action
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
 
 export default function App() {
 
   const [userState, dispatch] = useReducer(reducer, reducer());
+
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (true) {//if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }  
 
   const authState = React.useMemo(() => {
     return ({
@@ -32,8 +95,7 @@ export default function App() {
       signIn: async (responseToken) => {
           let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
           userInfo = await getMyInfo(userInfo.username, responseToken);
-          
-
+        
           const type = userInfo.driver_information ? "Driver" : "Rider";
           logUser(type);
 

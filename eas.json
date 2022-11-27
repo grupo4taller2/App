@@ -8,6 +8,12 @@
         "buildType": "apk"
       }
     },
+<<<<<<< HEAD
+=======
+    "production": {}
+  },
+  "submit": {
+>>>>>>> f47d3616e52732db4f0e4b827001ce8436c410f6
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease"

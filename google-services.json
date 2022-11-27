@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "91621333154",
+    "project_id": "fifi-uber-4",
+    "storage_bucket": "fifi-uber-4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91621333154:android:3a40327152df56f2f71ffb",
+        "android_client_info": {
+          "package_name": "com.t2.Fifi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91621333154-ra20usbadj8e66pah0bn6phg83at4hu8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.t2.Fifi",
+            "certificate_hash": "efcd4cd6918c4179a1dec2110cd837c3809440b5"
+          }
+        },
+        {
+          "client_id": "91621333154-2cccsnv6n0bo4iv18rokuur856oo6sdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnTEI6qKHB7pu9xWUemIfWWoZwVJi-4Xo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91621333154-2cccsnv6n0bo4iv18rokuur856oo6sdi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91621333154-545grusb39asi22j12itr0hhris708tl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "FIFI.UBA"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
