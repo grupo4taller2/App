@@ -89,13 +89,26 @@ export default function App() {
     return token;
   }  
 
+  const updateToken = async (username) => {
+    let url = `http://g4-fiuber.herokuapp.com/api/v1/users/push/token`;
+
+    try {
+      const authToken = getHeader(context);
+      await axios.post(url, {username: username, token: expoPushToken}, authToken);
+    }
+    catch(error) {
+        console.warn("Issue while sending updated pushToken to backend.");
+    }
+  }
+
   const authState = React.useMemo(() => {
     return ({
       userState,
       signIn: async (responseToken) => {
           let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
           userInfo = await getMyInfo(userInfo.username, responseToken);
-        
+          await updateToken(userInfo.username); // send pushToken to back
+
           const type = userInfo.driver_information ? "Driver" : "Rider";
           logUser(type);
 

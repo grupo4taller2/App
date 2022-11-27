@@ -63,7 +63,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const [visibleDestinationProximitySB, setVisibleDestinationProximitySB] = useState(false);
     const [visibleUnexpectedSB, setVisibleUnexpectedSB] = useState(false);
     const pay = Number(trip_info.estimated_price).toFixed(3);
-    const appFee = pay * 0.2;
+    const appFee = pay * 0.2; // app takes 20% of payment as fee
     const notRunning = 999999999999999;
     const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
 
