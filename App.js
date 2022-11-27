@@ -3,12 +3,13 @@ import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer, useState, useRef, useEffect } from 'react';
 import './src/config/firebase';
 import { logSignup, logUser } from './src/model/login';
-import { getMyInfo, getUser } from './src/model/status';
+import { getHeader, getMyInfo, getUser } from './src/model/status';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import axios from 'axios';
 
 
 const initialState = () => {
@@ -89,15 +90,17 @@ export default function App() {
     return token;
   }  
 
-  const updateToken = async (username) => {
+  const updateToken = async (username, context) => {
     let url = `http://g4-fiuber.herokuapp.com/api/v1/users/push/token`;
 
     try {
-      const authToken = getHeader(context);
+      const authToken = getHeader(context); 
       await axios.post(url, {username: username, token: expoPushToken}, authToken);
+      
     }
     catch(error) {
         console.warn("Issue while sending updated pushToken to backend.");
+        console.log(error)
     }
   }
 
@@ -107,7 +110,7 @@ export default function App() {
       signIn: async (responseToken) => {
           let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
           userInfo = await getMyInfo(userInfo.username, responseToken);
-          await updateToken(userInfo.username); // send pushToken to back
+          await updateToken(userInfo.username, {userState: responseToken}); // send pushToken to back
 
           const type = userInfo.driver_information ? "Driver" : "Rider";
           logUser(type);
