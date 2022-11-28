@@ -11,6 +11,7 @@ import React from "react";
 export default function Profile({navigation}){
 
     const {update} = useUserContext();
+    const context = useUserContext();
 
     React.useEffect(() => {
         update()
@@ -20,10 +21,11 @@ export default function Profile({navigation}){
     return (
         <View style={style.Mainview}>
             <SafeAreaView style={style.backView}>
-            <TouchableNativeFeedback onPress={() => navigation.pop()}>
-                <Avatar.Icon style={style.backArrow} size={50} icon="chevron-left" />
-            </TouchableNativeFeedback>
-        </SafeAreaView>
+                <TouchableNativeFeedback onPress={() => navigation.pop()}>
+                    <Avatar.Icon style={style.backArrow} size={50} icon="chevron-left" />
+                </TouchableNativeFeedback>
+                <Text style={style.userText}>{context.userState.userInfo.username}</Text>
+            </SafeAreaView>
             <ProfileTopView />
             <ProfileInfoView />
             <ProfileOptionsView navigation={navigation}/>
@@ -40,10 +42,18 @@ const style = StyleSheet.create(
         backView: {
             flex: 0.1,
             backgroundColor: "#fff",
+            flexDirection: 'row',
         },
         backArrow: {
             backgroundColor: "#fff",
             marginTop: Constants.statusBarHeight
+        },
+        userText: {
+            alignSelf: 'center',
+            fontWeight: 'bold',
+            fontSize: 26,
+            marginLeft: 10,
+            marginTop: '7%',
         }
     }
 )

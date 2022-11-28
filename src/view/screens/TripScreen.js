@@ -10,6 +10,7 @@ import { useUserContext } from '../components/context';
 import * as Location from 'expo-location';
 import { getHeader } from "../../model/status";
 import { max } from 'react-native-reanimated';
+import { PROVIDER_GOOGLE } from 'react-native-maps';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.
@@ -175,19 +176,14 @@ export default function TripScreen({navigation}){
                 latitudeDelta: 0.3,
                 longitudeDelta: 0.3,
                 }}
-                showsTraffic={true} showsCompass={true} showsBuildings={true} showsIndoors={true}
-                onRegionChangeComplete={(region) => setRegion(region)}>
-                    {validTrip == true && Platform.OS == 'ios' &&
+                showsCompass={true} showsBuildings={true} showsIndoors={true}
+                onRegionChangeComplete={(region) => setRegion(region)}
+                >
+                    {validTrip == true && 
                         <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
                     }
-                    {validTrip == true && Platform.OS == 'ios' &&
+                    {validTrip == true && 
                         <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
-                    }
-                    {validTrip == true && Platform.OS == 'android' &&
-                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={startMarker}/>
-                    }
-                    {validTrip == true && Platform.OS == 'android' &&
-                        <MapView.Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destinationMarker}/>
                     }
                     {validTrip == true &&
                     <MapViewDirections
@@ -255,35 +251,35 @@ export default function TripScreen({navigation}){
                     <Snackbar
                         visible={visibleSB}
                         onDismiss={onDismissSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>Invalid route. Check start and destination!</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePriceSB}
                         onDismiss={onDismissPriceSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the price of your trip, try again later.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visibleGeneralSB}
                         onDismiss={onDismissGeneralSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>There was an error processing the route, try again later.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePaymentSB}
                         onDismiss={onDismissPaymentSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>It seems your wallet doesn't have enough ETH to make pay for this trip, make sure to charge some more money into it and try again.</Text>
                     </Snackbar>
                     <Snackbar
                         visible={visiblePermissionsSB}
                         onDismiss={onDismissPermissionsSnackBar}
-                        duration='2500'
+                        duration={2500}
                         style={styles.snackbar}>
                         <Text style={{fontWeight: 'bold', color: '#fff'}}>GPS permissions were denied, make sure to enable them to proceed with your trip.</Text>
                     </Snackbar>
@@ -312,7 +308,7 @@ const styles = StyleSheet.create({
         height: "50%",
     },
     mapView: {
-        flex: 8.5,
+        flex: 9.5,
         alignItems: 'center',
         flexDirection: "column-reverse",
     },
@@ -353,7 +349,7 @@ const styles = StyleSheet.create({
     },
     backButton: {     
         marginLeft: 15,
-        marginBottom: 550,                             
+        marginBottom: '140%',                             
     },
     backButtonContent: {
     },
