@@ -3,7 +3,7 @@ import axios from "axios";
 import { logLogin, logSignup } from './login';
 
 
-
+console.log(ROUTE, DRIVERREG, PASSENGERREG, USERS, STATUS)
 
 export async function signIn(connection, info, failCall, context){
     

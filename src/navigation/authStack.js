@@ -5,6 +5,7 @@ import RegisterScreen from '../view/screens/RegisterScreen';
 import RegisterInfoScreen from '../view/screens/RegisterInfoScreen';
 import LoginScreen from '../view/screens/LoginScreen';
 import { ROUTES } from './routes';
+import PasswordRecovery from '../view/screens/PasswordRecovery';
 
 
 
@@ -18,6 +19,7 @@ export default function AuthStack() {
         <Stack.Screen name={ROUTES.LoginMainView} component={LoginScreen} options={ { headerShown: false }} />
         <Stack.Screen name={ROUTES.RegisterFirstView} component={RegisterScreen} options={ { headerShown: false }} />
         <Stack.Screen name={ROUTES.RegisterInfoView} component={RegisterInfoScreen} options={ { headerShown: false }} />
+        <Stack.Screen name={ROUTES.PasswordRecoveryPage} component={PasswordRecovery} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,13 +8,17 @@ import { ROUTES } from "../../navigation/routes";
 
 
 export default function LoginScreen({ navigation }) {
-    return (
+  const recoverPassword = () => {
+    navigation.push(ROUTES.PasswordRecoveryPage)
+  }  
+  
+  return (
       <View style={style.loginMainView}>
         
         
         <Greet mainText={"Hello Again!"} secondaryText={"Need a Lift?"} />
-        <Login />
-        
+        <Login navigation={recoverPassword}/>
+        <Text style={style.forgotPasswordText} onPress={recoverPassword}>{"Forgot password?"}</Text>
         <View style={style.registerNow}>
             <Text style={style.bottomTextAcc}> Don't have an account?</Text>
             <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.push(ROUTES.RegisterFirstView)} >
@@ -58,5 +62,10 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     paddingBottom: 5,
   },
+  forgotPasswordText: {
+    marginTop: 10,
+    fontSize: 12,
+    color: "#37a0bd"
+  }
 })
   
