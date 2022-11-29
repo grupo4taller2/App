@@ -14,7 +14,7 @@ export default function LoginInfo(props){
 
 const inputViewStyle = StyleSheet.create({
         flex: 2,
-        marginBottom: 100,
+        marginBottom: 20,
         minWidth: 350,
         maxHeight: 150,
         justifyContent: 'flex-start',
