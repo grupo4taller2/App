@@ -34,6 +34,7 @@ export default function OngoingTripScreen({route, navigation}) {
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
     const [driver, setDriver] = useState(undefined);
     const [driverCar, setDriverCar] = useState(undefined);
+    const [driverLocation, setDriverLocation] = useState(undefined);
     /* 
     [DEBUG]
     const [driver, setDriver] = useState("alejoo_driver");
@@ -78,9 +79,12 @@ export default function OngoingTripScreen({route, navigation}) {
         let response = await axios.get(url, {headers: token.headers});
         
         let currentTripState = response.data.trip_state;
-        if (driver === undefined && tripState == TripState.WaitingOnDriver) {
-            setDriver(response.data.driver.username);
-            setDriverCar(response.data.driver.car);
+        if (tripState == TripState.WaitingOnDriver) {
+            if (driver === undefined) {
+              setDriver(response.data.driver.username);
+              setDriverCar(response.data.driver.car);
+            }
+            setDriverLocation({latitude: response.data.driver.latitude, longitude: response.data.driver.longitude});
         }
         setTripState(currentTripState);
       }
@@ -183,6 +187,7 @@ export default function OngoingTripScreen({route, navigation}) {
         showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             {/*<Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
+            {tripState == TripState.WaitingOnDriver && <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: driverLocation.latitude, longitude: driverLocation.longitude }}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
             <MapViewDirections
