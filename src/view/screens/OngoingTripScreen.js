@@ -187,7 +187,7 @@ export default function OngoingTripScreen({route, navigation}) {
         showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             {/*<Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
-            {tripState == TripState.WaitingOnDriver && <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: driverLocation.latitude, longitude: driverLocation.longitude }}/>}
+            {tripState == TripState.WaitingOnDriver && driverLocation && <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: driverLocation.latitude, longitude: driverLocation.longitude }}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
             <MapViewDirections
