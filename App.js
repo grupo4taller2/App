@@ -127,6 +127,7 @@ export default function App() {
           const user = credentials.user;
           
           const userInfo = await getMyInfo(back_response.username, credentials);
+          await updateToken(userInfo.username, {userState: responseToken}); // send pushToken to back
           
           dispatch({
             token: token,
