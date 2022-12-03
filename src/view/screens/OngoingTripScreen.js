@@ -79,7 +79,7 @@ export default function OngoingTripScreen({route, navigation}) {
         let response = await axios.get(url, {headers: token.headers});
         
         let currentTripState = response.data.trip_state;
-        if (tripState == TripState.WaitingOnDriver) {
+        if (currentTripState == TripState.WaitingOnDriver) {
             if (driver === undefined) {
               setDriver(response.data.driver.username);
               setDriverCar(response.data.driver.car);
