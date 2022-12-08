@@ -94,6 +94,7 @@ export default function OngoingJobScreen({route, navigation}) {
         }
         catch (error) {
             console.warn("Ran into issues while updating gps location"); // may need to do a snackbar for this
+            console.log(error);
         }
       }, tripState !== TripState.TripFinished ? gpsDelay : notRunning);
     
