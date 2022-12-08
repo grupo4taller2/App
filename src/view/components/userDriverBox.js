@@ -111,7 +111,9 @@ export default function UserDriverBox(props) {
             try{
                 await callBack(context)
             }catch (error){ 
+                console.warn(error)
                 setLoading(false)
+                props.navigation.pop();
             }
 
         }

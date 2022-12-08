@@ -25,11 +25,11 @@ export async function register(connection, info, failCall, context){
     let result = {};
     
     if (credentials) result = await postNewUser(info, credentials);
-
+    
     if(result && credentials.result){
         credentials.credential.email = info.info.email;
         logSignup("Email");
-        context.register(credentials.credential, result.data);
+        await context.register(credentials.credential, result.data);
     }else{
         failCall();
     }
