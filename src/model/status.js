@@ -93,8 +93,10 @@ export async function updateDriverInfo(newInfo, email, context){
     const uri = ROUTE + DRIVERREG + "/" + email + "/" + STATUS;
     
     const headers = getHeader(context);
+    console.log("uri: ", uri);
+    console.log("Info: ", newInfo);
     const response = await axios.patch(uri, newInfo, headers);
-
+    
     await context.update();
 
 }
