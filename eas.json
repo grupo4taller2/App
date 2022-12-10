@@ -7,6 +7,31 @@
       "preview": {
         "android": {
           "buildType": "apk"
+        },
+        "env": {
+          "ROUTE":"https://g4-fiuber.herokuapp.com/api/v1/",
+
+          "DRIVERREG":"drivers",
+          "PASSENGERREG":"riders",
+
+          "USERS":"users",
+          "STATUS":"status",
+
+          "WEBKEY":"91621333154-2cccsnv6n0bo4iv18rokuur856oo6sdi.apps.googleusercontent.com",
+
+          "ANDROIDKEY":"91621333154-ra20usbadj8e66pah0bn6phg83at4hu8.apps.googleusercontent.com",
+
+          "APIKEY":"AIzaSyC0T3fmBUgFQlRqyXjqZI9_53cRXvxyZSw",
+
+          "AUTHDOMAIN":"fifi-uber-4.firebaseapp.com",
+
+          "PROJECTID":"fifi-uber-4",
+
+          "BUCKET":"fifi-uber-4.appspot.com",
+
+          "MESSSENDER":"91621333154",
+
+          "APPID":"1:91621333154:web:d22e23172d9df59cf71ffb"
         }
       },
       "preview2": {
