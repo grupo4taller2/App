@@ -17,21 +17,9 @@ import axios from 'axios';
 
 
 function inProximity(firstCoords, secondCoords, allowedError) {
-  let latitudeDelta;
-  let longitudeDelta;
-  if ((firstCoords.latitude > 0 && secondCoords.latitude < 0) || (firstCoords.latitude < 0 && secondCoords.latitude > 0)) {
-    latitudeDelta = firstCoords.latitude + secondCoords.latitude;
-  }
-  else {  // if both latitudes have the same sign
-    latitudeDelta = firstCoords.latitude - secondCoords.latitude;
-  }
-  if ((firstCoords.longitude > 0 && secondCoords.longitude < 0) || (firstCoords.longitude < 0 && secondCoords.longitude > 0)) {
-    longitudeDelta = firstCoords.longitude + secondCoords.longitude;
-  }
-  else {  // if both longitudes have the same sign
-    longitudeDelta = firstCoords.longitude - secondCoords.longitude;
+  let latitudeDelta = Math.abs(firstCoords.latitude - secondCoords.latitude);
+  let longitudeDelta = Math.abs(firstCoords.longitude - secondCoords.longitude);
   
-  }
   let latitudeResult = latitudeDelta <= allowedError;
   let longitudeResult = longitudeDelta <= allowedError;
   return (latitudeResult && longitudeResult)
@@ -65,7 +53,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const appFee = pay * 0.2; // app takes 20% of payment as fee
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.001;   // 0.001 ~= 111.0 m
+    const allowedProximityError = 0.0005;   // 0.0005 ~= 55.5 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"

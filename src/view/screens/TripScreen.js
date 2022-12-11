@@ -42,6 +42,7 @@ export default function TripScreen({navigation}){
     const [distance, setDistance] = useState(undefined);    // measured in km
     const [duration, setDuration] = useState(undefined);    // measured in min
     const [tripType, setTripType] = useState("regular");
+    const [confirmedStart, setConfirmedStart] = useState(false);    // used to prevent user from double tapping start button and creating 2 or more trips
     const previousRouteValues = useRef({ distance, duration });
 
     useEffect(() => {
@@ -214,9 +215,10 @@ export default function TripScreen({navigation}){
                         </Dialog.Content>
                         <Dialog.Actions>
                             <View style={styles.confirmationButtonsView}>
-                                <Button buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
+                                <Button disabled={confirmedStart} buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     async () => {
+                                        setConfirmedStart(true);
                                         let enoughBalance = await enoughWalletBalance(tripCost);
                                         if (enoughBalance) {
                                             let validStart = await startTrip(context.userState.userInfo.username);
@@ -226,7 +228,10 @@ export default function TripScreen({navigation}){
                                                 navigation.navigate(UserNavConstants.OngoingTripScreen, {startMarker, destinationMarker, tripCost, distance, duration, trip_id});
                                             }
                                         }
-                                        else {onTogglePaymentSnackBar()}
+                                        else {
+                                            setConfirmedStart(false);
+                                            onTogglePaymentSnackBar();
+                                        }
                                     }}>
                                         Yes, let's start my trip
                                     </Button>
