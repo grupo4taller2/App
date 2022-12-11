@@ -7,6 +7,7 @@ import {WEBKEY, ANDROIDKEY} from '@env'
 import { UserContext, useUserContext } from './context';
 import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { googleGetUser } from '../../model/status';
+import ErrorSnackBar from './ErrorSnackBar';
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -14,6 +15,7 @@ WebBrowser.maybeCompleteAuthSession();
 export default function GoogleLogin(props){
 
     const {signIn} = useUserContext();
+    const [loading, setLoading] = React.useState();
     console.log(ANDROIDKEY, WEBKEY)
     const [request, response, promptAsync] = Google.useAuthRequest({
       androidClientId: ANDROIDKEY,
@@ -25,6 +27,7 @@ export default function GoogleLogin(props){
     })
 
     const handleSignIn = async (authentication) => {
+      setLoading(true);
       const credential = GoogleAuthProvider.credential(authentication.idToken, authentication.accessToken);
       const auth = getAuth();
 
@@ -37,7 +40,7 @@ export default function GoogleLogin(props){
 
 
       signIn(signInResult);
-
+      setLoading(false);
     };
 
     React.useEffect(() => {
@@ -46,9 +49,12 @@ export default function GoogleLogin(props){
     }, [response]);
 
     return (
+    <>
     <TouchableOpacity activeOpacity={0.6} onPress={() => {promptAsync()}}>
         <Text style={style.higlightTextGoogle}> Sign in with Google</Text>
     </TouchableOpacity>
+    <ErrorSnackBar error={loading} onDissmissSnackbar={() => setLoading(false)} success={true} text="Signing in with Google" />
+    </>
     )
     
   }
