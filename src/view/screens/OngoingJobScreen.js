@@ -53,7 +53,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const appFee = pay * 0.2; // app takes 20% of payment as fee
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.0005;   // 0.0005 ~= 55.5 m
+    const allowedProximityError = 0.001;   // 0.001 ~= 111.0 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"

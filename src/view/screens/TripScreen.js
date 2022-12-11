@@ -215,9 +215,10 @@ export default function TripScreen({navigation}){
                         </Dialog.Content>
                         <Dialog.Actions>
                             <View style={styles.confirmationButtonsView}>
-                                <Button disabled={confirmedStart} buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
+                                <Button loading={confirmedStart} buttonColor='#32a852' mode='outlined' style={styles.confirmButton} contentStyle={styles.confirmButtonContent} labelStyle={styles.confirmButtonLabel}
                                 onPress={
                                     async () => {
+                                        if (confirmedStart) {return}    // prevents multiple clicks creating multiple trips
                                         setConfirmedStart(true);
                                         let enoughBalance = await enoughWalletBalance(tripCost);
                                         if (enoughBalance) {
