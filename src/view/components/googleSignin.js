@@ -1,5 +1,6 @@
 import { Button, Text } from 'react-native-paper';
 import * as Google from 'expo-auth-session/providers/google'
+import * as AuthSession from 'expo-auth-session'
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
@@ -24,6 +25,9 @@ export default function GoogleLogin(props){
       webClientId: WEBKEY
     },
     {
+      native: AuthSession.makeRedirectUri({
+        useProxy: true
+      }),
       useProxy: true
     })
 
