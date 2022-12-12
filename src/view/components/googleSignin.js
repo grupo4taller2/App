@@ -8,13 +8,14 @@ import { UserContext, useUserContext } from './context';
 import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { googleGetUser } from '../../model/status';
 import ErrorSnackBar from './ErrorSnackBar';
+import { ROUTES } from '../../navigation/routes';
 
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function GoogleLogin(props){
 
-    const {signIn} = useUserContext();
+    const {signIn, federated} = useUserContext();
     const [loading, setLoading] = React.useState();
     console.log(ANDROIDKEY, WEBKEY)
     const [request, response, promptAsync] = Google.useAuthRequest({
@@ -36,7 +37,12 @@ export default function GoogleLogin(props){
 
       if (signInResult.user === undefined) return;
       //If there is no user to this email. generate one
-      await googleGetUser(signInResult);
+      if (await googleGetUser(signInResult)){
+        federated.setValue(signInResult);
+        setLoading(false);
+        props.navigation.push(ROUTES.FederatedRegister);
+        return;
+      }
 
 
       signIn(signInResult);

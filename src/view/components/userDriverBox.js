@@ -5,13 +5,14 @@ import InfoInput from '../../controler/infoInput';
 import { Text, Checkbox, Button } from 'react-native-paper';
 import RegisterCarInput from '../composed/registerCarInput';
 import TextField from '../composed/textField';
-import { createStatusChangerWithChecks, register } from '../../model/status';
+import { createStatusChangerWithChecks, getUser, postNewUser, register } from '../../model/status';
 import { useUserContext } from './context';
 import StatusButton from './loginButton';
 import ErrorSnackBar from './ErrorSnackBar';
 
 
 export default function UserDriverBox(props) {
+    const context = useUserContext();
     const [checkedRight, setCheckedRight] = React.useState(false);
     const [carMake, setCarMake] = React.useState();
     const [carYear, setCarYear] = React.useState();
@@ -59,8 +60,51 @@ export default function UserDriverBox(props) {
         return {info: info, isDriver: driver};
     };
 
+    const bundleInfoFederated = () => {
+        const info = {};
+        info.username = props.username;
+        info.email = props.email.toLowerCase();
+        info.first_name = props.firstName;
+        info.last_name = props.lastName;
+        info.phone_number = props.phone ? props.phone : "";
+        info.preferred_location_name = props.location;
+
+        if (checkedRight){
+            info.car_manufacturer = carMake;
+            //TODO: agregar modelo de auto
+            info.car_model = carModel;
+            info.car_year_of_production = Number(carYear);
+            info.car_color = carColor;
+            info.car_plate = carPlate;
+        }
+        
+        return {info: info, isDriver: checkedRight};
+    }
+
     const checkNotEmpty = (value) => {
-        return value !== '';
+        return value && value !== '';
+    }
+
+    const carInfoCheck = () => {
+        let carOk = true;
+        if(checkedRight){
+            
+            const carMakeChecked = checkNotEmpty(carMake);
+            const carColorChecked = checkNotEmpty(carColor);
+            const carYearChecked =  checkNotEmpty(carYear);
+            const carModelChecked =  checkNotEmpty(carModel);
+            const carPlateChecked = checkNotEmpty(carPlate);
+            carOk = carMakeChecked && carColorChecked && carYearChecked && carModelChecked && carPlateChecked;
+            
+
+            carMakeChecked ? setCarMakeError(false) : setCarMakeError(true);
+            carModelChecked ? setCarModelError(false) : setCarModelError(true);
+            carYearChecked ? setCarYearError(false) : setCarYearError(true);
+            carPlateChecked ? setCarPlateError(false) : setCarPlateError(true);
+            carColorChecked ? setCarColorError(false) : setCarColorError(true);
+        }
+        
+        return carOk
     }
 
     const bundleChecks = () => {
@@ -68,20 +112,9 @@ export default function UserDriverBox(props) {
         return () => {
             const firstName = checkNotEmpty(props.firstName.value);
             const lastName = checkNotEmpty(props.lastName.value);
-            let carOk = true;
-            if(checkedRight){
-                const carMakeChecked = checkNotEmpty(carMake);
-                const carColorChecked = checkNotEmpty(carColor);
-                const carYearChecked =  checkNotEmpty(carYear);
-                const carModelChecked =  checkNotEmpty(carModel);
-                const carPlateChecked = checkNotEmpty(carPlate);
-                carOk = carMakeChecked && carColorChecked && carYearChecked && carModelChecked && carPlateChecked;
-                carMakeChecked ? setCarMakeError(false) : setCarMakeError(true);
-                carModelChecked ? setCarModelError(false) : setCarModelError(true);
-                carYearChecked ? setCarYearError(false) : setCarYearError(true);
-                carPlateChecked ? setCarPlateError(false) : setCarPlateError(true);
-                carColorChecked ? setCarColorError(false) : setCarColorError(true);
- }
+            const carOk = carInfoCheck();
+            
+
 
             firstName ? props.firstName.errorSet(false) : props.firstName.errorSet(true);
             lastName ? props.lastName.errorSet(false) : props.lastName.errorSet(true);
@@ -94,28 +127,85 @@ export default function UserDriverBox(props) {
         };
     }
 
-    
+    const federatedChecks = async () => {
+        const carOk = carInfoCheck();
+        let matched = props.username.match(/^\w{8,16}/);
+        
+        let userOk = true;
+        if (!matched){
+            userOk = false;
+        }else{
+            userOk = matched[0] === props.username;
+            
+        }
+        if(userOk){
+            try{
+            await getUser(props.username);
+            userOk = false;
+            }catch (error){
+                //console.log(error)
+            }
+        }
+
+        const addressOk = checkNotEmpty(props.location)
+
+        if (!userOk){
+            props.usernameError(true);
+        }else{
+            props.usernameError(false);
+        }
+        if(!addressOk){
+            props.locationError(true);
+        }else{
+            props.locationError(false);
+        }
+
+        return carOk && userOk && addressOk
+    }
+
+    const finishSignUpFederated = async (context) => {
+        const checked = await federatedChecks();
+        if (checked){
+            const bundledInfo = bundleInfoFederated();
+            try{
+                
+                const backResponse = await postNewUser(bundledInfo, {credential: props.federatedValue});
+                
+                await context.register(props.federatedValue, await backResponse.data);
+            }catch (error){
+                console.log(error);
+                setError(true)
+                
+            }
+
+        }
+        setLoading(false);
+    }
 
     const finishSignUp = (props, driver) => {
         
         
-        return async (context) => { 
+        if(!props.isFederated){
+            return async (context) => { 
 
-        const info = bundleInfo(props, driver);
+            const info = bundleInfo(props, driver);
 
-        const callBack = createStatusChangerWithChecks(register,
-        new Outward(),
-        info,
-        () => {setLoading(false)},
-            bundleChecks())
-            try{
-                await callBack(context)
-            }catch (error){ 
-                console.warn(error)
-                setLoading(false)
-                props.navigation.pop();
+            const callBack = createStatusChangerWithChecks(register,
+            new Outward(),
+            info,
+            () => {setLoading(false)},
+                bundleChecks())
+                try{
+                    await callBack(context)
+                }catch (error){ 
+                    console.warn(error)
+                    setLoading(false)
+                    props.navigation.pop();
+                }
+
             }
-
+        }else{
+            return finishSignUpFederated
         }
         }
     
@@ -155,10 +245,10 @@ export default function UserDriverBox(props) {
 
         <View style={styles.buttonView}>
             <ErrorSnackBar error={error} onDismissSnackBar={dismissError} text={"Unexpected error occured"} />
-            <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
+            {!error && <StatusButton style={{button: styles.finishButton, buttonContent: styles.finishButtonContent, buttonText: styles.finishButtonText}}
                             disabled={false} call={finishSignUp(props, checkedRight)}
                             load={load} loading={loading} 
-                            text={"Finish Sign up"}/>
+                            text={"Finish Sign up"}/>}
         </View>
     </View>
     )
