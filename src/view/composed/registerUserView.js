@@ -39,7 +39,8 @@ export default function UserTypeCheck(props) {
                 </View>
 
                 <UserDriverBox all={props} firstName={{value: firstName, errorSet: setFirstNameError}} 
-                                        lastName={{value: lastName, errorSet: setLasNameError}}/>
+                                        lastName={{value: lastName, errorSet: setLasNameError}}
+                                        navigation={props.navigation}/>
                 
             </View>
         </React.Fragment>

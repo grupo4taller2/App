@@ -23,8 +23,8 @@ export default function ProfileTopView(props){
         <SafeAreaView style={style.ProfileView}>
                 <View style={style.NameReviewView}>
                     <View style={style.reviewStars}>
-                        {!isSearch && <Text style={style.ratingText}>Passenger: ★ {calculateRating(rider_rating)}</Text>}
-                        {!isSearch && isDriver && <Text>Driver: ★ {calculateRating(driver_rating)}</Text>}
+                        {<Text style={style.ratingText}>Passenger: ★ {calculateRating(rider_rating)}</Text>}
+                        {isDriver && <Text>Driver: ★ {calculateRating(driver_rating)}</Text>}
                     </View>
                 </View>
                 <View style={style.ProfilePict}>

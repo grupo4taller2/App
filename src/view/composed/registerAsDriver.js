@@ -85,6 +85,7 @@ export default function RegisterAsDriver({navigation}){
 
         try{
             const newInfo = bundleInfo();
+            
             await updateDriverInfo(newInfo, userState.userInfo.email, context);
             setEditResult(true);
         }catch (error){

@@ -152,7 +152,8 @@ export default class RegisterInfo extends Component {
                 <ErrorSnackBar onDismissSnackBar={this.handleErrorDismiss} error={this.state.error !== null} text={this.state.error} />
             </React.Fragment>) :
             <UserTypeCheck username={this.state.username} email={this.state.email}
-                            phone={this.state.phone} password={this.state.password} location={this.state.location}/>
+                            phone={this.state.phone} password={this.state.password} location={this.state.location}
+                            navigation={this.props.nav}/>
     }
 
     stageChangeForward = () => {

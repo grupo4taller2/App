@@ -1,4 +1,4 @@
-# App
+# FIUBER
 
 ---
 
@@ -16,6 +16,14 @@ Si no esta instalado. Instalarlo con el siguiente comando:
 ```
 
 Luego verificar que la instalacion fue correcta con el comando de arriba.
+
+---
+
+### Verificar que node (y todos los modulos requeridos por la aplicacion) este instalado
+
+```bash
+    npm install
+```
 
 ---
 
@@ -45,3 +53,71 @@ Started Metro Bundler
 
 Para poder correrlo desde una maquina virtual de android. Tiene que estar ya corriendo la imagen. Para levantarla, usar android studio y crear una nueva imagen.
 
+---
+
+### Lista de funcionalidades/features de la aplicacion:
+
+- Registro de usuarios
+    - Registro de pasajero
+    
+    ![](images/register_screen.png)
+    
+    - Registro de chofer (choferes pueden tambien actuar como pasajeros)
+    
+    ![](images/driver_register.png)
+    
+- Login de Usuarios
+    - Login con e-mail y contraseña
+    - Login federado (por medio de Google)
+    
+    ![](images/login_screen.png)
+    
+- Recupero de contraseña
+
+![](images/password_recovery.png)
+
+- Homescreen
+
+![](images/home_screen.png)
+
+- Pantalla de perfil
+    - Editar perfil
+    
+    ![](images/profile_screen.png)
+    
+    - Visualizacion de perfil ajeno (a travez de username)
+    
+- Viajes
+    - Pedir el inicio de un viaje desde un origen hasta un destino, previamente consultando la ruta y el costo del mismo
+    
+    ![](images/trip_screen.png)
+    
+    - Pantalla de espera, una vez asignado un chofer, que permite visualizar el auto del chofer hasta que llegue a la locacion de origen
+    
+    ![](images/waiting_on_driver.png)
+    
+    - Visualizacion de locacion durante el viaje hasta termino del mismo, una vez finalizado el viaje se cobrara de la wallet asociada al usuario
+    
+- Trabajar como chofer
+    - Visualizar los viajes actualmente disponibles para ser tomados
+    
+    ![](images/available_jobs.png)
+    
+    - Tomar un viaje en particular, sabiendo antes datos varios del viaje (entre ellos la paga)
+    - Viajar a la locacion origen del viaje, realizar el viaje y finalizarlo para luego poder cobrar la paga
+    
+    ![](images/driver_on_its_way.png)
+    
+- Wallet (administrada por la app, los fondos en la misma permiten el pago de los viajes en la aplicacion)
+    - Depositar Ethereum en wallet
+    - **(Drivers Only)** Extraer dinero ganado en una wallet determinada
+    
+- Calificaciones (cualitativas y cuantitativas)
+    - De pasajeros a choferes
+    - De choferes a pasajeros
+    
+    ![](images/rating_screen.png)
+    
+- Push Notifications
+    - Notificacion indicando que un determinado chofer fue asignado para el viaje comenzado por un pasajero
+    - **(Drivers Only)** Notificacion indicando que un viaje nuevo esta disponible

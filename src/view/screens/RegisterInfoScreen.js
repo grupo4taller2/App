@@ -20,7 +20,7 @@ export default function RegisterInfoScreen({ navigation }) {
             </Text>
         </View>
         
-        <UserTypeCheck />
+        <UserTypeCheck navigation={navigation}/>
 
       </View>
     )

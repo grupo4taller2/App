@@ -37,7 +37,8 @@ export default function UserSearch(props){
         }
         
         if (searchResult) {
-            setError(false)
+            setError(false);
+            console.log(searchResult);
             props.callback({user: {}, userInfo: searchResult});
         }
         if(!searchResult) {

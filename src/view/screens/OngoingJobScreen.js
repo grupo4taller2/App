@@ -17,21 +17,9 @@ import axios from 'axios';
 
 
 function inProximity(firstCoords, secondCoords, allowedError) {
-  let latitudeDelta;
-  let longitudeDelta;
-  if ((firstCoords.latitude > 0 && secondCoords.latitude < 0) || (firstCoords.latitude < 0 && secondCoords.latitude > 0)) {
-    latitudeDelta = firstCoords.latitude + secondCoords.latitude;
-  }
-  else {  // if both latitudes have the same sign
-    latitudeDelta = firstCoords.latitude - secondCoords.latitude;
-  }
-  if ((firstCoords.longitude > 0 && secondCoords.longitude < 0) || (firstCoords.longitude < 0 && secondCoords.longitude > 0)) {
-    longitudeDelta = firstCoords.longitude + secondCoords.longitude;
-  }
-  else {  // if both longitudes have the same sign
-    longitudeDelta = firstCoords.longitude - secondCoords.longitude;
+  let latitudeDelta = Math.abs(firstCoords.latitude - secondCoords.latitude);
+  let longitudeDelta = Math.abs(firstCoords.longitude - secondCoords.longitude);
   
-  }
   let latitudeResult = latitudeDelta <= allowedError;
   let longitudeResult = longitudeDelta <= allowedError;
   return (latitudeResult && longitudeResult)
@@ -65,7 +53,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const pay = Number(trip_info.estimated_price).toFixed(3);
     const appFee = pay * 0.2; // app takes 20% of payment as fee
     const notRunning = 999999999999999;
-    const allowedProximityError = 0.5;   // 0.0005 ~= 55.5 m
+    const allowedProximityError = 0.001;   // 0.001 ~= 111.0 m
 
     const TripState = {
         // NoDriverAssigned: "looking_for_driver", This state will never happen since once a job is taken it's state is set to "accepted_by_driver"
@@ -88,11 +76,13 @@ export default function OngoingJobScreen({route, navigation}) {
     useInterval(async () => {
         try {
             let currentLoc = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
-            console.log(currentLoc.coords);
             setCurrentLocation({latitude: currentLoc.coords.latitude, longitude: currentLoc.coords.longitude});
+            let url = `http://g4-fiuber.herokuapp.com/api/v1/trips/${trip_id}`;
+            await axios.patch(url, {id: trip_id, trip_state: tripState, driver_username: driver, driver_current_latitude: currentLocation.latitude, driver_current_longitude: currentLocation.longitude}, token);
         }
         catch (error) {
-            console.warn("Couldn't poll for gps location"); // may need to do a snackbar for this
+            console.warn("Ran into issues while updating gps location"); // may need to do a snackbar for this
+            console.log(error);
         }
       }, tripState !== TripState.TripFinished ? gpsDelay : notRunning);
     
@@ -153,7 +143,6 @@ export default function OngoingJobScreen({route, navigation}) {
       else {
         try {
           let payment_url = `http://g4-fiuber.herokuapp.com/api/v1/payments/create/payment`;
-          console.log('reaches')
           let string_pay = pay.toString();
           let trip_payment = await axios.post(payment_url, {tripID: trip_id, amount: string_pay, driver_username: driver, rider_username: passenger}, token);
 
@@ -214,8 +203,8 @@ export default function OngoingJobScreen({route, navigation}) {
               <Text>Drive towards the starting marker (stickman) on your map.</Text>
               <Text>Your passenger is '{passenger}'.</Text>
               <Text>They're waiting at {origin.address}.{'\n'}</Text>
-              <Text>Distance to passenger: {remainingDistance}</Text>
-              <Text>ETA to passenger: {remainingDuration}</Text>
+              <Text>Distance to passenger: {remainingDistance} km</Text>
+              <Text>ETA to passenger: {remainingDuration} mins</Text>
               <Text>Trip's pay: {pay} ETH{'\n'}</Text>
               <View style={styles.buttonStateView}>
                 <Button style={{width:220}} labelStyle={{fontWeight: 'bold'}} buttonColor='#37a0bd' mode='contained' icon={'account-alert'} onPress={async () => {await notifyArrival()}}>Notify arrival</Button>
