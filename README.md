@@ -21,6 +21,14 @@ Luego verificar que la instalacion fue correcta con el comando de arriba.
 
 ### Verificar que node (y todos los modulos requeridos por la aplicacion) este instalado
 
+Verificar que la version de **node** instalada sea correcta
+
+```bash
+    node --version
+    >>> v18.0.0
+```
+
+
 ```bash
     npm install
 ```
@@ -52,6 +60,27 @@ Started Metro Bundler
 ```
 
 Para poder correrlo desde una maquina virtual de android. Tiene que estar ya corriendo la imagen. Para levantarla, usar android studio y crear una nueva imagen.
+
+---
+### Variables de entorno
+
+Las variables de entorno se deben encontrar en un archivo *.env* en el directorio del proyecto. 
+Las variables necesarias para este archivo se pueden encontrar en *eas.json* bajo *build.preview.env*
+
+---
+### Build de la App en expo
+
+Para generar un .apk de la app, es necesario colocar las variables de entorno en *build.preview.env* y ejecutar el siguiente comando:
+
+```bash
+    eas build -p android --profile preview
+```
+
+Una vez finalizado este proceso, se puede descargar el .apk desde el link mostrado en la consola.
+
+> Para poder correr este comando, es necesario tener un proyecto de expo asociado al proyecto.
+> En caso de querer modificar el proyecto de expo actual, se puede modificar la variable *originalFullName* en **app.json**
+
 
 ---
 
