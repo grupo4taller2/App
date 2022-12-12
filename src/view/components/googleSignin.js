@@ -25,9 +25,7 @@ export default function GoogleLogin(props){
       webClientId: WEBKEY
     },
     {
-      native: AuthSession.makeRedirectUri({
-        useProxy: true
-      }),
+      native: AuthSession.makeRedirectUri(),
       useProxy: true
     })
 
