@@ -145,33 +145,32 @@ export async function getMyInfo(userOrEmail, userState){
 export async function googleGetUser(userCredential){
     const email = userCredential.user.email;
     let endResult = null;
-    await generateUser(email, userCredential);
-    logLogin("Federated");
+    const is_new_user = await tryGetUser(email, userCredential);
+    if(!is_new_user) logLogin("Federated");
+    return is_new_user;
 }
 
-async function postNewUser(info, user){
+export async function postNewUser(info, user){
     
     const uri = ROUTE + (info.isDriver ? DRIVERREG : PASSENGERREG);
-    
+
     const result = await axios.post(uri, info.info, getToken(user.credential.user.stsTokenManager.accessToken));
 
     return result;
 }
 
-async function generateUser(email, info){
+async function tryGetUser(email, info){
     let userInfo = null;
     let number = null;
     let new_user = false;
-    while (!userInfo){
-        try{
-            userInfo = await getUser(email);
-        }catch{
-            new_user = true;
-            await tryGenerate(email, number, info);
-        }
+    
+    try{
+        userInfo = await getUser(email);
+    }catch{
+        new_user = true;
     }
-    if (new_user)  logSignup("Federated");
-    info.userInfo = userInfo;
+    
+    return new_user
 }
 
 async function tryGenerate(email, number, user){
@@ -185,15 +184,10 @@ async function tryGenerate(email, number, user){
         return first.concat(' ', second);
    });
    info.phone_number = user.user.phoneNumber ? user.user.phoneNumber : "";
-   info.wallet = "";
+   
    info.preferred_location = "No address";
 
-   try{
-    const credential = {credential: user};
-    await postNewUser({info: info, isDriver: false}, credential);
-   }catch (error) {
-    number = number ? number + 1 : 0;
-   }
+   
     
 }
 

@@ -6,6 +6,7 @@ import RegisterInfoScreen from '../view/screens/RegisterInfoScreen';
 import LoginScreen from '../view/screens/LoginScreen';
 import { ROUTES } from './routes';
 import PasswordRecovery from '../view/screens/PasswordRecovery';
+import FederatedRegister from '../view/screens/FederatedRegister';
 
 
 
@@ -20,6 +21,7 @@ export default function AuthStack() {
         <Stack.Screen name={ROUTES.RegisterFirstView} component={RegisterScreen} options={ { headerShown: false }} />
         <Stack.Screen name={ROUTES.RegisterInfoView} component={RegisterInfoScreen} options={ { headerShown: false }} />
         <Stack.Screen name={ROUTES.PasswordRecoveryPage} component={PasswordRecovery} options={{headerShown: false}} />
+        <Stack.Screen name={ROUTES.FederatedRegister} component={FederatedRegister} options={{headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );

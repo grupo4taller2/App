@@ -3,5 +3,6 @@ export  const ROUTES = {
     RegisterFirstView: "Register",
     RegisterInfoView: "RegisterInfo",
     MainPage: "Main",
-    PasswordRecoveryPage: 'PasswordRecovery'
+    PasswordRecoveryPage: 'PasswordRecovery',
+    FederatedRegister: "FederatedRegister"
 };
