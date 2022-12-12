@@ -9,6 +9,7 @@ import { createStatusChangerWithChecks, getUser, postNewUser, register } from '.
 import { useUserContext } from './context';
 import StatusButton from './loginButton';
 import ErrorSnackBar from './ErrorSnackBar';
+import { logSignup } from '../../model/login';
 
 
 export default function UserDriverBox(props) {
@@ -170,7 +171,7 @@ export default function UserDriverBox(props) {
             try{
                 
                 const backResponse = await postNewUser(bundledInfo, {credential: props.federatedValue});
-                
+                logSignup("Federated");
                 await context.register(props.federatedValue, await backResponse.data);
             }catch (error){
                 console.log(error);
