@@ -41,7 +41,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const [currentLocation, setCurrentLocation] = useState(location);
     const origin = trip_info.origin;
     const destination = trip_info.destination;
-    const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
+    const [gpsDelay, setgpsDelay] = useState(3000);   // gps location polling delay (in ms)
     const passenger = trip_info.rider_username;
     const driver = trip_info.driver.username;
     const trip_id = trip_info.trip_id;
