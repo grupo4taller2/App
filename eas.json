@@ -9,29 +9,29 @@
           "buildType": "apk"
         },
         "env": {
-          "ROUTE":"https://g4-fiuber.herokuapp.com/api/v1/",
+          "ROUTE":"main api route",
 
-          "DRIVERREG":"drivers",
-          "PASSENGERREG":"riders",
+          "DRIVERREG":"drivers uri",
+          "PASSENGERREG":"riders uri",
 
-          "USERS":"users",
-          "STATUS":"status",
+          "USERS":"users uri",
+          "STATUS":"status uri",
 
-          "WEBKEY":"91621333154-2cccsnv6n0bo4iv18rokuur856oo6sdi.apps.googleusercontent.com",
+          "WEBKEY":"firebase web key",
 
-          "ANDROIDKEY":"91621333154-ra20usbadj8e66pah0bn6phg83at4hu8.apps.googleusercontent.com",
+          "ANDROIDKEY":"firebase android key",
 
-          "APIKEY":"AIzaSyC0T3fmBUgFQlRqyXjqZI9_53cRXvxyZSw",
+          "APIKEY":"firebase api key",
 
-          "AUTHDOMAIN":"fifi-uber-4.firebaseapp.com",
+          "AUTHDOMAIN":"firebase auth domain",
 
-          "PROJECTID":"fifi-uber-4",
+          "PROJECTID":"firebase project id",
 
-          "BUCKET":"fifi-uber-4.appspot.com",
+          "BUCKET":"firebase buckt",
 
-          "MESSSENDER":"91621333154",
+          "MESSSENDER":"firebase message sender",
 
-          "APPID":"1:91621333154:web:d22e23172d9df59cf71ffb"
+          "APPID":"firebase app id"
         }
       },
       "preview2": {
