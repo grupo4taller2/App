@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:91621333154:android:3a40327152df56f2f71ffb",
         "android_client_info": {
-          "package_name": "com.t2.Fifi"
+          "package_name": "com.t2.fifi"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "91621333154-ra20usbadj8e66pah0bn6phg83at4hu8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.t2.Fifi",
+            "package_name": "com.t2.fifi",
             "certificate_hash": "efcd4cd6918c4179a1dec2110cd837c3809440b5"
           }
         },
