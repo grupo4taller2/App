@@ -18,14 +18,16 @@ export default function GoogleLogin(props){
 
     const {signIn, federated} = useUserContext();
     const [loading, setLoading] = React.useState();
-    console.log(ANDROIDKEY, WEBKEY)
+    
     const [request, response, promptAsync] = Google.useAuthRequest({
       androidClientId: ANDROIDKEY,
       expoClientId: WEBKEY,
       webClientId: WEBKEY
     },
     {
-      native: AuthSession.makeRedirectUri(),
+      native: AuthSession.makeRedirectUri({
+        useProxy: true
+      }),
       useProxy: true
     })
 

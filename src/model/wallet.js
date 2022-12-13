@@ -34,7 +34,7 @@ export async function extract(context, amount, destination){
 
     const token = getHeader(context);
 
-    await axios.post(path, {username: retrieveUserName(context), amount: amount, walletAddress: destination})
+    await axios.post(path, {username: retrieveUserName(context), amount: amount, walletAddress: destination}, token)
 
 }
 
