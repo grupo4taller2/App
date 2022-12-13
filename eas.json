@@ -7,6 +7,31 @@
       "preview": {
         "android": {
           "buildType": "apk"
+        },
+        "env": {
+          "ROUTE":"main api route",
+
+          "DRIVERREG":"drivers uri",
+          "PASSENGERREG":"riders uri",
+
+          "USERS":"users uri",
+          "STATUS":"status uri",
+
+          "WEBKEY":"firebase web key",
+
+          "ANDROIDKEY":"firebase android key",
+
+          "APIKEY":"firebase api key",
+
+          "AUTHDOMAIN":"firebase auth domain",
+
+          "PROJECTID":"firebase project id",
+
+          "BUCKET":"firebase buckt",
+
+          "MESSSENDER":"firebase message sender",
+
+          "APPID":"firebase app id"
         }
       },
       "preview2": {

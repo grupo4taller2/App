@@ -17,21 +17,9 @@ import axios from 'axios';
 
 
 function inProximity(firstCoords, secondCoords, allowedError) {
-  let latitudeDelta;
-  let longitudeDelta;
-  if ((firstCoords.latitude > 0 && secondCoords.latitude < 0) || (firstCoords.latitude < 0 && secondCoords.latitude > 0)) {
-    latitudeDelta = firstCoords.latitude + secondCoords.latitude;
-  }
-  else {  // if both latitudes have the same sign
-    latitudeDelta = firstCoords.latitude - secondCoords.latitude;
-  }
-  if ((firstCoords.longitude > 0 && secondCoords.longitude < 0) || (firstCoords.longitude < 0 && secondCoords.longitude > 0)) {
-    longitudeDelta = firstCoords.longitude + secondCoords.longitude;
-  }
-  else {  // if both longitudes have the same sign
-    longitudeDelta = firstCoords.longitude - secondCoords.longitude;
+  let latitudeDelta = Math.abs(firstCoords.latitude - secondCoords.latitude);
+  let longitudeDelta = Math.abs(firstCoords.longitude - secondCoords.longitude);
   
-  }
   let latitudeResult = latitudeDelta <= allowedError;
   let longitudeResult = longitudeDelta <= allowedError;
   return (latitudeResult && longitudeResult)
@@ -53,7 +41,7 @@ export default function OngoingJobScreen({route, navigation}) {
     const [currentLocation, setCurrentLocation] = useState(location);
     const origin = trip_info.origin;
     const destination = trip_info.destination;
-    const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
+    const [gpsDelay, setgpsDelay] = useState(3000);   // gps location polling delay (in ms)
     const passenger = trip_info.rider_username;
     const driver = trip_info.driver.username;
     const trip_id = trip_info.trip_id;

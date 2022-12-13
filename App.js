@@ -34,7 +34,7 @@ Notifications.setNotificationHandler({
 export default function App() {
 
   const [userState, dispatch] = useReducer(reducer, reducer());
-
+  const [federatedMemo, setFederatedMemo] = useState({});
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -107,6 +107,10 @@ export default function App() {
   const authState = React.useMemo(() => {
     return ({
       userState,
+      federated: {
+        value: federatedMemo,
+        setValue: setFederatedMemo
+      },
       signIn: async (responseToken) => {
           let userInfo = await getMyInfo(responseToken.user.email.toLowerCase(), responseToken);
           userInfo = await getMyInfo(userInfo.username, responseToken);

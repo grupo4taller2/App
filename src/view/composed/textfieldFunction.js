@@ -10,7 +10,7 @@ export default function TextFieldFunction(props){
 
 
         let info = props.info;
-        console.log(props);
+        
         if (props.disabled) {
             return (<TextInput
                 value={props.text}

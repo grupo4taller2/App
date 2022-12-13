@@ -4,12 +4,13 @@ import Constants  from 'expo-constants'
 import { useUserContext } from '../components/context'
 
 export default function ProfileTopView(props){
+    console.log(props.result);
     const context = useUserContext();
     const userState = props.isSearch ? props.result : context.userState;
     const isSearch = props.isSearch ? true : false;
-    const isDriver = context.userState.userInfo.driver_information? true : false;
-    const rider_rating = context.userState.userInfo.rider_information.avg_rating;  
-    const driver_rating = isDriver ? context.userState.userInfo.driver_information.avg_rating : 0;
+    const isDriver = userState.userInfo.driver_information? true : false;
+    const rider_rating = userState.userInfo.rider_information.avg_rating;  
+    const driver_rating = isDriver ? userState.userInfo.driver_information.avg_rating : 0;
     const photo = userState.user.photoURL ? {uri: userState.user.photoURL} : require("../../../assets/no_pic.jpg");
     
     function calculateRating(rating) {
@@ -23,8 +24,8 @@ export default function ProfileTopView(props){
         <SafeAreaView style={style.ProfileView}>
                 <View style={style.NameReviewView}>
                     <View style={style.reviewStars}>
-                        {!isSearch && <Text style={style.ratingText}>Passenger: ★ {calculateRating(rider_rating)}</Text>}
-                        {!isSearch && isDriver && <Text>Driver: ★ {calculateRating(driver_rating)}</Text>}
+                        {<Text style={style.ratingText}>Passenger: ★ {calculateRating(rider_rating)}</Text>}
+                        {isDriver && <Text>Driver: ★ {calculateRating(driver_rating)}</Text>}
                     </View>
                 </View>
                 <View style={style.ProfilePict}>

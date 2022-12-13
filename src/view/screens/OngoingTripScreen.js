@@ -29,8 +29,8 @@ export default function OngoingTripScreen({route, navigation}) {
     const [remainingDuration, setRemainingDuration] = useState(duration);
     const [currentLocation, setCurrentLocation] = useState(startMarker);
     const destination = destinationMarker;
-    const [gpsDelay, setgpsDelay] = useState(5000);   // gps location polling delay (in ms)
-    const [stateDelay, setStateDelay] = useState(5000);   // trip state polling delay (in ms)
+    const [gpsDelay, setgpsDelay] = useState(3000);   // gps location polling delay (in ms)
+    const [stateDelay, setStateDelay] = useState(3000);   // trip state polling delay (in ms)
     const [isRunning, setIsRunning] = useState(true);   // if set to false, component will stop polling (will be set to true once a driver has been assigned and the trip marked as started)
     const [driver, setDriver] = useState(undefined);
     const [driverCar, setDriverCar] = useState(undefined);
@@ -79,7 +79,7 @@ export default function OngoingTripScreen({route, navigation}) {
         let response = await axios.get(url, {headers: token.headers});
         
         let currentTripState = response.data.trip_state;
-        if (currentTripState == TripState.WaitingOnDriver) {
+        if (currentTripState == TripState.WaitingOnDriver || currentTripState == TripState.DriverArrived) {
             if (driver === undefined) {
               setDriver(response.data.driver.username);
               setDriverCar(response.data.driver.car);
@@ -187,7 +187,7 @@ export default function OngoingTripScreen({route, navigation}) {
         showsCompass={true} showsBuildings={true} showsIndoors={true}
         onRegionChangeComplete={(region) => setRegion(region)}>
             {/*<Button style={{width:150, position: 'absolute'}} buttonColor='white' mode='outlined' icon={'arrow-right-thick'} onPress={debugState}>Next State</Button>*/}
-            {tripState == TripState.WaitingOnDriver && driverLocation && <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: driverLocation.latitude, longitude: driverLocation.longitude }}/>}
+            {((tripState == TripState.WaitingOnDriver) || (tripState == TripState.DriverArrived)) && driverLocation && <Marker image={require('../../../resources/images/mapMarkers/driver_128.png')} coordinate={{ latitude: driverLocation.latitude, longitude: driverLocation.longitude }}/>}
             <Marker image={require('../../../resources/images/mapMarkers/tripStart4_256.png')} coordinate={currentLocation}/>
             <Marker image={require('../../../resources/images/mapMarkers/tripEnd1_128.png')} coordinate={destination}/>
             <MapViewDirections
