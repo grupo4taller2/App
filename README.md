@@ -81,6 +81,11 @@ Una vez finalizado este proceso, se puede descargar el .apk desde el link mostra
 > Para poder correr este comando, es necesario tener un proyecto de expo asociado al proyecto.
 > En caso de querer modificar el proyecto de expo actual, se puede modificar la variable *originalFullName* en **app.json**
 
+---
+### App nativa en android
+
+En el siguiente [link](https://drive.google.com/file/d/1FMxXlLDZlco0PJadIl7E5y5e_7Auilun/view?usp=share_link) se puede encontrar el archivo para instalar la aplicacion en smartphones android. 
+
 
 ---
 
