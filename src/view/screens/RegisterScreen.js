@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import {StyleSheet, TouchableHighlight, View} from 'react-native';
-import {Text, TextInput, Button, TouchableRipple} from 'react-native-paper';
+import React from "react";
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import RegisterInfo from "../composed/registerInfoView";
 import { Appbar } from 'react-native-paper';
 

@@ -1,10 +1,8 @@
-import React, { Component, useEffect } from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Outward from '../../controler/outward';
-import InfoInput from '../../controler/infoInput';
 import { Text, Checkbox, Button } from 'react-native-paper';
 import RegisterCarInput from '../composed/registerCarInput';
-import TextField from '../composed/textField';
 import { createStatusChangerWithChecks, getUser, postNewUser, register } from '../../model/status';
 import { useUserContext } from './context';
 import StatusButton from './loginButton';

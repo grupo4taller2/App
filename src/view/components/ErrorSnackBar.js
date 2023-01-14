@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, Snackbar, Text } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 
 export default function ErrorSnackBar(props) {
 

@@ -1,9 +1,7 @@
-import React, { useState, Component } from "react";
-import {StyleSheet, TouchableHighlight, View} from 'react-native';
-import {Text, TextInput, Button, Checkbox } from 'react-native-paper';
+import React from "react";
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { Appbar } from 'react-native-paper';
-import TextField from "../composed/textField";
-import InfoInput from "../../controler/infoInput";
 import UserTypeCheck from "../composed/registerUserView";
 
 

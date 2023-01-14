@@ -1,12 +1,8 @@
-
-
-
 import React from "react";
-import { StyleSheet, Touchable, TouchableNativeFeedback } from "react-native";
+import { StyleSheet } from "react-native";
 import { Button, Dialog, Paragraph, Surface, Text } from "react-native-paper";
 import * as Clipboard from 'expo-clipboard';
 import ErrorSnackBar from "./ErrorSnackBar";
-import { useUserContext } from "./context";
 
 
 export default function UserWallet(props){

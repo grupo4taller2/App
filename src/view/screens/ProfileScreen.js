@@ -1,8 +1,7 @@
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
-import { Appbar, Avatar, Drawer, List, Menu, Surface, Text } from "react-native-paper";
+import { Avatar, Text } from "react-native-paper";
 import Constants from 'expo-constants';
 import ProfileTopView from "../composed/profileTopView";
-import WalletView from "../composed/walletView";
 import ProfileOptionsView from "../composed/ProfileOptionsView";
 import ProfileInfoView from "../composed/profileInfoView";
 import { useUserContext } from "../components/context";

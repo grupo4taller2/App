@@ -1,15 +1,11 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { SafeAreaView, Image, StyleSheet, TouchableNativeFeedback, View } from "react-native";
+import { Image, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import { StatusBar } from 'expo-status-bar';
-import StatusButton from '../components/loginButton';
-import { Avatar, Button, Drawer, List, Menu, Surface, Text, Snackbar} from "react-native-paper";
+import { Avatar, Button, Surface, Text, Snackbar } from "react-native-paper";
 import { useUserContext } from '../components/context';
-import { createStatusChanger, signOut } from '../../model/status';
-import Constants from 'expo-constants';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { getWallet } from '../../model/wallet';
-import axios from 'axios';
 
 export default function HomeScreen({route, navigation}) {
   const context = useUserContext();

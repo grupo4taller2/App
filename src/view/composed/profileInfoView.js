@@ -1,14 +1,11 @@
 import React from "react";
 import { StyleSheet, View } from "react-native"
-import { Button, List, Surface, Text, TextInput } from "react-native-paper";
-import InfoInput from "../../controler/infoInput";
 import { updateDriverInfo, updateInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import EditButton from "../components/editButton";
 import ErrorSnackBar from "../components/ErrorSnackBar";
 import UserPrivateInfo from "../components/userPrivateInfo";
 import UserPublicInfo from "../components/userPublicInfo";
-import TextField from "./textField"
 
 /*
 Informacion pertinente:

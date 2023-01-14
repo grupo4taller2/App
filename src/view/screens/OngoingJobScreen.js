@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { PROVIDER_GOOGLE, Marker, Polyline } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View, Dimensions, SliderComponent } from "react-native";
-import { Text, Appbar, Avatar, Drawer, List, Menu, Surface, TextInput, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from "react-native-paper";
+import { Marker } from 'react-native-maps';
+import { StyleSheet, View } from "react-native";
+import { Text, Button, Snackbar } from "react-native-paper";
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
-import BottomDrawer from 'react-native-bottom-drawer-view';
 import * as Location from 'expo-location';
-import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { getHeader } from '../../model/status'
 import { useUserContext } from '../components/context';

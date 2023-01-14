@@ -1,14 +1,9 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-paper';
-import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-web';
+import { Text } from 'react-native-paper';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
 import { createStatusChanger, signIn } from '../../model/status';
-import { ROUTES } from '../../navigation/routes';
-import { UserContext } from '../components/context';
-import GoogleLogin from '../components/googleSignin';
 import StatusButton from '../components/loginButton';
 import LoginInfo from './loginInputView';
 

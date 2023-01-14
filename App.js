@@ -2,13 +2,12 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React, { useReducer, useState, useRef, useEffect } from 'react';
 import './src/config/firebase';
-import { logSignup, logUser } from './src/model/login';
-import { getHeader, getMyInfo, getUser } from './src/model/status';
+import { logUser } from './src/model/login';
+import { getHeader, getMyInfo } from './src/model/status';
 import AuthStack from './src/navigation/authStack';
 import UserStack from './src/navigation/userStack';
 import { UserContext } from './src/view/components/context';
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
 import axios from 'axios';
 
 

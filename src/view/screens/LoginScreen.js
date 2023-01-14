@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Appbar, Text} from 'react-native-paper';
+import React from "react";
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import GoogleLogin from "../components/googleSignin";
 import Greet from "../components/greet";
 import Login from "../composed/loginMainView";

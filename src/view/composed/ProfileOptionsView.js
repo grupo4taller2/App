@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableNativeFeedback, View } from "react-native"
-import { Avatar, Menu, Surface } from "react-native-paper"
+import { StyleSheet, View } from "react-native"
 import { UserNavConstants } from "../../config/userNavConstants";
 import { createStatusChanger } from "../../model/status";
 import { useUserContext } from "../components/context";

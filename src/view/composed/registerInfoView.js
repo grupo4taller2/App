@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { ScrollView, StyleSheet } from 'react-native';
 import ConfirmableTextInput from '../../controler/confirmableText';
 import InfoInput from '../../controler/infoInput';
 import Outward from '../../controler/outward';
-import { callCallback, checkUserFree, createStatusChanger, createStatusChangerWithAsyncChecks, createStatusChangerWithChecks, register } from '../../model/status';
+import { callCallback, checkUserFree, createStatusChangerWithAsyncChecks } from '../../model/status';
 import { EMAILCHECK, NUMBERCHECK, USERCHECK } from '../../model/textInput';
 import ErrorSnackBar from '../components/ErrorSnackBar';
 import StatusButton from '../components/loginButton';

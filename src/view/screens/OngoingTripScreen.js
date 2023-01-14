@@ -8,7 +8,6 @@ import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
 import { useInterval } from '../../hooks/useInterval';
 import * as Location from 'expo-location';
-import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { getHeader } from '../../model/status'
 import { useUserContext } from '../components/context';

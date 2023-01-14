@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getHeader } from "./status"
-import {ROUTE} from "@env";
+import { ROUTE } from "@env";
 
 export async function getWallet(isDriver, context){
     const path = 'payments/' + retrieveUserName(context) + '/wallet';

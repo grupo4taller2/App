@@ -1,5 +1,4 @@
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import app from "../config/firebase";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const GET = "GET"
 const CONTENT = 'application/json'

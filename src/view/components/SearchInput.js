@@ -1,9 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Button, TextInput } from "react-native-paper";
-import InfoInput from "../../controler/infoInput";
 import { getUser } from "../../model/status";
-import TextField from "../composed/textField";
 import TextFieldFunction from "../composed/textfieldFunction";
 import ErrorSnackBar from "./ErrorSnackBar";
 import StatusButton from "./loginButton";

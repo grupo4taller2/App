@@ -1,7 +1,7 @@
 import { React, useEffect, useState, useRef } from 'react';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, TextInput, Button, Snackbar, Dialog, Paragraph } from "react-native-paper";
 import MapViewDirections from 'react-native-maps-directions';
 import { UserNavConstants } from '../../config/userNavConstants';
@@ -9,8 +9,6 @@ import axios from 'axios';
 import { useUserContext } from '../components/context';
 import * as Location from 'expo-location';
 import { getHeader } from "../../model/status";
-import { max } from 'react-native-reanimated';
-import { PROVIDER_GOOGLE } from 'react-native-maps';
 
 
 //In your code, import { PROVIDER_GOOGLE } from react-native-maps and add the property provider=PROVIDER_GOOGLE to your <MapView>. This property works on both iOS and Android.

@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react';
 import { TextInput } from "react-native-paper";
 
 export function hideWidget(icon, callback) {

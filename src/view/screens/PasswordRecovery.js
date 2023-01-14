@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
 import { Avatar, Text } from "react-native-paper";
@@ -6,7 +5,6 @@ import TextFieldFunction from "../composed/textfieldFunction";
 import Constants from 'expo-constants';
 import StatusButton from "../components/loginButton";
 import { getAuth, sendPasswordResetEmail} from "firebase/auth";
-import { getApp } from "firebase/app";
 import ErrorSnackBar from "../components/ErrorSnackBar";
 import { EMAILCHECK } from "../../model/textInput";
 

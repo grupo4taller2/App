@@ -1,5 +1,5 @@
-import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from 'react-native'
-import { Avatar, Drawer, Text } from 'react-native-paper'
+import { SafeAreaView, StyleSheet, View } from 'react-native'
+import { Avatar, Text } from 'react-native-paper'
 import Constants  from 'expo-constants'
 import { useUserContext } from '../components/context'
 

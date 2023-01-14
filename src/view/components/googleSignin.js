@@ -1,11 +1,11 @@
-import { Button, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import * as Google from 'expo-auth-session/providers/google'
 import * as AuthSession from 'expo-auth-session'
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
-import { Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import {WEBKEY, ANDROIDKEY} from '@env'
-import { UserContext, useUserContext } from './context';
+import { useUserContext } from './context';
 import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { googleGetUser } from '../../model/status';
 import ErrorSnackBar from './ErrorSnackBar';

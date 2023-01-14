@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import {StyleSheet, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import UserDriverBox from '../components/userDriverBox';
 import { Appbar, Text } from 'react-native-paper';
 import TextFieldFunction from '../composed/textfieldFunction';

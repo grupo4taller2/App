@@ -1,6 +1,5 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, TouchableNativeFeedback, View } from "react-native";
-import InfoInput from "../../controler/infoInput";
 import { updateDriverInfo } from "../../model/status";
 import { useUserContext } from "../components/context";
 import StatusButton from "../components/loginButton";

@@ -1,8 +1,7 @@
-import fetch from 'node-fetch';
 import Network from '../model/network';
 
-import {ROUTE} from '@env';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { ROUTE } from '@env';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 
 const LOGINROUTE = '/users'
 

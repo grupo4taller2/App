@@ -1,11 +1,8 @@
 
 import React from "react";
-import { StyleSheet, Touchable, TouchableNativeFeedback, View } from "react-native";
-import { Button, Dialog, Paragraph, Surface, Text } from "react-native-paper";
-import * as Clipboard from 'expo-clipboard';
+import { StyleSheet, View } from "react-native";
+import { Button, Dialog, Paragraph, Text } from "react-native-paper";
 import ErrorSnackBar from "./ErrorSnackBar";
-import { useUserContext } from "./context";
-import TextFieldFunction from "../composed/textfieldFunction";
 import { Input } from "react-native-elements";
 
 

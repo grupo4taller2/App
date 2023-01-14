@@ -1,4 +1,3 @@
-import Input from "../model/textInput";
 import InfoInput from "./infoInput";
 
 export default class ConfirmableTextInput{

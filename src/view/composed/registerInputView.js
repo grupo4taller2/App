@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {StyleSheet, View} from 'react-native';
-import Outward from '../../controler/outward';
 import ConfirmableTextField from './confirmableTextField';
 import TextField from './textField';
 
