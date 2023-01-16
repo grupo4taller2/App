@@ -192,7 +192,7 @@ export default function OngoingTripScreen({route, navigation}) {
             <MapViewDirections
                 origin={currentLocation}
                 destination={destination}
-                apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+                apikey={'AIzaSyA5O_0ZQs21zZXTabvvYP9UiVmSE4ZXoVM'}  // directions APIKey
                 strokeWidth={5}
                 strokeColor="red"
                 onReady={result => {

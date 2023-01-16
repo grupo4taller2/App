@@ -27,6 +27,7 @@ export default function TripScreen({navigation}){
     });
     const [validTrip, setValidTrip] = useState(undefined);
     const [tripCost, setTripCost] = useState("0 ETH");
+    const [costError, setCostError] = useState(false);
     const [clickedRoute, setClickedRoute] = useState(false);
     const [fetchingPrice, setFetchingPrice] = useState(false);
     const [visibleSB, setVisibleSB] = useState(false);
@@ -119,6 +120,8 @@ export default function TripScreen({navigation}){
         }
         catch(error) {
             console.warn(error);
+            console.log('error de precio');
+            setCostError(true);
             onTogglePriceSnackBar();
             setFetchingPrice(false);
         }
@@ -188,7 +191,7 @@ export default function TripScreen({navigation}){
                     <MapViewDirections
                         origin={startMarker}
                         destination={destinationMarker}
-                        apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+                        apikey={'AIzaSyA5O_0ZQs21zZXTabvvYP9UiVmSE4ZXoVM'}  // directions APIKey
                         strokeWidth={5}
                         strokeColor="red"
                         onReady={result => {
@@ -249,7 +252,7 @@ export default function TripScreen({navigation}){
                         Set Route
                     </Button>
                     <Button buttonColor='#000' mode='contained' loading={fetchingPrice} style={styles.startTripButton} labelStyle={styles.startTripButtonLabel} contentStyle={styles.startTripButtonContent}
-                        icon="car" disabled={!validTrip} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
+                        icon="car" disabled={(!validTrip) || (costError)} onPress={async () => { if (await enoughWalletBalance(tripCost)) { getGPSPermissions() }}}>
                         Start Trip for {tripCost}
                     </Button>
                     <Snackbar

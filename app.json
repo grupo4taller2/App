@@ -24,7 +24,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "FIFI.UBA",
       "config": {
-        "googleMapsApiKey": "AIzaSyDCmZOjM-xds5wQ-bfSGeIrR37lCaXdyGI"
+        "googleMapsApiKey": "AIzaSyCD3D03-4PumpyN3TMFJJZtMB9ItltjTPY"
       }
     },
     "android": {
@@ -34,7 +34,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCDo_xTUAPTROSCNr70he8YLJxs1F1upkA"
+          "apiKey": "AIzaSyAx62DQan87AQwQe2Xu8VGdlE1lNN3ZSFA"
         }
       },
       "softwareKeyboardLayoutMode": "pan",

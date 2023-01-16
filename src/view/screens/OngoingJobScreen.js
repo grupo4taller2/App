@@ -255,7 +255,7 @@ export default function OngoingJobScreen({route, navigation}) {
           <MapViewDirections
               origin={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
               destination={{ latitude: origin.latitude, longitude: origin.longitude }}
-              apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+              apikey={'AIzaSyA5O_0ZQs21zZXTabvvYP9UiVmSE4ZXoVM'}  // directions APIKey
               strokeWidth={5}
               strokeColor="red"
               onReady={result => {
@@ -273,7 +273,7 @@ export default function OngoingJobScreen({route, navigation}) {
         <MapViewDirections
             origin={{ latitude: currentLocation.latitude, longitude: currentLocation.longitude }}
             destination={{ latitude: destination.latitude, longitude: destination.longitude }}
-            apikey={'AIzaSyA3x-jiXBvirmGETpkD4WRXej17TfCqJ7o'}  // directions APIKey
+            apikey={'AIzaSyA5O_0ZQs21zZXTabvvYP9UiVmSE4ZXoVM'}  // directions APIKey
             strokeWidth={5}
             strokeColor="red"
             onReady={result => {
