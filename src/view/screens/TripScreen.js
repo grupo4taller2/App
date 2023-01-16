@@ -120,7 +120,6 @@ export default function TripScreen({navigation}){
         }
         catch(error) {
             console.warn(error);
-            console.log('error de precio');
             setCostError(true);
             onTogglePriceSnackBar();
             setFetchingPrice(false);
